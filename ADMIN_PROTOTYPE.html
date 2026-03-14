@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pureHerbHealth Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sidebar-bg:#0f1f14;
+  --sidebar-active-bg:#2D8C54;
+  --sidebar-text:#9ca3af;
+  --sidebar-text-active:#ffffff;
+  --sidebar-width:240px;
+  --content-bg:#f3f4f6;
+  --card-bg:#ffffff;
+  --border:#e5e7eb;
+  --brand:#2D8C54;
+  --brand-dark:#166534;
+  --brand-light:#f0fdf4;
+  --status-live:#16a34a;
+  --status-draft:#d97706;
+  --status-pending:#2563eb;
+  --status-inactive:#6b7280;
+  --text-primary:#111827;
+  --text-secondary:#6b7280;
+  --text-muted:#9ca3af;
+  --topbar-h:56px;
+}
+body{font-family:'Inter',sans-serif;background:var(--content-bg);color:var(--text-primary);overflow-x:hidden}
+/* TOP BAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;z-index:100;gap:16px}
+.topbar-logo{display:flex;align-items:center;gap:8px;width:var(--sidebar-width);flex-shrink:0}
+.logo-dot{width:10px;height:10px;background:var(--brand);border-radius:50%}
+.logo-text{font-size:14px;font-weight:700;color:var(--text-primary)}
+.logo-sub{font-size:10px;color:var(--text-muted);font-weight:400}
+.topbar-breadcrumb{flex:1;font-size:13px;color:var(--text-secondary)}
+.topbar-breadcrumb span{color:var(--text-muted)}
+.topbar-breadcrumb b{color:var(--text-primary);font-weight:500}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.notif-btn{position:relative;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--brand);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.user-label{font-size:13px;font-weight:500;color:var(--text-primary)}
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;width:var(--sidebar-width);background:var(--sidebar-bg);overflow-y:auto;z-index:90;display:flex;flex-direction:column}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:#1e3a26;border-radius:2px}
+.nav-section{padding:16px 0 4px}
+.nav-section-label{font-size:10px;font-weight:600;color:#4b5563;letter-spacing:.08em;text-transform:uppercase;padding:0 16px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 14px;margin:1px 8px;border-radius:7px;cursor:pointer;transition:background .15s;color:var(--sidebar-text);font-size:13px;font-weight:500;position:relative;text-decoration:none}
+.nav-item:hover{background:#1a3020;color:#d1fae5}
+.nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-text-active)}
+.nav-icon{width:18px;text-align:center;font-style:normal;flex-shrink:0}
+.nav-badge{margin-left:auto;background:#374151;color:#d1d5db;font-size:10px;font-weight:600;padding:1px 6px;border-radius:10px}
+.nav-item.active .nav-badge{background:rgba(255,255,255,.2);color:#fff}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid #1e3020}
+.sidebar-footer-inner{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px}
+.footer-info{flex:1;min-width:0}
+.footer-name{font-size:12px;font-weight:600;color:#e5e7eb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.footer-role{font-size:10px;color:#6b7280}
+.logout-btn{color:#6b7280;cursor:pointer;font-size:14px;padding:4px;border-radius:4px;transition:color .15s}
+.logout-btn:hover{color:#d1fae5}
+/* MAIN */
+.main{margin-left:var(--sidebar-width);margin-top:var(--topbar-h);min-height:calc(100vh - var(--topbar-h));padding:28px}
+/* PAGE */
+.page{display:none}
+.page.active{display:block}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
+.page-title{font-size:22px;font-weight:700;color:var(--text-primary);line-height:1.2}
+.page-subtitle{font-size:13px;color:var(--text-secondary);margin-top:3px}
+.page-date{font-size:12px;color:var(--text-muted);margin-top:4px}
+/* CARDS */
+.card{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card-pad{padding:20px}
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.kpi-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px}
+.kpi-card{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.08);padding:20px;display:flex;align-items:flex-start;gap:14px}
+.kpi-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.kpi-icon.green{background:#dcfce7}
+.kpi-icon.blue{background:#dbeafe}
+.kpi-icon.orange{background:#ffedd5}
+.kpi-icon.purple{background:#f3e8ff}
+.kpi-icon.teal{background:#ccfbf1}
+.kpi-icon.jade{background:var(--brand-light)}
+.kpi-body{flex:1;min-width:0}
+.kpi-label{font-size:12px;color:var(--text-secondary);font-weight:500;margin-bottom:4px}
+.kpi-value{font-size:26px;font-weight:700;color:var(--text-primary);line-height:1;margin-bottom:4px}
+.kpi-trend{font-size:11px;color:var(--text-secondary)}
+.kpi-trend.up{color:#16a34a}
+.kpi-trend.neutral{color:var(--text-muted)}
+/* STORE GRID */
+.store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.store-card{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.08);padding:20px}
+.store-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.store-name{font-size:14px;font-weight:700;color:var(--text-primary)}
+.store-slug{font-size:11px;color:var(--text-muted);margin-top:2px}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}
+.badge-live{background:#dcfce7;color:#15803d}
+.badge-draft{background:#fef3c7;color:#b45309}
+.badge-pending{background:#dbeafe;color:#1d4ed8}
+.badge-inactive{background:#f3f4f6;color:#6b7280}
+.badge-paid{background:#fef3c7;color:#92400e}
+.badge-shipped{background:#dbeafe;color:#1e40af}
+.badge-delivered{background:#d1fae5;color:#065f46}
+.badge-processing{background:#e0e7ff;color:#3730a3}
+.badge-refunded{background:#fee2e2;color:#991b1b}
+.badge-cancelled{background:#f3f4f6;color:#6b7280}
+.badge-active{background:#dcfce7;color:#15803d}
+.store-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.store-stat{text-align:center;padding:8px;background:#f9fafb;border-radius:8px}
+.store-stat-val{font-size:16px;font-weight:700;color:var(--text-primary)}
+.store-stat-label{font-size:10px;color:var(--text-muted)}
+.store-last-active{font-size:11px;color:var(--text-muted);margin-bottom:12px}
+.store-manage-link{font-size:12px;font-weight:600;color:var(--brand);cursor:pointer;text-decoration:none}
+.store-manage-link:hover{color:var(--brand-dark);text-decoration:underline}
+/* TABLE */
+.table-wrap{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.table-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.table-title{font-size:14px;font-weight:600;color:var(--text-primary)}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;padding:10px 16px;border-bottom:1px solid var(--border);background:#f9fafb;text-align:left;white-space:nowrap}
+tbody tr{border-bottom:1px solid #f3f4f6;transition:background .1s;cursor:pointer}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#f9fafb}
+tbody td{padding:10px 16px;font-size:13px;color:var(--text-primary);vertical-align:middle}
+.order-num{font-weight:600;color:var(--brand);font-size:12px;font-family:monospace}
+.text-sm{font-size:12px}
+.text-muted{color:var(--text-muted)}
+.text-secondary{color:var(--text-secondary)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;text-decoration:none}
+.btn-primary{background:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-dark)}
+.btn-outline{background:#fff;color:var(--text-primary);border:1px solid var(--border)}
+.btn-outline:hover{background:#f9fafb}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-ghost{background:transparent;color:var(--text-secondary);padding:5px 8px;border-radius:6px}
+.btn-ghost:hover{background:#f3f4f6;color:var(--text-primary)}
+.btn-danger-ghost{background:transparent;color:#dc2626;padding:5px 8px;border-radius:6px}
+.btn-danger-ghost:hover{background:#fee2e2}
+/* FILTERS / TABS */
+.filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab-pills{display:flex;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.tab-pill{padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;color:var(--text-secondary);transition:all .15s;border:none;background:none}
+.tab-pill:hover{background:#f9fafb;color:var(--text-primary)}
+.tab-pill.active{background:var(--brand);color:#fff}
+.filter-select{padding:7px 10px;font-size:12px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text-primary);cursor:pointer;outline:none}
+.filter-select:focus{border-color:var(--brand)}
+.search-input{padding:7px 12px;font-size:12px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text-primary);outline:none;min-width:200px}
+.search-input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(45,140,84,.1)}
+/* SECTION LABEL */
+.section-label{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:12px}
+/* SECTION SPACER */
+.mb-4{margin-bottom:16px}
+.mb-5{margin-bottom:20px}
+.mb-6{margin-bottom:24px}
+/* INLINE FLEX ROW */
+.row{display:flex;gap:16px}
+.col{flex:1;min-width:0}
+/* ORDER EXPAND ROW */
+.order-expand{display:none;background:#f9fafb}
+.order-expand.open{display:table-row}
+.order-expand td{padding:16px 20px;border-top:1px solid var(--border)}
+.expand-inner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.expand-section-label{font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text-muted);letter-spacing:.06em;margin-bottom:6px}
+.line-item{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.line-img{width:32px;height:32px;border-radius:6px;object-fit:cover}
+.line-img-ph{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
+/* ELEMENT COLORS */
+.el-wood{background:#dcfce7;color:#166534}
+.el-fire{background:#fee2e2;color:#991b1b}
+.el-earth{background:#fef9c3;color:#854d0e}
+.el-metal{background:#f1f5f9;color:#334155}
+.el-water{background:#dbeafe;color:#1e40af}
+.el-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.el-dot-wood{background:#16a34a}
+.el-dot-fire{background:#dc2626}
+.el-dot-earth{background:#ca8a04}
+.el-dot-metal{background:#64748b}
+.el-dot-water{background:#2563eb}
+/* PROTO SWITCHER */
+#proto-bar{position:fixed;top:64px;right:16px;z-index:9999;background:#fff;border:1px solid var(--border);border-radius:20px;padding:6px 10px;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,.12);font-size:11px}
+#proto-bar span{color:var(--text-muted);font-weight:500;white-space:nowrap}
+#proto-bar button{border:none;background:none;padding:4px 10px;border-radius:12px;cursor:pointer;font-size:11px;font-weight:500;color:var(--text-secondary);transition:all .15s}
+#proto-bar button:hover{background:#f3f4f6;color:var(--text-primary)}
+#proto-bar button.active{background:var(--brand);color:#fff}
+
+/* ===== WIZARD LAYOUT ===== */
+.wizard-layout{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start}
+.wizard-steps-panel{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.08);padding:0;overflow:hidden;position:sticky;top:calc(var(--topbar-h) + 20px)}
+.wizard-steps-header{padding:16px 20px;border-bottom:1px solid var(--border);background:#f9fafb}
+.wizard-progress-label{font-size:12px;color:var(--text-secondary);margin-bottom:8px;font-weight:500}
+.wizard-progress-bar{height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden}
+.wizard-progress-fill{height:100%;background:var(--brand);border-radius:3px;transition:width .4s}
+.wizard-steps-list{padding:12px 0}
+.wizard-step-item{display:flex;align-items:flex-start;gap:12px;padding:10px 16px;cursor:pointer;transition:background .15s;position:relative}
+.wizard-step-item:hover{background:#f9fafb}
+.wizard-step-item.current{background:var(--brand-light)}
+.wizard-step-line{position:absolute;left:28px;top:40px;bottom:-10px;width:2px;background:#e5e7eb}
+.wizard-step-item:last-child .wizard-step-line{display:none}
+.wizard-step-circle{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;position:relative;z-index:1}
+.wsc-done{background:var(--brand);color:#fff}
+.wsc-current{background:var(--brand);color:#fff;box-shadow:0 0 0 3px rgba(45,140,84,.2)}
+.wsc-todo{background:#fff;border:2px solid #d1d5db;color:var(--text-muted)}
+.wizard-step-info{flex:1;min-width:0}
+.wsn{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
+.wsd{font-size:11px;color:var(--text-muted)}
+.wss{font-size:11px;font-weight:600;margin-top:2px}
+.wss-done{color:var(--brand)}
+.wss-current{color:var(--brand)}
+.wss-todo{color:var(--text-muted)}
+/* WIZARD CONTENT */
+.wizard-content{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.wizard-step-header{padding:20px 24px;border-bottom:1px solid var(--border)}
+.wizard-step-chip{display:inline-flex;align-items:center;gap:6px;background:var(--brand-light);color:var(--brand);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:10px}
+.wizard-step-title{font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.wizard-step-desc{font-size:13px;color:var(--text-secondary)}
+/* SUB TABS */
+.sub-tabs{display:flex;border-bottom:2px solid var(--border);padding:0 24px}
+.sub-tab{padding:10px 14px;font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.sub-tab:hover{color:var(--text-primary)}
+.sub-tab.active{color:var(--brand);border-bottom-color:var(--brand)}
+/* PRODUCT GRID */
+.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px 24px}
+.product-card{border:2px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .15s;position:relative}
+.product-card:hover{border-color:var(--brand);box-shadow:0 2px 8px rgba(45,140,84,.15)}
+.product-card.selected{border-color:var(--brand);background:var(--brand-light)}
+.product-card-img{height:80px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.product-card-body{padding:10px}
+.product-card-cb{position:absolute;top:8px;left:8px;width:18px;height:18px;accent-color:var(--brand)}
+.product-card-name{font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
+.product-card-zh{font-size:11px;color:var(--text-muted);margin-bottom:6px}
+.product-card-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.product-card-price{font-size:13px;font-weight:700;color:var(--text-primary)}
+.product-card-stock{font-size:10px;color:var(--text-muted)}
+/* WIZARD FOOTER */
+.wizard-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#f9fafb}
+/* STATS CHIPS */
+.stats-chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.stats-chip{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;cursor:pointer;transition:all .15s}
+.stats-chip:hover{border-color:var(--brand);color:var(--brand)}
+.stats-chip.active{background:var(--brand-light);border-color:var(--brand);color:var(--brand)}
+.chip-val{font-size:18px;font-weight:700;display:block;line-height:1.2}
+.chip-label{font-size:11px;color:var(--text-muted)}
+/* ACCORDION */
+.accordion{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:0 24px 20px}
+.accordion-header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#f9fafb;font-size:13px;font-weight:600;color:var(--text-primary)}
+.accordion-header:hover{background:#f3f4f6}
+.accordion-arrow{transition:transform .2s;font-size:12px;color:var(--text-muted)}
+.accordion-arrow.open{transform:rotate(180deg)}
+.accordion-body{display:none;padding:16px;background:#fff}
+.accordion-body.open{display:block}
+/* TABLE FOOTER */
+.table-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#f9fafb}
+.table-footer-info{font-size:12px;color:var(--text-muted)}
+.pagination{display:flex;gap:4px}
+.page-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .15s}
+.page-btn:hover{background:#f3f4f6}
+.page-btn.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+/* WIZARD COMPLETED STEP */
+.completed-step-content{padding:24px}
+.completed-field{margin-bottom:12px}
+.completed-field-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.completed-field-value{font-size:13px;color:var(--text-primary);font-weight:500}
+.completed-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.color-swatch{display:inline-flex;align-items:center;gap:6px}
+.swatch{width:20px;height:20px;border-radius:4px;border:1px solid var(--border)}
+/* PRODUCT TABLE */
+.prod-name-cell{display:flex;align-items:center;gap:10px}
+.prod-img-ph{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.prod-en{font-size:13px;font-weight:600;color:var(--text-primary)}
+.prod-zh{font-size:11px;color:var(--text-muted)}
+.prod-pin{font-size:11px;color:var(--text-muted);font-style:italic}
+</style>
+</head>
+<body>
+
+<!-- PROTOTYPE SWITCHER -->
+<div id="proto-bar">
+  <span>Prototype:</span>
+  <button onclick="showPage('dashboard')" class="active">Dashboard</button>
+  <button onclick="showPage('stores')">Stores</button>
+  <button onclick="showPage('wizard')">Onboarding Wizard</button>
+  <button onclick="showPage('orders')">Orders</button>
+  <button onclick="showPage('products')">Products</button>
+</div>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-dot"></div>
+    <div>
+      <div class="logo-text">pureHerbHealth</div>
+      <div class="logo-sub">Admin Platform</div>
+    </div>
+  </div>
+  <div class="topbar-breadcrumb" id="breadcrumb"><b>Dashboard</b></div>
+  <div class="topbar-right">
+    <div class="notif-btn">🔔<span class="notif-badge">3</span></div>
+    <div class="avatar">JT</div>
+    <span class="user-label">John Tang</span>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="nav-section">
+    <div class="nav-section-label">Overview</div>
+    <a class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')">
+      <i class="nav-icon">📊</i> Dashboard
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Stores</div>
+    <a class="nav-item" id="nav-stores" onclick="showPage('stores')">
+      <i class="nav-icon">🏪</i> All Stores <span class="nav-badge">3</span>
+    </a>
+    <a class="nav-item" id="nav-wizard" onclick="showPage('wizard')">
+      <i class="nav-icon">✨</i> Onboarding Wizard
+    </a>
+    <a class="nav-item" onclick="">
+      <i class="nav-icon">➕</i> Add New Store
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Commerce</div>
+    <a class="nav-item" id="nav-orders" onclick="showPage('orders')">
+      <i class="nav-icon">📦</i> Orders <span class="nav-badge">12</span>
+    </a>
+    <a class="nav-item" id="nav-products" onclick="showPage('products')">
+      <i class="nav-icon">🛍️</i> Products
+    </a>
+    <a class="nav-item" onclick="">
+      <i class="nav-icon">📋</i> Inventory
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">TCM Content</div>
+    <a class="nav-item" onclick=""><i class="nav-icon">🌿</i> Five Elements CMS</a>
+    <a class="nav-item" onclick=""><i class="nav-icon">🌱</i> Herb Profiles</a>
+    <a class="nav-item" onclick=""><i class="nav-icon">📝</i> Articles</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Intelligence</div>
+    <a class="nav-item" onclick=""><i class="nav-icon">🤖</i> AI Configuration</a>
+    <a class="nav-item" onclick=""><i class="nav-icon">🧬</i> Constitution Analytics</a>
+    <a class="nav-item" onclick=""><i class="nav-icon">💡</i> Recommendations</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Settings</div>
+    <a class="nav-item" onclick=""><i class="nav-icon">⚙️</i> Platform Settings</a>
+    <a class="nav-item" onclick=""><i class="nav-icon">💳</i> Billing</a>
+    <a class="nav-item" onclick=""><i class="nav-icon">👥</i> Team</a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-inner">
+      <div class="avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0">JT</div>
+      <div class="footer-info">
+        <div class="footer-name">John Tang</div>
+        <div class="footer-role">Super Admin</div>
+      </div>
+      <div class="logout-btn" title="Logout">⏏</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- ===== PAGE: DASHBOARD ===== -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Platform Overview</div>
+        <div class="page-date">Thursday, March 12, 2026</div>
+      </div>
+    </div>
+
+    <!-- KPI Row 1 -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon green">💰</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Platform GMV (This Month)</div>
+          <div class="kpi-value">$47,320</div>
+          <div class="kpi-trend up">↑ 23% vs last month</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon blue">🏪</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Active Stores</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-trend neutral">All systems normal</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon orange">📦</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Orders Today</div>
+          <div class="kpi-value">28</div>
+          <div class="kpi-trend up">↑ 4 from yesterday</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon purple">🧬</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Constitution Analyses</div>
+          <div class="kpi-value">1,247</div>
+          <div class="kpi-trend neutral">This month</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Row 2 -->
+    <div class="kpi-grid-2">
+      <div class="kpi-card">
+        <div class="kpi-icon teal">🛍️</div>
+        <div class="kpi-body">
+          <div class="kpi-label">Total Products</div>
+          <div class="kpi-value">486</div>
+          <div class="kpi-trend neutral">Across 3 stores</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon jade">🌿</div>
+        <div class="kpi-body">
+          <div class="kpi-label">AI Herb Recommendations</div>
+          <div class="kpi-value">3,891</div>
+          <div class="kpi-trend neutral">Served this month</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Status Grid -->
+    <div class="section-label">Store Status</div>
+    <div class="store-grid mb-6">
+      <div class="store-card">
+        <div class="store-card-header">
+          <div>
+            <div class="store-name">pureHerbHealth.com</div>
+            <div class="store-slug">purehrb.com</div>
+          </div>
+          <span class="badge badge-live">🟢 LIVE</span>
+        </div>
+        <div class="store-stats">
+          <div class="store-stat"><div class="store-stat-val">$31,200</div><div class="store-stat-label">Revenue MTD</div></div>
+          <div class="store-stat"><div class="store-stat-val">487</div><div class="store-stat-label">Orders MTD</div></div>
+        </div>
+        <div class="store-last-active">🟢 Active 2 min ago</div>
+        <a class="store-manage-link">Manage →</a>
+      </div>
+      <div class="store-card">
+        <div class="store-card-header">
+          <div>
+            <div class="store-name">Dr. Huang's Wellness</div>
+            <div class="store-slug">drhuang.purehrb.com</div>
+          </div>
+          <span class="badge badge-live">🟢 LIVE</span>
+        </div>
+        <div class="store-stats">
+          <div class="store-stat"><div class="store-stat-val">$12,840</div><div class="store-stat-label">Revenue MTD</div></div>
+          <div class="store-stat"><div class="store-stat-val">203</div><div class="store-stat-label">Orders MTD</div></div>
+        </div>
+        <div class="store-last-active">🟢 Active 1 hr ago</div>
+        <a class="store-manage-link">Manage →</a>
+      </div>
+      <div class="store-card">
+        <div class="store-card-header">
+          <div>
+            <div class="store-name">Flushing TCM Center</div>
+            <div class="store-slug">flushing.purehrb.com</div>
+          </div>
+          <span class="badge badge-draft">🟡 DRAFT</span>
+        </div>
+        <div class="store-stats">
+          <div class="store-stat"><div class="store-stat-val">$3,280</div><div class="store-stat-label">Revenue MTD</div></div>
+          <div class="store-stat"><div class="store-stat-val">47</div><div class="store-stat-label">Orders MTD</div></div>
+        </div>
+        <div class="store-last-active">⚙️ Onboarding Step 3</div>
+        <a class="store-manage-link" onclick="showPage('wizard')">Continue Onboarding →</a>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="table-wrap">
+      <div class="table-header">
+        <div class="table-title">Recent Orders</div>
+        <a class="btn btn-ghost btn-sm" onclick="showPage('orders')">View All →</a>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Order #</th><th>Store</th><th>Customer</th><th>Amount</th><th>Status</th><th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="order-num">PHH-20260312-028</span></td><td>pureHerbHealth</td><td>Sarah L.</td><td><b>$89.00</b></td><td><span class="badge badge-shipped">Shipped</span></td><td class="text-muted text-sm">14 min ago</td></tr>
+          <tr><td><span class="order-num">PHH-20260312-027</span></td><td>pureHerbHealth</td><td>Mike C.</td><td><b>$156.00</b></td><td><span class="badge badge-paid">Paid</span></td><td class="text-muted text-sm">31 min ago</td></tr>
+          <tr><td><span class="order-num">DRH-20260312-041</span></td><td>Dr. Huang</td><td>Jennifer W.</td><td><b>$234.00</b></td><td><span class="badge badge-delivered">Delivered</span></td><td class="text-muted text-sm">1 hr ago</td></tr>
+          <tr><td><span class="order-num">PHH-20260312-026</span></td><td>pureHerbHealth</td><td>David T.</td><td><b>$67.00</b></td><td><span class="badge badge-paid">Paid</span></td><td class="text-muted text-sm">2 hr ago</td></tr>
+          <tr><td><span class="order-num">FTC-20260312-009</span></td><td>Flushing TCM</td><td>Linda K.</td><td><b>$112.00</b></td><td><span class="badge badge-processing">Processing</span></td><td class="text-muted text-sm">2 hr ago</td></tr>
+          <tr><td><span class="order-num">DRH-20260312-040</span></td><td>Dr. Huang</td><td>Robert M.</td><td><b>$89.50</b></td><td><span class="badge badge-shipped">Shipped</span></td><td class="text-muted text-sm">3 hr ago</td></tr>
+          <tr><td><span class="order-num">PHH-20260312-025</span></td><td>pureHerbHealth</td><td>Yuki T.</td><td><b>$198.00</b></td><td><span class="badge badge-delivered">Delivered</span></td><td class="text-muted text-sm">4 hr ago</td></tr>
+          <tr><td><span class="order-num">FTC-20260312-008</span></td><td>Flushing TCM</td><td>Chang W.</td><td><b>$45.00</b></td><td><span class="badge badge-paid">Paid</span></td><td class="text-muted text-sm">5 hr ago</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: STORES ===== -->
+  <div class="page" id="page-stores">
+    <div class="page-header">
+      <div>
+        <div class="page-title">All Stores</div>
+        <div class="page-subtitle">Manage your multi-tenant store network</div>
+      </div>
+      <button class="btn btn-primary">➕ Add New Store</button>
+    </div>
+
+    <div class="filter-bar">
+      <div class="tab-pills" id="store-filter-tabs">
+        <button class="tab-pill active" onclick="filterStores('all', this)">All</button>
+        <button class="tab-pill" onclick="filterStores('live', this)">Live</button>
+        <button class="tab-pill" onclick="filterStores('draft', this)">Draft</button>
+        <button class="tab-pill" onclick="filterStores('pending', this)">Pending</button>
+        <button class="tab-pill" onclick="filterStores('inactive', this)">Inactive</button>
+      </div>
+      <input class="search-input" placeholder="Search stores…" style="margin-left:auto" />
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Store</th><th>Slug</th><th>Status</th><th>Revenue (MTD)</th><th>Orders (MTD)</th><th>Products</th><th>Created</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="stores-table-body">
+          <tr data-status="live">
+            <td>
+              <div style="font-weight:600;font-size:13px">pureHerbHealth.com</div>
+              <div style="font-size:11px;color:var(--text-muted)">Premium TCM wellness products</div>
+            </td>
+            <td><code style="font-size:11px;background:#f3f4f6;padding:2px 6px;border-radius:4px">purehrb</code></td>
+            <td><span class="badge badge-live">🟢 LIVE</span></td>
+            <td><b>$31,200</b></td>
+            <td>487</td>
+            <td>203</td>
+            <td class="text-muted text-sm">Jan 2026</td>
+            <td>
+              <div style="display:flex;gap:4px">
+                <button class="btn btn-sm btn-outline">Manage</button>
+                <button class="btn btn-sm btn-ghost">⚙️</button>
+                <button class="btn btn-sm btn-ghost">…</button>
+              </div>
+            </td>
+          </tr>
+          <tr data-status="live">
+            <td>
+              <div style="font-weight:600;font-size:13px">Dr. Huang's Wellness Store</div>
+              <div style="font-size:11px;color:var(--text-muted)">Traditional Chinese Medicine clinic store</div>
+            </td>
+            <td><code style="font-size:11px;background:#f3f4f6;padding:2px 6px;border-radius:4px">drhuang</code></td>
+            <td><span class="badge badge-live">🟢 LIVE</span></td>
+            <td><b>$12,840</b></td>
+            <td>203</td>
+            <td>156</td>
+            <td class="text-muted text-sm">Feb 2026</td>
+            <td>
+              <div style="display:flex;gap:4px">
+                <button class="btn btn-sm btn-outline">Manage</button>
+                <button class="btn btn-sm btn-ghost">⚙️</button>
+                <button class="btn btn-sm btn-ghost">…</button>
+              </div>
+            </td>
+          </tr>
+          <tr data-status="draft">
+            <td>
+              <div style="font-weight:600;font-size:13px">Flushing TCM Center</div>
+              <div style="font-size:11px;color:var(--text-muted)">NYC Flushing district TCM dispensary</div>
+            </td>
+            <td><code style="font-size:11px;background:#f3f4f6;padding:2px 6px;border-radius:4px">flushing</code></td>
+            <td><span class="badge badge-draft">🟡 DRAFT</span></td>
+            <td><b>$3,280</b></td>
+            <td>47</td>
+            <td>89</td>
+            <td class="text-muted text-sm">Mar 2026</td>
+            <td>
+              <div style="display:flex;gap:4px">
+                <button class="btn btn-sm btn-primary" onclick="showPage('wizard')">Continue Onboarding</button>
+                <button class="btn btn-sm btn-ghost">…</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-footer">
+        <span class="table-footer-info">Showing 3 stores · 2 Live · 1 Draft</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: ONBOARDING WIZARD ===== -->
+  <div class="page" id="page-wizard">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Store Onboarding — Flushing TCM Center</div>
+        <div class="page-subtitle">Complete all 7 steps to go live. Your progress is saved automatically.</div>
+      </div>
+    </div>
+
+    <div class="wizard-layout">
+      <!-- Left: Step Progress Panel -->
+      <div class="wizard-steps-panel">
+        <div class="wizard-steps-header">
+          <div class="wizard-progress-label">3 of 7 steps complete</div>
+          <div class="wizard-progress-bar"><div class="wizard-progress-fill" style="width:43%"></div></div>
+        </div>
+        <div class="wizard-steps-list">
+
+          <div class="wizard-step-item" onclick="showWizardStep(1)">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-circle wsc-done">✓</div>
+            <div class="wizard-step-info">
+              <div class="wsn">O1 Intake</div>
+              <div class="wsd">Store info &amp; contact details</div>
+              <div class="wss wss-done">Completed ✓</div>
+            </div>
+          </div>
+
+          <div class="wizard-step-item" onclick="showWizardStep(2)">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-circle wsc-done">✓</div>
+            <div class="wizard-step-info">
+              <div class="wsn">O2 Branding</div>
+              <div class="wsd">Logo, colors &amp; theme</div>
+              <div class="wss wss-done">Completed ✓</div>
+            </div>
+          </div>
+
+          <div class="wizard-step-item current" id="wstep-3" onclick="showWizardStep(3)">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-circle wsc-current">3</div>
+            <div class="wizard-step-info">
+              <div class="wsn">O3 Product Curation</div>
+              <div class="wsd">Select &amp; configure products</div>
+              <div class="wss wss-current">In Progress ●</div>
+            </div>
+          </div>
+
+          <div class="wizard-step-item" onclick="showWizardStep(4)">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-circle wsc-todo">4</div>
+            <div class="wizard-step-info">
+              <div class="wsn">O4 Stripe Connect</div>
+              <div class="wsd">Payment processing setup</div>
+              <div class="wss wss-todo">Not Started</div>
+            </div>
+          </div>
+
+          <div class="wizard-step-item" onclick="showWizardStep(5)">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-circle wsc-todo">5</div>
+            <div class="wizard-step-info">
+              <div class="wsn">O5 AI Configuration</div>
+              <div class="wsd">TCM AI &amp; constitution quiz</div>
+              <div class="wss wss-todo">Not Started</div>
+            </div>
+          </div>
+
+          <div class="wizard-step-item" onclick="showWizardStep(6)">
+            <div class="wizard-step-line"></div>
+            <div class="wizard-step-circle wsc-todo">6</div>
+            <div class="wizard-step-info">
+              <div class="wsn">O6 Review</div>
+              <div class="wsd">Preview your store</div>
+              <div class="wss wss-todo">Not Started</div>
+            </div>
+          </div>
+
+          <div class="wizard-step-item" onclick="showWizardStep(7)">
+            <div class="wizard-step-line" style="display:none"></div>
+            <div class="wizard-step-circle wsc-todo">7</div>
+            <div class="wizard-step-info">
+              <div class="wsn">O7 Go Live</div>
+              <div class="wsd">Launch &amp; DNS configuration</div>
+              <div class="wss wss-todo">Not Started</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right: Step Content -->
+      <div class="wizard-content" id="wizard-content-area">
+
+        <!-- O1 Completed Summary -->
+        <div id="wizard-step-1" style="display:none">
+          <div class="wizard-step-header">
+            <div class="wizard-step-chip">✓ O1 Complete</div>
+            <div class="wizard-step-title">Intake</div>
+            <div class="wizard-step-desc">Store information and contact details have been saved.</div>
+          </div>
+          <div class="completed-step-content">
+            <div class="completed-grid">
+              <div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Store Name</div>
+                  <div class="completed-field-value">Flushing TCM Center</div>
+                </div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Owner Name</div>
+                  <div class="completed-field-value">Dr. Li Wei</div>
+                </div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Email</div>
+                  <div class="completed-field-value">li.wei@flushingTCM.com</div>
+                </div>
+              </div>
+              <div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Phone</div>
+                  <div class="completed-field-value">+1 (718) 555-0142</div>
+                </div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Business Address</div>
+                  <div class="completed-field-value">136-21 Roosevelt Ave, Flushing, NY 11354</div>
+                </div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Store Slug</div>
+                  <div class="completed-field-value"><code style="background:#f3f4f6;padding:2px 8px;border-radius:4px;font-size:13px">flushing</code></div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;gap:8px">
+              <button class="btn btn-outline btn-sm">✏️ Edit Details</button>
+              <button class="btn btn-primary btn-sm" onclick="showWizardStep(2)">Go to O2 Branding →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- O2 Completed Summary -->
+        <div id="wizard-step-2" style="display:none">
+          <div class="wizard-step-header">
+            <div class="wizard-step-chip">✓ O2 Complete</div>
+            <div class="wizard-step-title">Branding</div>
+            <div class="wizard-step-desc">Logo, color palette and theme configuration saved.</div>
+          </div>
+          <div class="completed-step-content">
+            <div class="completed-grid">
+              <div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Brand Name (EN)</div>
+                  <div class="completed-field-value">Flushing TCM Center</div>
+                </div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Brand Name (ZH)</div>
+                  <div class="completed-field-value">法拉盛中医中心</div>
+                </div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Primary Color</div>
+                  <div class="completed-field-value">
+                    <span class="color-swatch">
+                      <span class="swatch" style="background:#1a6b45"></span>
+                      #1a6b45
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Theme</div>
+                  <div class="completed-field-value">Classic Jade</div>
+                </div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Accent Color</div>
+                  <div class="completed-field-value">
+                    <span class="color-swatch">
+                      <span class="swatch" style="background:#d4a853"></span>
+                      #d4a853
+                    </span>
+                  </div>
+                </div>
+                <div class="completed-field">
+                  <div class="completed-field-label">Logo</div>
+                  <div class="completed-field-value">flushing_logo_v2.png ✓</div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;gap:8px">
+              <button class="btn btn-outline btn-sm">✏️ Edit Branding</button>
+              <button class="btn btn-primary btn-sm" onclick="showWizardStep(3)">Go to O3 Products →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- O3 Product Curation (default) -->
+        <div id="wizard-step-3">
+          <div class="wizard-step-header">
+            <div class="wizard-step-chip">● O3 In Progress</div>
+            <div class="wizard-step-title">Product Curation</div>
+            <div class="wizard-step-desc">Select which products to feature in your store. You can always add more later.</div>
+          </div>
+
+          <div class="sub-tabs">
+            <div class="sub-tab active" onclick="switchSubTab(this)">All Products</div>
+            <div class="sub-tab" onclick="switchSubTab(this)">Selected <span style="background:#dcfce7;color:#166534;border-radius:10px;padding:0 6px;font-size:10px;font-weight:700;margin-left:3px">47</span></div>
+            <div class="sub-tab" onclick="switchSubTab(this)">TCM Categories</div>
+            <div class="sub-tab" onclick="switchSubTab(this)">Pricing Rules</div>
+          </div>
+
+          <div style="padding:16px 24px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input class="search-input" placeholder="Search herbs and products…" style="flex:1;min-width:180px" />
+            <select class="filter-select">
+              <option>Filter by element</option>
+              <option>Wood</option><option>Fire</option><option>Earth</option><option>Metal</option><option>Water</option>
+            </select>
+            <select class="filter-select">
+              <option>Filter by category</option>
+              <option>Tonic</option><option>Formula</option><option>Single Herb</option><option>Topical</option>
+            </select>
+          </div>
+
+          <div class="product-grid" id="product-grid">
+
+            <div class="product-card selected" onclick="toggleProduct(this)">
+              <input type="checkbox" class="product-card-cb" checked onclick="event.stopPropagation()">
+              <div class="product-card-img" style="background:#fef9c3">🌾</div>
+              <div class="product-card-body">
+                <div class="product-card-name">Astragalus Root</div>
+                <div class="product-card-zh">黄芪 · Huáng Qí</div>
+                <div class="product-card-meta">
+                  <span class="badge el-earth" style="font-size:10px;padding:2px 6px">Earth · Spleen</span>
+                </div>
+                <div class="product-card-meta">
+                  <span class="product-card-price">$24.99</span>
+                  <span class="product-card-stock">In stock: 248</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-card selected" onclick="toggleProduct(this)">
+              <input type="checkbox" class="product-card-cb" checked onclick="event.stopPropagation()">
+              <div class="product-card-img" style="background:#fce7f3">🍄</div>
+              <div class="product-card-body">
+                <div class="product-card-name">Reishi Mushroom</div>
+                <div class="product-card-zh">灵芝 · Líng Zhī</div>
+                <div class="product-card-meta">
+                  <span class="badge el-fire" style="font-size:10px;padding:2px 6px">Fire · Heart</span>
+                </div>
+                <div class="product-card-meta">
+                  <span class="product-card-price">$39.99</span>
+                  <span class="product-card-stock">In stock: 183</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-card selected" onclick="toggleProduct(this)">
+              <input type="checkbox" class="product-card-cb" checked onclick="event.stopPropagation()">
+              <div class="product-card-img" style="background:#dbeafe">🫐</div>
+              <div class="product-card-body">
+                <div class="product-card-name">Goji Berries</div>
+                <div class="product-card-zh">枸杞子 · Gǒu Qǐ Zǐ</div>
+                <div class="product-card-meta">
+                  <span class="badge el-water" style="font-size:10px;padding:2px 6px">Water · Kidney</span>
+                </div>
+                <div class="product-card-meta">
+                  <span class="product-card-price">$18.99</span>
+                  <span class="product-card-stock">In stock: 512</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-card" onclick="toggleProduct(this)">
+              <input type="checkbox" class="product-card-cb" onclick="event.stopPropagation()">
+              <div class="product-card-img" style="background:#dcfce7">🌿</div>
+              <div class="product-card-body">
+                <div class="product-card-name">Dong Quai</div>
+                <div class="product-card-zh">当归 · Dāng Guī</div>
+                <div class="product-card-meta">
+                  <span class="badge el-wood" style="font-size:10px;padding:2px 6px">Wood · Liver</span>
+                </div>
+                <div class="product-card-meta">
+                  <span class="product-card-price">$22.99</span>
+                  <span class="product-card-stock">In stock: 97</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-card selected" onclick="toggleProduct(this)">
+              <input type="checkbox" class="product-card-cb" checked onclick="event.stopPropagation()">
+              <div class="product-card-img" style="background:#f1f5f9">🫧</div>
+              <div class="product-card-body">
+                <div class="product-card-name">Schisandra Berry</div>
+                <div class="product-card-zh">五味子 · Wǔ Wèi Zǐ</div>
+                <div class="product-card-meta">
+                  <span class="badge el-metal" style="font-size:10px;padding:2px 6px">Metal · Lung</span>
+                </div>
+                <div class="product-card-meta">
+                  <span class="product-card-price">$29.99</span>
+                  <span class="product-card-stock">In stock: 164</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-card" onclick="toggleProduct(this)">
+              <input type="checkbox" class="product-card-cb" onclick="event.stopPropagation()">
+              <div class="product-card-img" style="background:#dcfce7">🌸</div>
+              <div class="product-card-body">
+                <div class="product-card-name">Chrysanthemum</div>
+                <div class="product-card-zh">菊花 · Jú Huā</div>
+                <div class="product-card-meta">
+                  <span class="badge el-wood" style="font-size:10px;padding:2px 6px">Wood · Liver</span>
+                </div>
+                <div class="product-card-meta">
+                  <span class="product-card-price">$14.99</span>
+                  <span class="product-card-stock">In stock: 338</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div style="padding:8px 24px 4px;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border)">
+            Showing 6 of 203 products · <b id="selected-count">47</b> selected
+          </div>
+
+          <div class="accordion" style="margin-top:12px">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              Configure store-specific pricing rules
+              <span class="accordion-arrow">▼</span>
+            </div>
+            <div class="accordion-body">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px">Markup Percentage</label>
+                  <input type="number" value="15" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:100%">
+                  <div style="font-size:11px;color:var(--text-muted);margin-top:3px">% above wholesale price</div>
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:4px">Currency</label>
+                  <select class="filter-select" style="width:100%;padding:8px 10px">
+                    <option>USD — US Dollar</option>
+                    <option>CAD — Canadian Dollar</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wizard-footer">
+            <button class="btn btn-ghost" onclick="showWizardStep(2)">← Back to O2 Branding</button>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-outline">Save Progress</button>
+              <button class="btn btn-primary" onclick="showWizardStep(4)">Save &amp; Continue to O4 →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- O4 Stripe Connect -->
+        <div id="wizard-step-4" style="display:none">
+          <div class="wizard-step-header">
+            <div class="wizard-step-chip">○ O4 Not Started</div>
+            <div class="wizard-step-title">Stripe Connect</div>
+            <div class="wizard-step-desc">Connect your Stripe account to accept payments in your store.</div>
+          </div>
+          <div class="completed-step-content" style="text-align:center;padding:40px">
+            <div style="font-size:48px;margin-bottom:16px">💳</div>
+            <div style="font-size:16px;font-weight:600;margin-bottom:8px">Connect Stripe Account</div>
+            <div style="font-size:13px;color:var(--text-secondary);max-width:360px;margin:0 auto 20px">Link your Stripe account to enable secure payment processing, automatic payouts, and revenue tracking.</div>
+            <button class="btn btn-primary" style="margin:0 auto">Connect with Stripe →</button>
+          </div>
+          <div class="wizard-footer">
+            <button class="btn btn-ghost" onclick="showWizardStep(3)">← Back to O3 Products</button>
+            <button class="btn btn-outline">Skip for Now</button>
+          </div>
+        </div>
+
+        <!-- O5+ placeholder -->
+        <div id="wizard-step-5" style="display:none">
+          <div class="wizard-step-header">
+            <div class="wizard-step-chip">○ O5 Not Started</div>
+            <div class="wizard-step-title">AI Configuration</div>
+            <div class="wizard-step-desc">Configure the TCM constitution quiz and AI recommendation engine.</div>
+          </div>
+          <div class="completed-step-content" style="text-align:center;padding:40px">
+            <div style="font-size:48px;margin-bottom:16px">🤖</div>
+            <div style="font-size:16px;font-weight:600;margin-bottom:8px">Configure TCM AI</div>
+            <div style="font-size:13px;color:var(--text-secondary);max-width:360px;margin:0 auto 20px">Set up your five elements constitution quiz, AI herb recommendation model, and personalization preferences.</div>
+            <button class="btn btn-primary" style="margin:0 auto">Begin AI Setup →</button>
+          </div>
+          <div class="wizard-footer">
+            <button class="btn btn-ghost" onclick="showWizardStep(4)">← Back to O4 Stripe</button>
+          </div>
+        </div>
+
+        <div id="wizard-step-6" style="display:none">
+          <div class="wizard-step-header">
+            <div class="wizard-step-chip">○ O6 Not Started</div>
+            <div class="wizard-step-title">Review</div>
+            <div class="wizard-step-desc">Preview your store before launch.</div>
+          </div>
+          <div class="completed-step-content" style="text-align:center;padding:40px">
+            <div style="font-size:48px;margin-bottom:16px">👁️</div>
+            <div style="font-size:16px;font-weight:600;margin-bottom:8px">Preview Your Store</div>
+            <div style="font-size:13px;color:var(--text-secondary);max-width:360px;margin:0 auto 20px">Complete steps O4 and O5 first to unlock the preview mode.</div>
+          </div>
+          <div class="wizard-footer">
+            <button class="btn btn-ghost" onclick="showWizardStep(5)">← Back to O5 AI</button>
+          </div>
+        </div>
+
+        <div id="wizard-step-7" style="display:none">
+          <div class="wizard-step-header">
+            <div class="wizard-step-chip">○ O7 Not Started</div>
+            <div class="wizard-step-title">Go Live</div>
+            <div class="wizard-step-desc">Launch your store and configure DNS settings.</div>
+          </div>
+          <div class="completed-step-content" style="text-align:center;padding:40px">
+            <div style="font-size:48px;margin-bottom:16px">🚀</div>
+            <div style="font-size:16px;font-weight:600;margin-bottom:8px">Ready to Launch?</div>
+            <div style="font-size:13px;color:var(--text-secondary);max-width:360px;margin:0 auto 20px">Complete all prior steps to unlock the Go Live button and publish your store.</div>
+          </div>
+          <div class="wizard-footer">
+            <button class="btn btn-ghost" onclick="showWizardStep(6)">← Back to O6 Review</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: ORDERS ===== -->
+  <div class="page" id="page-orders">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Orders</div>
+        <div class="page-subtitle">All orders across all stores</div>
+      </div>
+    </div>
+
+    <div class="stats-chips">
+      <div class="stats-chip active"><span class="chip-val">738</span><span class="chip-label">All Orders</span></div>
+      <div class="stats-chip"><span class="chip-val">28</span><span class="chip-label">Today</span></div>
+      <div class="stats-chip"><span class="chip-val">187</span><span class="chip-label">This Week</span></div>
+      <div class="stats-chip"><span class="chip-val">737</span><span class="chip-label">This Month</span></div>
+    </div>
+
+    <div class="filter-bar">
+      <input class="search-input" placeholder="Search by order # or customer…" />
+      <select class="filter-select">
+        <option>All Stores</option>
+        <option>pureHerbHealth</option>
+        <option>Dr. Huang's Wellness</option>
+        <option>Flushing TCM</option>
+      </select>
+      <select class="filter-select">
+        <option>All Statuses</option>
+        <option>Paid</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Refunded</option><option>Cancelled</option>
+      </select>
+      <input class="search-input" value="Mar 1 – Mar 12, 2026" style="min-width:160px;max-width:190px">
+      <button class="btn btn-outline btn-sm" style="margin-left:auto">⬇ Export CSV</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Order #</th><th>Store</th><th>Customer</th><th>Items</th><th>Amount</th><th>Status</th><th>Shipping</th><th>Date</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="orders-tbody">
+
+          <tr onclick="toggleOrder('ord1')" class="order-main-row">
+            <td><span class="order-num">PHH-20260312-028</span></td>
+            <td class="text-sm">pureHerbHealth</td>
+            <td class="text-sm">Sarah L.</td>
+            <td class="text-sm">2 items</td>
+            <td><b>$89.00</b></td>
+            <td><span class="badge badge-shipped">Shipped</span></td>
+            <td><span class="badge" style="background:#e0e7ff;color:#3730a3;font-size:10px">UPS</span></td>
+            <td class="text-muted text-sm">Mar 12, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord1-expand">
+            <td colspan="9">
+              <div class="expand-inner">
+                <div>
+                  <div class="expand-section-label">Line Items</div>
+                  <div class="line-item"><div class="line-img-ph" style="background:#fef9c3">🌾</div><div><div style="font-size:12px;font-weight:600">Astragalus Root 60ct</div><div style="font-size:11px;color:var(--text-muted)">$24.99 × 1</div></div></div>
+                  <div class="line-item"><div class="line-img-ph" style="background:#fce7f3">🍄</div><div><div style="font-size:12px;font-weight:600">Reishi Mushroom Capsules</div><div style="font-size:11px;color:var(--text-muted)">$39.99 × 1</div></div></div>
+                </div>
+                <div>
+                  <div class="expand-section-label">Shipping Address</div>
+                  <div style="font-size:12px;line-height:1.6">Sarah Lin<br>42 Elm Street, Apt 3B<br>New York, NY 10003<br>United States</div>
+                </div>
+                <div>
+                  <div class="expand-section-label">Tracking</div>
+                  <div style="font-size:12px;color:var(--brand);font-weight:600;margin-bottom:8px">1Z999AA10123456784</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <button class="btn btn-outline btn-sm">📄 Invoice</button>
+                    <button class="btn btn-outline btn-sm">🏷 Label</button>
+                    <button class="btn btn-danger-ghost btn-sm">↩ Refund</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr onclick="toggleOrder('ord2')" class="order-main-row">
+            <td><span class="order-num">PHH-20260312-027</span></td>
+            <td class="text-sm">pureHerbHealth</td>
+            <td class="text-sm">Mike C.</td>
+            <td class="text-sm">3 items</td>
+            <td><b>$156.00</b></td>
+            <td><span class="badge badge-paid">Paid</span></td>
+            <td><span class="badge" style="background:#dcfce7;color:#166534;font-size:10px">EasyPost</span></td>
+            <td class="text-muted text-sm">Mar 12, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord2-expand">
+            <td colspan="9">
+              <div class="expand-inner">
+                <div>
+                  <div class="expand-section-label">Line Items</div>
+                  <div class="line-item"><div class="line-img-ph" style="background:#dbeafe">🫐</div><div><div style="font-size:12px;font-weight:600">Goji Berry Premium 8oz</div><div style="font-size:11px;color:var(--text-muted)">$18.99 × 2</div></div></div>
+                  <div class="line-item"><div class="line-img-ph" style="background:#f1f5f9">🫧</div><div><div style="font-size:12px;font-weight:600">Schisandra Extract</div><div style="font-size:11px;color:var(--text-muted)">$29.99 × 1</div></div></div>
+                </div>
+                <div>
+                  <div class="expand-section-label">Shipping Address</div>
+                  <div style="font-size:12px;line-height:1.6">Michael Chen<br>88 Bayard Street<br>New York, NY 10013<br>United States</div>
+                </div>
+                <div>
+                  <div class="expand-section-label">Tracking</div>
+                  <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Label not yet generated</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <button class="btn btn-primary btn-sm">🏷 Generate Label</button>
+                    <button class="btn btn-outline btn-sm">📄 Invoice</button>
+                    <button class="btn btn-danger-ghost btn-sm">↩ Refund</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr onclick="toggleOrder('ord3')" class="order-main-row">
+            <td><span class="order-num">DRH-20260312-041</span></td>
+            <td class="text-sm">Dr. Huang</td>
+            <td class="text-sm">Jennifer W.</td>
+            <td class="text-sm">4 items</td>
+            <td><b>$234.00</b></td>
+            <td><span class="badge badge-delivered">Delivered</span></td>
+            <td><span class="badge" style="background:#fef3c7;color:#92400e;font-size:10px">FedEx</span></td>
+            <td class="text-muted text-sm">Mar 12, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord3-expand">
+            <td colspan="9">
+              <div class="expand-inner">
+                <div>
+                  <div class="expand-section-label">Line Items</div>
+                  <div class="line-item"><div class="line-img-ph" style="background:#dcfce7">🌿</div><div><div style="font-size:12px;font-weight:600">Dong Quai Tincture</div><div style="font-size:11px;color:var(--text-muted)">$22.99 × 2</div></div></div>
+                  <div class="line-item"><div class="line-img-ph" style="background:#fce7f3">🍄</div><div><div style="font-size:12px;font-weight:600">Reishi Spore Powder</div><div style="font-size:11px;color:var(--text-muted)">$89.99 × 1</div></div></div>
+                </div>
+                <div>
+                  <div class="expand-section-label">Shipping Address</div>
+                  <div style="font-size:12px;line-height:1.6">Jennifer Wong<br>250 Canal Street, Suite 4<br>New York, NY 10013<br>United States</div>
+                </div>
+                <div>
+                  <div class="expand-section-label">Tracking</div>
+                  <div style="font-size:12px;color:var(--brand);font-weight:600;margin-bottom:8px">7489065843210</div>
+                  <div style="font-size:11px;color:#16a34a;margin-bottom:8px">✓ Delivered Mar 11, 2026</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <button class="btn btn-outline btn-sm">📄 Invoice</button>
+                    <button class="btn btn-danger-ghost btn-sm">↩ Refund</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr onclick="toggleOrder('ord4')" class="order-main-row">
+            <td><span class="order-num">PHH-20260312-026</span></td><td class="text-sm">pureHerbHealth</td><td class="text-sm">David T.</td><td class="text-sm">1 item</td><td><b>$67.00</b></td>
+            <td><span class="badge badge-paid">Paid</span></td>
+            <td><span class="badge" style="background:#e0e7ff;color:#3730a3;font-size:10px">USPS</span></td>
+            <td class="text-muted text-sm">Mar 12, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord4-expand">
+            <td colspan="9"><div class="expand-inner"><div><div class="expand-section-label">Line Items</div><div class="line-item"><div class="line-img-ph" style="background:#fef9c3">🌾</div><div><div style="font-size:12px;font-weight:600">Astragalus 5:1 Extract</div><div style="font-size:11px;color:var(--text-muted)">$67.00 × 1</div></div></div></div><div><div class="expand-section-label">Shipping Address</div><div style="font-size:12px;line-height:1.6">David Tan<br>15 Mott Street<br>New York, NY 10013</div></div><div><div class="expand-section-label">Actions</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-primary btn-sm">🏷 Generate Label</button><button class="btn btn-outline btn-sm">📄 Invoice</button></div></div></div></td>
+          </tr>
+
+          <tr onclick="toggleOrder('ord5')" class="order-main-row">
+            <td><span class="order-num">FTC-20260312-009</span></td><td class="text-sm">Flushing TCM</td><td class="text-sm">Linda K.</td><td class="text-sm">2 items</td><td><b>$112.00</b></td>
+            <td><span class="badge badge-processing">Processing</span></td>
+            <td><span class="badge" style="background:#dcfce7;color:#166634;font-size:10px">EasyPost</span></td>
+            <td class="text-muted text-sm">Mar 12, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord5-expand">
+            <td colspan="9"><div class="expand-inner"><div><div class="expand-section-label">Line Items</div><div class="line-item"><div class="line-img-ph" style="background:#dcfce7">🌸</div><div><div style="font-size:12px;font-weight:600">Chrysanthemum Tea 50pk</div><div style="font-size:11px;color:var(--text-muted)">$14.99 × 2</div></div></div><div class="line-item"><div class="line-img-ph" style="background:#fef9c3">🌾</div><div><div style="font-size:12px;font-weight:600">Astragalus Root 30ct</div><div style="font-size:11px;color:var(--text-muted)">$24.99 × 1</div></div></div></div><div><div class="expand-section-label">Shipping Address</div><div style="font-size:12px;line-height:1.6">Linda Kim<br>136-15 Northern Blvd<br>Flushing, NY 11354</div></div><div><div class="expand-section-label">Actions</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-primary btn-sm">🏷 Generate Label</button><button class="btn btn-outline btn-sm">📄 Invoice</button></div></div></div></td>
+          </tr>
+
+          <tr onclick="toggleOrder('ord6')" class="order-main-row">
+            <td><span class="order-num">DRH-20260312-040</span></td><td class="text-sm">Dr. Huang</td><td class="text-sm">Robert M.</td><td class="text-sm">2 items</td><td><b>$89.50</b></td>
+            <td><span class="badge badge-shipped">Shipped</span></td>
+            <td><span class="badge" style="background:#e0e7ff;color:#3730a3;font-size:10px">UPS</span></td>
+            <td class="text-muted text-sm">Mar 12, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord6-expand">
+            <td colspan="9"><div class="expand-inner"><div><div class="expand-section-label">Line Items</div><div class="line-item"><div class="line-img-ph" style="background:#f1f5f9">🫧</div><div><div style="font-size:12px;font-weight:600">Schisandra Berry 4oz</div><div style="font-size:11px;color:var(--text-muted)">$29.99 × 2</div></div></div><div class="line-item"><div class="line-img-ph" style="background:#dbeafe">🫐</div><div><div style="font-size:12px;font-weight:600">Goji Berry 2oz</div><div style="font-size:11px;color:var(--text-muted)">$9.99 × 1</div></div></div></div><div><div class="expand-section-label">Shipping Address</div><div style="font-size:12px;line-height:1.6">Robert Mao<br>88 Henry St Apt 2<br>New York, NY 10002</div></div><div><div class="expand-section-label">Tracking</div><div style="font-size:12px;color:var(--brand);font-weight:600;margin-bottom:8px">1ZA99W610398765432</div><button class="btn btn-outline btn-sm">📄 Invoice</button></div></div></td>
+          </tr>
+
+          <tr onclick="toggleOrder('ord7')" class="order-main-row">
+            <td><span class="order-num">PHH-20260312-025</span></td><td class="text-sm">pureHerbHealth</td><td class="text-sm">Yuki T.</td><td class="text-sm">3 items</td><td><b>$198.00</b></td>
+            <td><span class="badge badge-delivered">Delivered</span></td>
+            <td><span class="badge" style="background:#fef3c7;color:#92400e;font-size:10px">FedEx</span></td>
+            <td class="text-muted text-sm">Mar 11, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord7-expand">
+            <td colspan="9"><div class="expand-inner"><div><div class="expand-section-label">Line Items</div><div class="line-item"><div class="line-img-ph" style="background:#fce7f3">🍄</div><div><div style="font-size:12px;font-weight:600">Reishi Mushroom 120ct</div><div style="font-size:11px;color:var(--text-muted)">$39.99 × 2</div></div></div><div class="line-item"><div class="line-img-ph" style="background:#dbeafe">🫐</div><div><div style="font-size:12px;font-weight:600">Goji Berries 8oz</div><div style="font-size:11px;color:var(--text-muted)">$18.99 × 1</div></div></div></div><div><div class="expand-section-label">Shipping Address</div><div style="font-size:12px;line-height:1.6">Yuki Tanaka<br>220 E 23rd St, Apt 8F<br>New York, NY 10010</div></div><div><div class="expand-section-label">Tracking</div><div style="font-size:12px;color:var(--brand);font-weight:600;margin-bottom:4px">7742183991230</div><div style="font-size:11px;color:#16a34a">✓ Delivered Mar 11, 2026</div></div></div></td>
+          </tr>
+
+          <tr onclick="toggleOrder('ord8')" class="order-main-row">
+            <td><span class="order-num">FTC-20260312-008</span></td><td class="text-sm">Flushing TCM</td><td class="text-sm">Chang W.</td><td class="text-sm">1 item</td><td><b>$45.00</b></td>
+            <td><span class="badge badge-paid">Paid</span></td>
+            <td><span class="badge" style="background:#f3f4f6;color:#6b7280;font-size:10px">USPS</span></td>
+            <td class="text-muted text-sm">Mar 11, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord8-expand">
+            <td colspan="9"><div class="expand-inner"><div><div class="expand-section-label">Line Items</div><div class="line-item"><div class="line-img-ph" style="background:#fef9c3">🌾</div><div><div style="font-size:12px;font-weight:600">Astragalus Powder 4oz</div><div style="font-size:11px;color:var(--text-muted)">$45.00 × 1</div></div></div></div><div><div class="expand-section-label">Shipping Address</div><div style="font-size:12px;line-height:1.6">Chang Wang<br>41-22 Kissena Blvd<br>Flushing, NY 11355</div></div><div><div class="expand-section-label">Actions</div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-primary btn-sm">🏷 Generate Label</button><button class="btn btn-outline btn-sm">📄 Invoice</button></div></div></div></td>
+          </tr>
+
+          <tr onclick="toggleOrder('ord9')" class="order-main-row">
+            <td><span class="order-num">DRH-20260311-039</span></td><td class="text-sm">Dr. Huang</td><td class="text-sm">Amy L.</td><td class="text-sm">2 items</td><td><b>$77.00</b></td>
+            <td><span class="badge badge-refunded">Refunded</span></td>
+            <td><span class="badge" style="background:#f3f4f6;color:#6b7280;font-size:10px">UPS</span></td>
+            <td class="text-muted text-sm">Mar 11, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord9-expand">
+            <td colspan="9"><div class="expand-inner"><div><div class="expand-section-label">Line Items</div><div class="line-item"><div class="line-img-ph" style="background:#dcfce7">🌿</div><div><div style="font-size:12px;font-weight:600">Dong Quai Capsules</div><div style="font-size:11px;color:var(--text-muted)">$22.99 × 2</div></div></div></div><div><div class="expand-section-label">Refund Reason</div><div style="font-size:12px;color:#991b1b">Item damaged in transit. Full refund issued Mar 12.</div></div><div><div class="expand-section-label">Actions</div><button class="btn btn-outline btn-sm">📄 Invoice</button></div></div></td>
+          </tr>
+
+          <tr onclick="toggleOrder('ord10')" class="order-main-row">
+            <td><span class="order-num">PHH-20260311-024</span></td><td class="text-sm">pureHerbHealth</td><td class="text-sm">Helen Z.</td><td class="text-sm">5 items</td><td><b>$312.50</b></td>
+            <td><span class="badge badge-delivered">Delivered</span></td>
+            <td><span class="badge" style="background:#fef3c7;color:#92400e;font-size:10px">FedEx</span></td>
+            <td class="text-muted text-sm">Mar 11, 2026</td>
+            <td><button class="btn btn-ghost btn-sm">···</button></td>
+          </tr>
+          <tr class="order-expand" id="ord10-expand">
+            <td colspan="9"><div class="expand-inner"><div><div class="expand-section-label">Line Items</div><div class="line-item"><div class="line-img-ph" style="background:#fce7f3">🍄</div><div><div style="font-size:12px;font-weight:600">Reishi Extract 2oz</div><div style="font-size:11px;color:var(--text-muted)">$89.99 × 1</div></div></div><div class="line-item"><div class="line-img-ph" style="background:#fef9c3">🌾</div><div><div style="font-size:12px;font-weight:600">Astragalus Bundle</div><div style="font-size:11px;color:var(--text-muted)">$49.99 × 2</div></div></div></div><div><div class="expand-section-label">Shipping Address</div><div style="font-size:12px;line-height:1.6">Helen Zhang<br>535 W 111th St, Apt 6E<br>New York, NY 10025</div></div><div><div class="expand-section-label">Tracking</div><div style="font-size:12px;color:var(--brand);font-weight:600;margin-bottom:4px">7489223944512</div><div style="font-size:11px;color:#16a34a">✓ Delivered Mar 12, 2026</div></div></div></td>
+          </tr>
+
+        </tbody>
+      </table>
+      <div class="table-footer">
+        <span class="table-footer-info">Showing 1–10 of 738 orders</span>
+        <div class="pagination">
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn" style="width:auto;padding:0 8px">…</button>
+          <button class="page-btn">74</button>
+          <button class="page-btn">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: PRODUCTS ===== -->
+  <div class="page" id="page-products">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Products</div>
+        <div class="page-subtitle">All products across all stores</div>
+      </div>
+      <button class="btn btn-primary">➕ Add Product</button>
+    </div>
+
+    <div class="stats-chips" style="margin-bottom:16px">
+      <div class="stats-chip active"><span class="chip-val">486</span><span class="chip-label">Total</span></div>
+      <div class="stats-chip"><span class="chip-val">423</span><span class="chip-label">Active</span></div>
+      <div class="stats-chip"><span class="chip-val">43</span><span class="chip-label">Draft</span></div>
+      <div class="stats-chip"><span class="chip-val" style="color:#dc2626">20</span><span class="chip-label">Out of Stock</span></div>
+    </div>
+
+    <div class="filter-bar">
+      <input class="search-input" placeholder="Search products…" />
+      <select class="filter-select">
+        <option>All Stores</option><option>pureHerbHealth</option><option>Dr. Huang</option><option>Flushing TCM</option>
+      </select>
+      <select class="filter-select">
+        <option>All Elements</option><option>Wood</option><option>Fire</option><option>Earth</option><option>Metal</option><option>Water</option>
+      </select>
+      <select class="filter-select">
+        <option>All Statuses</option><option>Active</option><option>Draft</option><option>Out of Stock</option>
+      </select>
+      <select class="filter-select">
+        <option>Sort: Newest</option><option>Best Selling</option><option>Price Low–High</option><option>Price High–Low</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th><th>Store</th><th>Element</th><th>TCM Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                <div class="prod-img-ph" style="background:#fef9c3">🌾</div>
+                <div>
+                  <div class="prod-en">Astragalus Root Extract</div>
+                  <div class="prod-zh">黄芪提取物</div>
+                  <div class="prod-pin">Huáng Qí Tí Qǔ Wù</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm">pureHerbHealth</td>
+            <td><span class="badge el-earth">Earth</span></td>
+            <td class="text-sm">Tonic</td>
+            <td><b>$34.99</b></td>
+            <td class="text-sm">248</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm">✏️</button><button class="btn btn-ghost btn-sm">👁</button><button class="btn btn-ghost btn-sm">⧉</button><button class="btn btn-ghost btn-sm">…</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                <div class="prod-img-ph" style="background:#fce7f3">🍄</div>
+                <div>
+                  <div class="prod-en">Reishi Mushroom Capsules</div>
+                  <div class="prod-zh">灵芝胶囊</div>
+                  <div class="prod-pin">Líng Zhī Jiāo Náng</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm">pureHerbHealth</td>
+            <td><span class="badge el-fire">Fire</span></td>
+            <td class="text-sm">Single Herb</td>
+            <td><b>$39.99</b></td>
+            <td class="text-sm">183</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm">✏️</button><button class="btn btn-ghost btn-sm">👁</button><button class="btn btn-ghost btn-sm">⧉</button><button class="btn btn-ghost btn-sm">…</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                <div class="prod-img-ph" style="background:#dbeafe">🫐</div>
+                <div>
+                  <div class="prod-en">Goji Berry Premium</div>
+                  <div class="prod-zh">枸杞子特级</div>
+                  <div class="prod-pin">Gǒu Qǐ Zǐ Tè Jí</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm">Dr. Huang</td>
+            <td><span class="badge el-water">Water</span></td>
+            <td class="text-sm">Tonic</td>
+            <td><b>$18.99</b></td>
+            <td class="text-sm">512</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm">✏️</button><button class="btn btn-ghost btn-sm">👁</button><button class="btn btn-ghost btn-sm">⧉</button><button class="btn btn-ghost btn-sm">…</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                <div class="prod-img-ph" style="background:#dcfce7">🌿</div>
+                <div>
+                  <div class="prod-en">Dong Quai Tincture</div>
+                  <div class="prod-zh">当归酊剂</div>
+                  <div class="prod-pin">Dāng Guī Dīng Jì</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm">Dr. Huang</td>
+            <td><span class="badge el-wood">Wood</span></td>
+            <td class="text-sm">Single Herb</td>
+            <td><b>$27.99</b></td>
+            <td class="text-sm">97</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm">✏️</button><button class="btn btn-ghost btn-sm">👁</button><button class="btn btn-ghost btn-sm">⧉</button><button class="btn btn-ghost btn-sm">…</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                <div class="prod-img-ph" style="background:#f1f5f9">🫧</div>
+                <div>
+                  <div class="prod-en">Schisandra Extract</div>
+                  <div class="prod-zh">五味子提取物</div>
+                  <div class="prod-pin">Wǔ Wèi Zǐ Tí Qǔ Wù</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm">pureHerbHealth</td>
+            <td><span class="badge el-metal">Metal</span></td>
+            <td class="text-sm">Tonic</td>
+            <td><b>$29.99</b></td>
+            <td class="text-sm">164</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm">✏️</button><button class="btn btn-ghost btn-sm">👁</button><button class="btn btn-ghost btn-sm">⧉</button><button class="btn btn-ghost btn-sm">…</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                <div class="prod-img-ph" style="background:#dcfce7">🌸</div>
+                <div>
+                  <div class="prod-en">Chrysanthemum Tea</div>
+                  <div class="prod-zh">菊花茶</div>
+                  <div class="prod-pin">Jú Huā Chá</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm">Flushing TCM</td>
+            <td><span class="badge el-wood">Wood</span></td>
+            <td class="text-sm">Single Herb</td>
+            <td><b>$14.99</b></td>
+            <td class="text-sm">338</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm">✏️</button><button class="btn btn-ghost btn-sm">👁</button><button class="btn btn-ghost btn-sm">⧉</button><button class="btn btn-ghost btn-sm">…</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                <div class="prod-img-ph" style="background:#fef3c7">🪨</div>
+                <div>
+                  <div class="prod-en">Four Gentlemen Formula</div>
+                  <div class="prod-zh">四君子汤</div>
+                  <div class="prod-pin">Sì Jūn Zǐ Tāng</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm">Dr. Huang</td>
+            <td><span class="badge el-earth">Earth</span></td>
+            <td class="text-sm">Formula</td>
+            <td><b>$54.99</b></td>
+            <td style="color:#dc2626;font-weight:600;font-size:13px">8</td>
+            <td><span class="badge badge-draft">Draft</span></td>
+            <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm">✏️</button><button class="btn btn-ghost btn-sm">👁</button><button class="btn btn-ghost btn-sm">⧉</button><button class="btn btn-ghost btn-sm">…</button></div></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-name-cell">
+                <div class="prod-img-ph" style="background:#dbeafe">💧</div>
+                <div>
+                  <div class="prod-en">He Shou Wu Root</div>
+                  <div class="prod-zh">何首乌</div>
+                  <div class="prod-pin">Hé Shǒu Wū</div>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm">pureHerbHealth</td>
+            <td><span class="badge el-water">Water</span></td>
+            <td class="text-sm">Tonic</td>
+            <td><b>$44.99</b></td>
+            <td style="color:#dc2626;font-weight:600;font-size:13px">3</td>
+            <td><span class="badge" style="background:#fee2e2;color:#991b1b">Low Stock</span></td>
+            <td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm">✏️</button><button class="btn btn-ghost btn-sm">👁</button><button class="btn btn-ghost btn-sm">⧉</button><button class="btn btn-ghost btn-sm">…</button></div></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-footer">
+        <span class="table-footer-info">Showing 1–8 of 486 products</span>
+        <div class="pagination">
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn" style="width:auto;padding:0 8px">…</button>
+          <button class="page-btn">61</button>
+          <button class="page-btn">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ===== PAGE SWITCHER =====
+const pages = {
+  dashboard: { breadcrumb: '<b>Dashboard</b>', navId: 'nav-dashboard' },
+  stores: { breadcrumb: '<span>Stores</span> › <b>All Stores</b>', navId: 'nav-stores' },
+  wizard: { breadcrumb: '<span>Stores</span> › <b>Onboarding Wizard</b>', navId: 'nav-wizard' },
+  orders: { breadcrumb: '<span>Commerce</span> › <b>Orders</b>', navId: 'nav-orders' },
+  products: { breadcrumb: '<span>Commerce</span> › <b>Products</b>', navId: 'nav-products' },
+};
+
+function showPage(name) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Show target page
+  const pg = document.getElementById('page-' + name);
+  if (pg) pg.classList.add('active');
+  // Update breadcrumb
+  const cfg = pages[name];
+  if (cfg) document.getElementById('breadcrumb').innerHTML = cfg.breadcrumb;
+  // Update sidebar active
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navEl = document.getElementById(cfg.navId);
+  if (navEl) navEl.classList.add('active');
+  // Update proto-bar active
+  document.querySelectorAll('#proto-bar button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#proto-bar button').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + name + "'")) {
+      b.classList.add('active');
+    }
+  });
+  // Scroll to top
+  window.scrollTo(0, 0);
+}
+
+// ===== WIZARD STEPS =====
+function showWizardStep(n) {
+  // Hide all step content panels
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById('wizard-step-' + i);
+    if (el) el.style.display = 'none';
+  }
+  const target = document.getElementById('wizard-step-' + n);
+  if (target) target.style.display = 'block';
+
+  // Update left panel current highlight
+  document.querySelectorAll('.wizard-step-item').forEach((item, idx) => {
+    item.classList.remove('current');
+    if (idx + 1 === n) item.classList.add('current');
+  });
+}
+
+// ===== ORDER ROW EXPAND =====
+function toggleOrder(id) {
+  const row = document.getElementById(id + '-expand');
+  if (!row) return;
+  const isOpen = row.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.order-expand').forEach(r => r.classList.remove('open'));
+  if (!isOpen) row.classList.add('open');
+}
+
+// ===== PRODUCT CARD TOGGLE =====
+let selectedCount = 47;
+function toggleProduct(card) {
+  const isSelected = card.classList.contains('selected');
+  const cb = card.querySelector('.product-card-cb');
+  if (isSelected) {
+    card.classList.remove('selected');
+    if (cb) cb.checked = false;
+    selectedCount = Math.max(0, selectedCount - 1);
+  } else {
+    card.classList.add('selected');
+    if (cb) cb.checked = true;
+    selectedCount++;
+  }
+  const countEl = document.getElementById('selected-count');
+  if (countEl) countEl.textContent = selectedCount;
+}
+
+// ===== STORE FILTER TABS =====
+function filterStores(status, btn) {
+  // Update tab pills
+  document.querySelectorAll('#store-filter-tabs .tab-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Filter rows
+  const rows = document.querySelectorAll('#stores-table-body tr');
+  rows.forEach(row => {
+    if (status === 'all' || row.getAttribute('data-status') === status) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+// ===== SUB TABS =====
+function switchSubTab(el) {
+  const parent = el.closest('.sub-tabs');
+  parent.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===== ACCORDION =====
+function toggleAccordion(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.accordion-arrow');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+}
+
+// ===== STATS CHIP TOGGLE =====
+document.querySelectorAll('.stats-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    const parent = this.closest('.stats-chips');
+    parent.querySelectorAll('.stats-chip').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

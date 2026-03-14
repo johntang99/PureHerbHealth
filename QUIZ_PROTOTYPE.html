@@ -1,0 +1,1651 @@
+<!-- Theme sourced from theme.json — keep in sync -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TCM Constitution Quiz — pureHerbHealth Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* =============================================
+       DESIGN SYSTEM — pureHerbHealth v1.0
+       Theme sourced from theme.json — keep in sync
+    ============================================= */
+    :root {
+      --brand-50:  #f0fdf4;
+      --brand-100: #dcfce7;
+      --brand-200: #bbf7d0;
+      --brand-300: #86efac;
+      --brand-400: #4ade80;
+      --brand-500: #2D8C54;
+      --brand-600: #22764a;
+      --brand-700: #166534;
+      --brand-800: #14532d;
+      --brand-900: #052e16;
+      --accent-50:  #fffbeb;
+      --accent-100: #fef3c7;
+      --accent-200: #fde68a;
+      --accent-300: #fcd34d;
+      --accent-400: #fbbf24;
+      --accent-500: #D4A843;
+      --accent-600: #b45309;
+      --accent-700: #92400e;
+      --neutral-50:  #fafafa;
+      --neutral-100: #f5f5f5;
+      --neutral-200: #e5e5e5;
+      --neutral-300: #d4d4d4;
+      --neutral-400: #a3a3a3;
+      --neutral-500: #737373;
+      --neutral-600: #525252;
+      --neutral-700: #404040;
+      --neutral-800: #262626;
+      --neutral-900: #171717;
+      --font-heading: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-chinese: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-2xl: 24px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.04);
+      --shadow-brand: 0 4px 14px rgba(45,140,84,0.30);
+      --shadow-gold: 0 4px 14px rgba(212,168,67,0.35);
+      --transition-fast: 150ms ease;
+      --transition-base: 250ms ease;
+      --transition-slow: 400ms ease;
+      /* Constitution colors */
+      --const-balanced: #16a34a;
+      --const-qi-deficient: #D4A843;
+      --const-yang-deficient: #3182CE;
+      --const-yin-deficient: #E53E3E;
+      --const-phlegm-damp: #737373;
+      --const-damp-heat: #ea580c;
+      --const-blood-stasis: #7c3aed;
+      --const-qi-stagnant: #0284c7;
+      --const-allergic: #dc2626;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--neutral-100);
+      color: var(--neutral-700);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    body.zh { font-family: var(--font-chinese), var(--font-body); }
+    body.zh h1, body.zh h2, body.zh h3, body.zh h4 {
+      font-family: var(--font-chinese), var(--font-heading);
+      font-weight: 500;
+    }
+    h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--neutral-900); line-height: 1.2; }
+
+    a { color: var(--brand-600); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* =============================================
+       PROTOTYPE BAR
+    ============================================= */
+    #proto-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      background: #1a1a1a; color: #e5e5e5;
+      display: flex; align-items: center; gap: 0;
+      padding: 0 16px; height: 44px;
+      font-family: var(--font-body); font-size: 12px;
+    }
+    .proto-title {
+      color: var(--accent-500); font-weight: 700; font-size: 11px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      white-space: nowrap; margin-right: 16px;
+    }
+    .proto-tabs { display: flex; gap: 2px; flex: 1; }
+    .proto-tab {
+      padding: 6px 14px; border-radius: var(--radius-sm);
+      background: transparent; border: 1px solid #333;
+      color: #a3a3a3; font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+    .proto-tab:hover { background: #2a2a2a; color: #e5e5e5; }
+    .proto-tab.active { background: var(--brand-700); border-color: var(--brand-600); color: white; }
+    .proto-lang-toggle { display: flex; gap: 2px; margin: 0 12px; }
+    .proto-lang-btn {
+      padding: 4px 10px; border-radius: var(--radius-sm);
+      background: transparent; border: 1px solid #444;
+      color: #888; font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all var(--transition-fast);
+    }
+    .proto-lang-btn.active { background: var(--brand-600); border-color: var(--brand-500); color: white; }
+    .proto-note { color: #555; font-size: 11px; white-space: nowrap; margin-left: auto; }
+
+    /* =============================================
+       SHARED TOPBAR + HEADER
+    ============================================= */
+    #site-wrapper { margin-top: 44px; }
+
+    .topbar {
+      background: var(--brand-700); color: var(--brand-200);
+      font-size: 13px; padding: 8px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .topbar span { color: var(--accent-300); font-weight: 600; }
+    .topbar-right { color: var(--brand-300); }
+
+    header {
+      background: white; border-bottom: 1px solid var(--neutral-200);
+      position: sticky; top: 44px; z-index: 200;
+      box-shadow: var(--shadow-sm);
+    }
+    .header-inner {
+      display: flex; align-items: center; gap: 20px;
+      padding: 14px 24px; max-width: 1280px; margin: 0 auto;
+    }
+    .logo {
+      font-family: var(--font-heading); font-size: 22px;
+      color: var(--brand-600); text-decoration: none;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    }
+    .logo:hover { text-decoration: none; }
+    nav { display: flex; gap: 2px; flex: 1; }
+    nav a {
+      padding: 7px 13px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 500; color: var(--neutral-600);
+      text-decoration: none; transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+    nav a:hover { background: var(--neutral-100); color: var(--brand-600); text-decoration: none; }
+    nav a.active { color: var(--brand-600); background: var(--brand-50); }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .search-box {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--neutral-100); border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-full); padding: 7px 14px;
+      font-size: 14px; color: var(--neutral-400); min-width: 200px;
+      cursor: text;
+    }
+    .lang-switcher {
+      display: flex; gap: 2px;
+      background: var(--neutral-100); border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-full); padding: 3px;
+    }
+    .lang-btn {
+      padding: 4px 11px; border-radius: var(--radius-full);
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: none; background: transparent; color: var(--neutral-500);
+      transition: all var(--transition-fast);
+    }
+    .lang-btn.active { background: white; color: var(--brand-600); box-shadow: var(--shadow-sm); }
+    .cart-btn {
+      position: relative; background: var(--brand-500); color: white;
+      border: none; border-radius: var(--radius-md); padding: 8px 16px;
+      font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      transition: background var(--transition-fast);
+    }
+    .cart-btn:hover { background: var(--brand-600); }
+    .cart-count {
+      background: var(--accent-500); color: white;
+      border-radius: var(--radius-full); font-size: 11px; font-weight: 700;
+      padding: 1px 6px; line-height: 1.4;
+    }
+
+    /* =============================================
+       PAGE SECTIONS
+    ============================================= */
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    /* =============================================
+       PAGE 1: QUIZ QUESTIONS
+    ============================================= */
+    .quiz-wrapper {
+      max-width: 1280px; margin: 0 auto; padding: 40px 24px;
+      display: grid; grid-template-columns: 1fr 280px; gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .quiz-wrapper { grid-template-columns: 1fr; }
+      .quiz-side-panel { display: none; }
+    }
+
+    /* Intro Banner */
+    #quiz-intro {
+      grid-column: 1 / -1;
+      display: flex; justify-content: center;
+    }
+    .intro-card {
+      background: white; border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-lg); padding: 56px 48px;
+      max-width: 720px; width: 100%; text-align: center;
+      border: 1px solid var(--neutral-200);
+    }
+    .intro-icon { font-size: 64px; margin-bottom: 20px; display: block; }
+    .intro-card h2 {
+      font-size: 36px; color: var(--neutral-900); margin-bottom: 8px;
+    }
+    .intro-card .zh-sub {
+      font-family: var(--font-chinese); font-size: 22px; color: var(--brand-600);
+      margin-bottom: 16px; font-weight: 400;
+    }
+    .intro-card p {
+      font-size: 16px; color: var(--neutral-500); line-height: 1.7;
+      max-width: 520px; margin: 0 auto 24px;
+    }
+    .intro-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--brand-50); border: 1px solid var(--brand-200);
+      color: var(--brand-700); border-radius: var(--radius-full);
+      padding: 6px 14px; font-size: 13px; font-weight: 600;
+    }
+    .btn-start-quiz {
+      background: var(--brand-500); color: white; border: none;
+      padding: 16px 40px; border-radius: var(--radius-lg);
+      font-size: 17px; font-weight: 700; letter-spacing: 0.01em;
+      box-shadow: var(--shadow-brand); transition: all var(--transition-base);
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .btn-start-quiz:hover { background: var(--brand-600); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,140,84,0.4); }
+    .intro-link { display: block; margin-top: 16px; font-size: 14px; color: var(--neutral-500); }
+    .intro-link:hover { color: var(--brand-600); }
+
+    /* Question Card */
+    #quiz-questions { display: none; }
+    #quiz-questions.visible { display: block; }
+
+    .progress-header {
+      background: white; border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm); padding: 20px 24px;
+      margin-bottom: 20px; border: 1px solid var(--neutral-200);
+    }
+    .progress-top {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px;
+    }
+    .progress-label { font-size: 14px; font-weight: 600; color: var(--neutral-700); }
+    .progress-pct { font-size: 13px; color: var(--brand-600); font-weight: 600; }
+    .progress-bar-track {
+      background: var(--neutral-200); border-radius: var(--radius-full);
+      height: 8px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
+      height: 100%; border-radius: var(--radius-full);
+      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .question-card {
+      background: white; border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md); padding: 36px 36px 28px;
+      border: 1px solid var(--neutral-200);
+    }
+    .q-number-chip {
+      display: inline-flex; align-items: center;
+      background: var(--brand-50); border: 1px solid var(--brand-200);
+      color: var(--brand-700); border-radius: var(--radius-full);
+      padding: 4px 14px; font-size: 13px; font-weight: 700;
+      margin-bottom: 16px; letter-spacing: 0.04em;
+    }
+    .question-text {
+      font-family: var(--font-heading); font-size: 26px;
+      color: var(--neutral-900); line-height: 1.3; margin-bottom: 6px;
+    }
+    .question-text-zh {
+      font-family: var(--font-chinese); font-size: 18px;
+      color: var(--neutral-600); margin-bottom: 8px; font-weight: 400;
+    }
+    .tcm-context {
+      font-style: italic; font-size: 13px; color: var(--neutral-400);
+      margin-bottom: 28px; display: flex; align-items: center; gap: 6px;
+    }
+    .tcm-context::before { content: '☯'; font-style: normal; color: var(--brand-400); }
+
+    .answer-options { display: flex; flex-direction: column; gap: 12px; }
+    .answer-option {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 18px 20px; border-radius: var(--radius-lg);
+      border: 2px solid var(--neutral-200);
+      background: white; cursor: pointer;
+      transition: all var(--transition-base);
+    }
+    .answer-option:hover {
+      border-color: var(--brand-300); background: var(--brand-50);
+      box-shadow: var(--shadow-sm);
+    }
+    .answer-option.selected {
+      border-color: var(--brand-500); background: var(--brand-50);
+      box-shadow: 0 0 0 3px rgba(45,140,84,0.12);
+    }
+    .answer-letter {
+      width: 32px; height: 32px; min-width: 32px;
+      border-radius: var(--radius-full);
+      background: var(--neutral-100); border: 2px solid var(--neutral-300);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: var(--neutral-500);
+      transition: all var(--transition-base);
+    }
+    .answer-option.selected .answer-letter {
+      background: var(--brand-500); border-color: var(--brand-500); color: white;
+    }
+    .answer-option:hover:not(.selected) .answer-letter {
+      border-color: var(--brand-400); color: var(--brand-600);
+    }
+    .answer-text { flex: 1; }
+    .answer-en { font-size: 15px; color: var(--neutral-800); font-weight: 500; line-height: 1.4; }
+    .answer-zh { font-size: 13px; color: var(--neutral-500); font-family: var(--font-chinese); margin-top: 3px; }
+
+    .q-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 28px; padding-top: 20px;
+      border-top: 1px solid var(--neutral-100);
+    }
+    .btn-prev {
+      background: white; color: var(--neutral-700);
+      border: 1px solid var(--neutral-300); border-radius: var(--radius-md);
+      padding: 10px 22px; font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      transition: all var(--transition-fast);
+    }
+    .btn-prev:hover { border-color: var(--brand-400); color: var(--brand-600); }
+    .btn-prev:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-next {
+      background: var(--brand-500); color: white;
+      border: none; border-radius: var(--radius-md);
+      padding: 10px 24px; font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      box-shadow: var(--shadow-brand);
+      transition: all var(--transition-fast);
+    }
+    .btn-next:hover { background: var(--brand-600); }
+    .save-progress { font-size: 13px; color: var(--neutral-400); cursor: pointer; transition: color var(--transition-fast); }
+    .save-progress:hover { color: var(--brand-600); }
+
+    /* Side Progress Panel */
+    .quiz-side-panel {
+      background: white; border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm); padding: 20px;
+      border: 1px solid var(--neutral-200);
+      position: sticky; top: 120px;
+    }
+    .side-panel-title { font-size: 12px; font-weight: 700; color: var(--neutral-500); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+    .side-question-list { display: flex; flex-direction: column; gap: 6px; }
+    .side-q-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 10px; border-radius: var(--radius-md);
+      font-size: 13px; color: var(--neutral-500); cursor: pointer;
+      transition: all var(--transition-fast); border: 1px solid transparent;
+    }
+    .side-q-item:hover { background: var(--neutral-100); color: var(--neutral-700); }
+    .side-q-item.current {
+      background: var(--brand-50); border-color: var(--brand-200);
+      color: var(--brand-700); font-weight: 600;
+    }
+    .side-q-item.answered { color: var(--neutral-700); }
+    .side-q-dot {
+      width: 22px; height: 22px; min-width: 22px; border-radius: var(--radius-full);
+      border: 2px solid var(--neutral-300);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: var(--neutral-400);
+      transition: all var(--transition-fast);
+    }
+    .side-q-item.current .side-q-dot {
+      background: var(--brand-500); border-color: var(--brand-500); color: white;
+    }
+    .side-q-item.answered .side-q-dot {
+      background: var(--brand-100); border-color: var(--brand-400); color: var(--brand-600);
+    }
+
+    /* =============================================
+       PAGE 2: SCORING ANIMATION
+    ============================================= */
+    .scoring-page {
+      min-height: calc(100vh - 44px - 120px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 60px 24px; text-align: center;
+      background: linear-gradient(160deg, var(--brand-50) 0%, white 50%, var(--accent-50) 100%);
+    }
+
+    /* Five Elements Pentagon SVG */
+    .five-elements-wrapper {
+      width: 200px; height: 200px; margin-bottom: 36px;
+      animation: spin-slow 8s linear infinite;
+    }
+    @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .scoring-title {
+      font-family: var(--font-heading); font-size: 36px;
+      color: var(--neutral-900); margin-bottom: 8px; line-height: 1.2;
+    }
+    .scoring-title-zh {
+      font-family: var(--font-chinese); font-size: 22px;
+      color: var(--brand-600); margin-bottom: 32px; font-weight: 400;
+    }
+
+    .scoring-progress-track {
+      width: 380px; max-width: 100%; height: 6px;
+      background: var(--neutral-200); border-radius: var(--radius-full);
+      overflow: hidden; margin: 0 auto 32px;
+    }
+    .scoring-progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
+      border-radius: var(--radius-full);
+      animation: sweep-progress 3s ease-in-out forwards;
+    }
+    @keyframes sweep-progress { from { width: 0%; } to { width: 100%; } }
+
+    .scoring-status {
+      font-size: 16px; color: var(--neutral-500); min-height: 28px;
+      margin-bottom: 48px; transition: opacity 0.4s ease;
+    }
+    .scoring-status.fade-out { opacity: 0; }
+
+    .scoring-footer-note {
+      font-style: italic; font-size: 13px; color: var(--neutral-400);
+      max-width: 480px; margin: 0 auto 20px;
+    }
+    .scoring-skip {
+      font-size: 13px; color: var(--neutral-400); cursor: pointer;
+      transition: color var(--transition-fast);
+    }
+    .scoring-skip:hover { color: var(--brand-600); }
+
+    /* =============================================
+       PAGE 3: RESULTS
+    ============================================= */
+    .results-wrapper { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* Constitution Hero */
+    .constitution-hero {
+      background: white; border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-lg); padding: 48px 44px;
+      margin-bottom: 32px; text-align: center;
+      border: 1px solid var(--neutral-200);
+      position: relative; overflow: hidden;
+    }
+    .constitution-hero::before {
+      content: '气'; position: absolute; right: -20px; top: 50%;
+      transform: translateY(-50%); font-size: 220px;
+      font-family: var(--font-chinese); font-weight: 700;
+      color: rgba(212,168,67,0.06); pointer-events: none; line-height: 1;
+    }
+    .constitution-badge-lg {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 10px 22px; border-radius: var(--radius-full);
+      font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .const-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .constitution-name {
+      font-family: var(--font-heading); font-size: 48px;
+      color: var(--neutral-900); margin-bottom: 6px; line-height: 1.1;
+    }
+    .constitution-name-zh {
+      font-family: var(--font-chinese); font-size: 28px;
+      color: var(--accent-600); margin-bottom: 12px; font-weight: 500;
+    }
+    .constitution-match {
+      font-size: 15px; color: var(--neutral-500); font-weight: 500; margin-bottom: 24px;
+    }
+    .constitution-desc {
+      font-size: 15px; color: var(--neutral-600); line-height: 1.75;
+      max-width: 620px; margin: 0 auto 10px;
+    }
+    .constitution-desc-zh {
+      font-family: var(--font-chinese); font-size: 14px; color: var(--neutral-500);
+      line-height: 1.8; max-width: 620px; margin: 0 auto 32px;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-save-profile {
+      background: var(--brand-500); color: white; border: none;
+      padding: 11px 22px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      transition: all var(--transition-fast);
+    }
+    .btn-save-profile:hover { background: var(--brand-600); }
+    .btn-share {
+      background: white; color: var(--neutral-700);
+      border: 1px solid var(--neutral-300); border-radius: var(--radius-md);
+      padding: 11px 22px; font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      transition: all var(--transition-fast);
+    }
+    .btn-share:hover { border-color: var(--brand-400); color: var(--brand-600); }
+    .btn-retake {
+      background: transparent; color: var(--neutral-500);
+      border: 1px solid var(--neutral-200); border-radius: var(--radius-md);
+      padding: 11px 22px; font-size: 14px; font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+    .btn-retake:hover { border-color: var(--neutral-400); color: var(--neutral-700); }
+
+    /* Score Chart */
+    .results-section {
+      background: white; border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm); padding: 32px 36px;
+      margin-bottom: 28px; border: 1px solid var(--neutral-200);
+    }
+    .section-heading {
+      font-family: var(--font-heading); font-size: 24px;
+      color: var(--neutral-900); margin-bottom: 6px;
+    }
+    .section-heading-zh {
+      font-family: var(--font-chinese); font-size: 16px;
+      color: var(--neutral-500); margin-bottom: 24px; font-weight: 400;
+    }
+    .score-bar-row {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 14px;
+    }
+    .score-bar-label {
+      min-width: 170px; display: flex; flex-direction: column;
+    }
+    .score-bar-en { font-size: 14px; font-weight: 600; color: var(--neutral-700); }
+    .score-bar-zh { font-family: var(--font-chinese); font-size: 12px; color: var(--neutral-400); }
+    .score-bar-track {
+      flex: 1; height: 22px; background: var(--neutral-100);
+      border-radius: var(--radius-full); overflow: hidden;
+    }
+    .score-bar-fill {
+      height: 100%; border-radius: var(--radius-full);
+      display: flex; align-items: center; padding-right: 10px;
+      justify-content: flex-end;
+      width: 0%;
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .score-bar-fill.animate { /* triggered by JS */ }
+    .score-pct {
+      font-size: 12px; font-weight: 700; color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .score-bar-row.primary .score-bar-en { color: var(--accent-600); font-size: 15px; }
+
+    /* Characteristics Grid */
+    .chars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 700px) { .chars-grid { grid-template-columns: 1fr 1fr; } }
+    .char-card {
+      background: var(--neutral-50); border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-lg); padding: 18px 16px;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .char-icon { font-size: 24px; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+    .char-en { font-size: 14px; font-weight: 600; color: var(--neutral-800); margin-bottom: 3px; }
+    .char-zh { font-family: var(--font-chinese); font-size: 12px; color: var(--neutral-500); }
+
+    /* Product Cards */
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    @media (max-width: 640px) { .products-grid { grid-template-columns: 1fr; } }
+    .product-card {
+      border: 1px solid var(--neutral-200); border-radius: var(--radius-xl);
+      overflow: hidden; background: white;
+      transition: all var(--transition-base); box-shadow: var(--shadow-sm);
+    }
+    .product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .product-img {
+      height: 140px; background: linear-gradient(135deg, var(--brand-700), var(--brand-500));
+      display: flex; align-items: center; justify-content: center; font-size: 48px;
+      position: relative;
+    }
+    .product-badge-pill {
+      position: absolute; top: 10px; left: 10px;
+      background: var(--accent-500); color: white;
+      font-size: 11px; font-weight: 700; padding: 3px 10px;
+      border-radius: var(--radius-full); letter-spacing: 0.03em;
+    }
+    .product-body { padding: 18px; }
+    .product-name { font-size: 15px; font-weight: 700; color: var(--neutral-900); margin-bottom: 2px; }
+    .product-name-zh { font-family: var(--font-chinese); font-size: 13px; color: var(--brand-600); margin-bottom: 8px; }
+    .product-rationale { font-size: 13px; color: var(--neutral-500); line-height: 1.5; margin-bottom: 14px; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; }
+    .product-price { font-size: 20px; font-weight: 700; color: var(--neutral-900); }
+    .btn-add-cart {
+      background: var(--brand-500); color: white; border: none;
+      padding: 8px 18px; border-radius: var(--radius-md);
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; gap: 6px;
+      transition: all var(--transition-fast);
+    }
+    .btn-add-cart:hover { background: var(--brand-600); }
+    .fda-disclaimer {
+      font-size: 12px; color: var(--neutral-400); line-height: 1.6;
+      margin-top: 16px; padding: 12px 16px;
+      background: var(--neutral-50); border-radius: var(--radius-md);
+      border: 1px solid var(--neutral-200);
+    }
+
+    /* Lifestyle Accordion */
+    .accordion-item {
+      border: 1px solid var(--neutral-200); border-radius: var(--radius-lg);
+      overflow: hidden; margin-bottom: 10px;
+    }
+    .accordion-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; cursor: pointer;
+      background: white; transition: background var(--transition-fast);
+      user-select: none;
+    }
+    .accordion-header:hover { background: var(--neutral-50); }
+    .accordion-icon-wrap { font-size: 20px; }
+    .accordion-title { flex: 1; font-size: 15px; font-weight: 600; color: var(--neutral-800); }
+    .accordion-title-zh { font-family: var(--font-chinese); font-size: 13px; color: var(--neutral-500); font-weight: 400; }
+    .accordion-chevron { font-size: 14px; color: var(--neutral-400); transition: transform var(--transition-base); }
+    .accordion-item.open .accordion-chevron { transform: rotate(180deg); }
+    .accordion-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.35s;
+      padding: 0 20px; background: var(--neutral-50);
+    }
+    .accordion-item.open .accordion-body { max-height: 300px; padding: 16px 20px 20px; }
+    .accordion-content { font-size: 14px; color: var(--neutral-600); line-height: 1.7; }
+    .accordion-content-zh { font-family: var(--font-chinese); font-size: 13px; color: var(--neutral-500); margin-top: 8px; line-height: 1.8; }
+
+    /* CTA Cards */
+    .cta-consult {
+      background: linear-gradient(135deg, var(--brand-800), var(--brand-700));
+      border-radius: var(--radius-xl); padding: 32px 36px;
+      color: white; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    }
+    .cta-consult-text { flex: 1; }
+    .cta-consult h3 { font-family: var(--font-heading); font-size: 22px; color: white; margin-bottom: 6px; }
+    .cta-consult p { font-size: 14px; color: var(--brand-300); line-height: 1.6; }
+    .dr-info { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+    .dr-avatar {
+      width: 44px; height: 44px; border-radius: var(--radius-full);
+      background: var(--brand-600); display: flex; align-items: center; justify-content: center;
+      font-size: 20px; border: 2px solid var(--brand-400);
+    }
+    .dr-name { font-size: 14px; font-weight: 600; color: white; }
+    .dr-cred { font-size: 12px; color: var(--brand-300); }
+    .cta-consult-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+    .btn-book {
+      background: var(--accent-500); color: white; border: none;
+      padding: 12px 24px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 700; box-shadow: var(--shadow-gold);
+      transition: all var(--transition-fast); white-space: nowrap;
+    }
+    .btn-book:hover { background: var(--accent-600); }
+    .or-ai-link { font-size: 13px; color: var(--brand-300); cursor: pointer; }
+    .or-ai-link:hover { color: var(--accent-300); }
+
+    .cta-ai {
+      background: var(--neutral-800); border-radius: var(--radius-xl);
+      padding: 24px 32px; color: white; margin-bottom: 28px;
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .cta-ai-text { flex: 1; }
+    .cta-ai h3 { font-family: var(--font-heading); font-size: 20px; color: white; margin-bottom: 4px; }
+    .cta-ai p { font-size: 13px; color: var(--neutral-400); }
+    .btn-ask-ai {
+      background: var(--accent-500); color: white; border: none;
+      padding: 11px 22px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 700; white-space: nowrap;
+      box-shadow: var(--shadow-gold); transition: all var(--transition-fast);
+    }
+    .btn-ask-ai:hover { background: var(--accent-600); }
+
+    /* Other Constitutions Accordion */
+    .other-consts-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .other-const-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: var(--radius-lg);
+      border: 1px solid var(--neutral-200); background: white;
+      transition: all var(--transition-fast);
+    }
+    .other-const-row:hover { border-color: var(--neutral-300); box-shadow: var(--shadow-sm); }
+    .other-const-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .other-const-name { font-size: 14px; font-weight: 600; color: var(--neutral-800); min-width: 140px; }
+    .other-const-name-zh { font-family: var(--font-chinese); font-size: 13px; color: var(--neutral-500); min-width: 80px; }
+    .other-const-desc { font-size: 13px; color: var(--neutral-500); flex: 1; }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--brand-700); color: white;
+      padding: 12px 24px; border-radius: var(--radius-lg);
+      font-size: 14px; font-weight: 600;
+      box-shadow: var(--shadow-lg); z-index: 9998;
+      display: flex; align-items: center; gap: 10px;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s;
+      opacity: 0; pointer-events: none;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* Utility */
+    .text-zh { font-family: var(--font-chinese); }
+    .hidden { display: none !important; }
+    .label-sm {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--neutral-400); margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- PROTOTYPE BAR -->
+<div id="proto-bar">
+  <span class="proto-title">QUIZ PROTOTYPE — pureHerbHealth</span>
+  <div class="proto-tabs">
+    <button class="proto-tab active" onclick="showPage('quiz')">Quiz (Questions)</button>
+    <button class="proto-tab" onclick="showPage('scoring')">Scoring Animation</button>
+    <button class="proto-tab" onclick="showPage('results')">Results Page</button>
+  </div>
+  <div class="proto-lang-toggle">
+    <button class="proto-lang-btn active" id="proto-en-btn" onclick="setLang('en')">EN</button>
+    <button class="proto-lang-btn" id="proto-zh-btn" onclick="setLang('zh')">ZH</button>
+  </div>
+  <span class="proto-note">theme.json v1.0 · 2026-03-11</span>
+</div>
+
+<!-- SITE WRAPPER -->
+<div id="site-wrapper">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <span>🌿 <span>Free shipping over $75</span></span>
+    <span class="topbar-right">📞 1-800-HERB-TCM</span>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="#">🌿 pureHerbHealth</a>
+      <nav>
+        <a href="#">Shop</a>
+        <a href="#">Learn</a>
+        <a href="#" class="active">Quiz</a>
+        <a href="#">AI Advisor</a>
+      </nav>
+      <div class="header-actions">
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span id="search-placeholder">Search herbs, conditions…</span>
+        </div>
+        <div class="lang-switcher">
+          <button class="lang-btn active" id="header-en-btn" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" id="header-zh-btn" onclick="setLang('zh')">中文</button>
+        </div>
+        <button class="cart-btn" onclick="showToast('Cart opened')">
+          🛒 <span id="header-cart-label">Cart</span> <span class="cart-count" id="cart-count">2</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =============================================
+       PAGE 1: QUIZ QUESTIONS
+  ============================================= -->
+  <div id="page-quiz" class="page-section active">
+    <div class="quiz-wrapper">
+
+      <!-- Intro Card -->
+      <div id="quiz-intro">
+        <div class="intro-card">
+          <span class="intro-icon">☯️</span>
+          <h2 id="intro-headline">Discover Your TCM Body Constitution</h2>
+          <div class="zh-sub" id="intro-headline-zh">了解您的中医体质</div>
+          <p id="intro-desc">Answer 15 questions to receive a personalized health profile and herb recommendations tailored to your unique body type.</p>
+          <div class="intro-chips">
+            <span class="chip">📋 <span id="chip-q">15 Questions</span></span>
+            <span class="chip">⏱ <span id="chip-t">5 Minutes</span></span>
+            <span class="chip">✨ <span id="chip-f">Free</span></span>
+          </div>
+          <button class="btn-start-quiz" onclick="startQuiz()">
+            <span id="start-btn-text">Start Quiz</span> →
+          </button>
+          <a href="#" class="intro-link" id="intro-browse-link">Already know your constitution? Browse by type →</a>
+        </div>
+      </div>
+
+      <!-- Question Area (hidden until Start is clicked) -->
+      <div id="quiz-questions">
+        <div class="progress-header">
+          <div class="progress-top">
+            <span class="progress-label" id="progress-label">Question 1 of 15</span>
+            <span class="progress-pct" id="progress-pct">7% complete</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progress-bar" style="width:7%"></div>
+          </div>
+        </div>
+
+        <div class="question-card">
+          <div class="q-number-chip" id="q-chip">Q1</div>
+          <h3 class="question-text" id="q-text-en">How often do you feel tired even after adequate sleep?</h3>
+          <div class="question-text-zh" id="q-text-zh">您即使睡眠充足后也常感疲倦吗？</div>
+          <div class="tcm-context" id="q-context-en">This helps identify Qi patterns</div>
+
+          <div class="answer-options" id="answer-options">
+            <!-- Populated by JS -->
+          </div>
+
+          <div class="q-nav">
+            <button class="btn-prev" id="btn-prev" onclick="navigate(-1)" disabled>← <span id="prev-text">Previous</span></button>
+            <a class="save-progress" id="save-link">💾 <span id="save-text">Save progress</span></a>
+            <button class="btn-next" id="btn-next" onclick="navigate(1)"><span id="next-text">Next Question</span> →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side Progress Panel -->
+      <div class="quiz-side-panel" id="side-panel" style="display:none;">
+        <div class="side-panel-title" id="side-panel-title">YOUR PROGRESS</div>
+        <div class="side-question-list" id="side-question-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =============================================
+       PAGE 2: SCORING ANIMATION
+  ============================================= -->
+  <div id="page-scoring" class="page-section">
+    <div class="scoring-page">
+
+      <!-- Five Elements Pentagon SVG -->
+      <div class="five-elements-wrapper">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Pentagon path for Five Elements -->
+          <!-- Points: top, upper-right, lower-right, lower-left, upper-left -->
+          <!-- Centered at 100,100, radius ~80 -->
+          <polygon
+            points="100,20 175,74 148,162 52,162 25,74"
+            fill="none" stroke="#e5e5e5" stroke-width="1.5"
+          />
+          <!-- Inner connections (pentagram) -->
+          <line x1="100" y1="20" x2="148" y2="162" stroke="#e5e5e5" stroke-width="1" opacity="0.5"/>
+          <line x1="100" y1="20" x2="52" y2="162" stroke="#e5e5e5" stroke-width="1" opacity="0.5"/>
+          <line x1="175" y1="74" x2="52" y2="162" stroke="#e5e5e5" stroke-width="1" opacity="0.5"/>
+          <line x1="175" y1="74" x2="25" y2="74" stroke="#e5e5e5" stroke-width="1" opacity="0.5"/>
+          <line x1="148" y1="162" x2="25" y2="74" stroke="#e5e5e5" stroke-width="1" opacity="0.5"/>
+          <!-- Element circles -->
+          <!-- Wood (top) -->
+          <circle cx="100" cy="20" r="16" fill="#4CAF50"/>
+          <text x="100" y="25" text-anchor="middle" fill="white" font-size="13" font-family="serif">木</text>
+          <!-- Fire (upper-right) -->
+          <circle cx="175" cy="74" r="16" fill="#E53E3E"/>
+          <text x="175" y="79" text-anchor="middle" fill="white" font-size="13" font-family="serif">火</text>
+          <!-- Earth (lower-right) -->
+          <circle cx="148" cy="162" r="16" fill="#D4A843"/>
+          <text x="148" y="167" text-anchor="middle" fill="white" font-size="13" font-family="serif">土</text>
+          <!-- Metal (lower-left) -->
+          <circle cx="52" cy="162" r="16" fill="#A0AEC0"/>
+          <text x="52" y="167" text-anchor="middle" fill="white" font-size="13" font-family="serif">金</text>
+          <!-- Water (upper-left) -->
+          <circle cx="25" cy="74" r="16" fill="#3182CE"/>
+          <text x="25" y="79" text-anchor="middle" fill="white" font-size="13" font-family="serif">水</text>
+        </svg>
+      </div>
+
+      <h2 class="scoring-title" id="scoring-title">Analyzing your TCM constitution...</h2>
+      <div class="scoring-title-zh" id="scoring-title-zh">正在分析您的中医体质...</div>
+
+      <div class="scoring-progress-track">
+        <div class="scoring-progress-fill" id="scoring-bar"></div>
+      </div>
+
+      <div class="scoring-status" id="scoring-status">Evaluating Qi circulation patterns...</div>
+
+      <p class="scoring-footer-note" id="scoring-note">Based on Traditional Chinese Medicine theory developed over 3,000 years</p>
+      <a class="scoring-skip" onclick="showPage('results')" id="scoring-skip-link">Skip to Results →</a>
+    </div>
+  </div>
+
+  <!-- =============================================
+       PAGE 3: RESULTS
+  ============================================= -->
+  <div id="page-results" class="page-section">
+    <div class="results-wrapper">
+
+      <!-- Constitution Hero -->
+      <div class="constitution-hero">
+        <div class="constitution-badge-lg" style="background:rgba(212,168,67,0.12); border:2px solid #D4A843; color:#D4A843;">
+          <span class="const-dot" style="background:#D4A843;"></span>
+          <span id="result-type-label">Qi Deficient Constitution</span>
+        </div>
+        <h1 class="constitution-name" id="result-name">Qi Deficient Constitution</h1>
+        <div class="constitution-name-zh" id="result-name-zh">气虚体质</div>
+        <div class="constitution-match" id="result-match">Your primary constitution · 68% match</div>
+        <p class="constitution-desc" id="result-desc-en">You have a Qi Deficient constitution, characterized by low energy, easy fatigue, and a tendency toward shortness of breath. Your body's vital energy (Qi) needs regular nourishment through diet, lifestyle, and targeted herbal support.</p>
+        <p class="constitution-desc-zh" id="result-desc-zh">您属于气虚体质，特征为精力不足、容易疲劳、倾向于气短。您的身体生命能量（气）需要通过饮食、生活方式和有针对性的草药支持来定期滋养。</p>
+        <div class="hero-actions">
+          <button class="btn-save-profile" onclick="showToast('✅ Constitution saved to your account')">💾 <span id="save-profile-text">Save to My Profile</span></button>
+          <button class="btn-share" onclick="showToast('Share link copied!')">🔗 <span id="share-text">Share Result</span></button>
+          <button class="btn-retake" onclick="showPage('quiz'); resetQuiz();" id="retake-text">↺ Retake Quiz</button>
+        </div>
+      </div>
+
+      <!-- Score Chart -->
+      <div class="results-section">
+        <h3 class="section-heading" id="chart-heading">Constitution Score Breakdown</h3>
+        <div class="section-heading-zh" id="chart-heading-zh">体质评分分析</div>
+        <div id="score-bars">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Key Characteristics -->
+      <div class="results-section">
+        <h3 class="section-heading" id="chars-heading">Key Characteristics</h3>
+        <div class="section-heading-zh" id="chars-heading-zh">主要特征</div>
+        <div class="chars-grid">
+          <div class="char-card"><span class="char-icon">🔋</span><div><div class="char-en" id="char1-en">Low energy, easily tired</div><div class="char-zh">精力不足，易疲劳</div></div></div>
+          <div class="char-card"><span class="char-icon">💨</span><div><div class="char-en" id="char2-en">Shortness of breath</div><div class="char-zh">气短</div></div></div>
+          <div class="char-card"><span class="char-icon">🌡️</span><div><div class="char-en" id="char3-en">Sensitive to cold</div><div class="char-zh">怕冷</div></div></div>
+          <div class="char-card"><span class="char-icon">😴</span><div><div class="char-en" id="char4-en">Oversleeping or poor sleep quality</div><div class="char-zh">嗜睡或睡眠质量差</div></div></div>
+          <div class="char-card"><span class="char-icon">🍽️</span><div><div class="char-en" id="char5-en">Poor appetite or weak digestion</div><div class="char-zh">食欲差或消化弱</div></div></div>
+          <div class="char-card"><span class="char-icon">🗣️</span><div><div class="char-en" id="char6-en">Soft voice, reluctance to speak</div><div class="char-zh">声音低微</div></div></div>
+        </div>
+      </div>
+
+      <!-- Herb Recommendations -->
+      <div class="results-section">
+        <h3 class="section-heading" id="recs-heading">Recommended for Qi Deficient Constitution</h3>
+        <div class="section-heading-zh" id="recs-heading-zh">适合气虚体质的推荐</div>
+        <div class="products-grid">
+
+          <div class="product-card">
+            <div class="product-img">🌿<div class="product-badge-pill" style="background:#D4A843;">Top Pick for Qi Deficiency</div></div>
+            <div class="product-body">
+              <div class="product-name" id="p1-name">Astragalus Immune Formula</div>
+              <div class="product-name-zh">黄芪免疫方</div>
+              <div class="product-rationale" id="p1-rationale">Astragalus (Huang Qi) is the premier Qi tonic herb, directly addressing Wei Qi deficiency and fatigue.</div>
+              <div class="product-footer">
+                <span class="product-price">$42.00</span>
+                <button class="btn-add-cart" onclick="addToCart()">🛒 <span id="add-cart-text">Add to Cart</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img" style="background:linear-gradient(135deg,#14532d,#166534);">🍄<div class="product-badge-pill">Classic Qi Tonic</div></div>
+            <div class="product-body">
+              <div class="product-name" id="p2-name">Four Gentlemen Formula</div>
+              <div class="product-name-zh">四君子汤</div>
+              <div class="product-rationale" id="p2-rationale">A classical formula of four herbs that tonifies Spleen and Stomach Qi — the foundational Qi tonic.</div>
+              <div class="product-footer">
+                <span class="product-price">$38.00</span>
+                <button class="btn-add-cart" onclick="addToCart()">🛒 <span id="add-cart-text2">Add to Cart</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img" style="background:linear-gradient(135deg,#166534,#22764a);">🛡️<div class="product-badge-pill" style="background:#22764a;">Qi &amp; Wei Defense</div></div>
+            <div class="product-body">
+              <div class="product-name" id="p3-name">Jade Screen Formula</div>
+              <div class="product-name-zh">玉屏风散</div>
+              <div class="product-rationale" id="p3-rationale">Strengthens Wei Qi and stabilizes the body surface — ideal for frequent colds and low immunity.</div>
+              <div class="product-footer">
+                <span class="product-price">$35.00</span>
+                <button class="btn-add-cart" onclick="addToCart()">🛒 <span id="add-cart-text3">Add to Cart</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img" style="background:linear-gradient(135deg,#78350f,#b45309);">🍵<div class="product-badge-pill" style="background:#b45309;">Daily Support</div></div>
+            <div class="product-body">
+              <div class="product-name" id="p4-name">Ginseng &amp; Astragalus Tea</div>
+              <div class="product-name-zh">参芪茶</div>
+              <div class="product-rationale" id="p4-rationale">A gentle daily tea combining Ren Shen and Huang Qi for sustained energy and Qi restoration.</div>
+              <div class="product-footer">
+                <span class="product-price">$22.00</span>
+                <button class="btn-add-cart" onclick="addToCart()">🛒 <span id="add-cart-text4">Add to Cart</span></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="fda-disclaimer" id="fda-text">
+          ℹ️ These products support wellness and are not intended to diagnose, treat, cure, or prevent any disease. These statements have not been evaluated by the Food and Drug Administration. Consult your healthcare practitioner before use.<br>
+          <span class="text-zh" style="margin-top:4px;display:block;">本产品声明未经FDA评估，不用于诊断、治疗、治愈或预防任何疾病。使用前请咨询您的医疗保健从业者。</span>
+        </div>
+      </div>
+
+      <!-- Lifestyle Guidance -->
+      <div class="results-section">
+        <h3 class="section-heading" id="lifestyle-heading">TCM Lifestyle Guidance</h3>
+        <div class="section-heading-zh" id="lifestyle-heading-zh">中医生活方式建议</div>
+
+        <div class="accordion-item open" id="acc-diet">
+          <div class="accordion-header" onclick="toggleAccordion('acc-diet')">
+            <span class="accordion-icon-wrap">🍲</span>
+            <div class="accordion-title">
+              <div id="acc-diet-title">Diet</div>
+              <div class="accordion-title-zh">饮食</div>
+            </div>
+            <span class="accordion-chevron">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content" id="acc-diet-content">Focus on warm, cooked foods. Avoid cold and raw foods. Recommended: yam (山药), red dates (红枣), ginger (姜), millet (小米), chicken, and root vegetables.</div>
+            <div class="accordion-content-zh">重点食用温热、熟制食物。避免生冷食物。推荐：山药、红枣、生姜、小米、鸡肉和根茎类蔬菜。</div>
+          </div>
+        </div>
+
+        <div class="accordion-item" id="acc-exercise">
+          <div class="accordion-header" onclick="toggleAccordion('acc-exercise')">
+            <span class="accordion-icon-wrap">🧘</span>
+            <div class="accordion-title">
+              <div id="acc-ex-title">Exercise</div>
+              <div class="accordion-title-zh">运动</div>
+            </div>
+            <span class="accordion-chevron">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content" id="acc-ex-content">Gentle movement is ideal: Tai Chi (太极), Qi Gong (气功), walking, and light yoga. Avoid intense exertion which further depletes Qi.</div>
+            <div class="accordion-content-zh">以温和运动为宜：太极拳、气功、散步和轻柔瑜伽。避免剧烈运动，以防进一步耗损气。</div>
+          </div>
+        </div>
+
+        <div class="accordion-item" id="acc-sleep">
+          <div class="accordion-header" onclick="toggleAccordion('acc-sleep')">
+            <span class="accordion-icon-wrap">😴</span>
+            <div class="accordion-title">
+              <div id="acc-sleep-title">Sleep</div>
+              <div class="accordion-title-zh">睡眠</div>
+            </div>
+            <span class="accordion-chevron">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content" id="acc-sleep-content">Prioritize 8+ hours of sleep per night. A 20-minute nap after lunch (午休) can help replenish Qi. Keep a consistent sleep schedule.</div>
+            <div class="accordion-content-zh">保证每晚8小时以上睡眠。午饭后20分钟的午休有助于补充元气。保持规律的作息时间。</div>
+          </div>
+        </div>
+
+        <div class="accordion-item" id="acc-herbs">
+          <div class="accordion-header" onclick="toggleAccordion('acc-herbs')">
+            <span class="accordion-icon-wrap">🌿</span>
+            <div class="accordion-title">
+              <div id="acc-herbs-title">Herbs</div>
+              <div class="accordion-title-zh">草药</div>
+            </div>
+            <span class="accordion-chevron">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-content" id="acc-herbs-content">Take a regular course of Qi-tonifying herbs for 3–6 months for best results. Key herbs: Astragalus (黄芪), Ginseng (人参), Codonopsis (党参), White Atractylodes (白术).</div>
+            <div class="accordion-content-zh">坚持服用补气草药3至6个月效果最佳。主要草药：黄芪、人参、党参、白术。请遵从医嘱。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Practitioner CTA -->
+      <div class="cta-consult">
+        <div class="cta-consult-text">
+          <h3 id="consult-heading">Get a personalized treatment plan</h3>
+          <p id="consult-desc">from a licensed TCM practitioner. Based on your Qi Deficient constitution.</p>
+          <div class="dr-info">
+            <div class="dr-avatar">👨‍⚕️</div>
+            <div>
+              <div class="dr-name" id="dr-name">Dr. Huang Wei, L.Ac, DAOM</div>
+              <div class="dr-cred" id="dr-cred">Licensed Acupuncturist · Doctor of Oriental Medicine</div>
+            </div>
+          </div>
+        </div>
+        <div class="cta-consult-actions">
+          <button class="btn-book" onclick="showToast('Booking page opening...')">📅 <span id="book-text">Book a Consultation</span></button>
+          <a class="or-ai-link" onclick="showPage('results')" id="or-ai-link">Or ask our AI →</a>
+        </div>
+      </div>
+
+      <!-- AI CTA -->
+      <div class="cta-ai">
+        <div class="cta-ai-text">
+          <h3 id="ai-heading">Chat with our TCM AI</h3>
+          <p id="ai-subtext">about your Qi Deficient constitution — get instant answers, herb explanations, and personalized tips.</p>
+        </div>
+        <button class="btn-ask-ai" onclick="showToast('Opening TCM AI chat...')">✨ <span id="ask-ai-text">Ask TCM AI</span></button>
+      </div>
+
+      <!-- Other Constitutions -->
+      <div class="results-section">
+        <h3 class="section-heading" id="other-heading">Explore All 9 Constitution Types</h3>
+        <div class="section-heading-zh" id="other-heading-zh">探索全部9种体质类型</div>
+        <div class="other-consts-list" id="other-consts-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end site-wrapper -->
+
+<!-- TOAST -->
+<div id="toast">✅ <span id="toast-msg">Done</span></div>
+
+<script>
+// =============================================
+// THEME APPLICATION (from theme.json)
+// =============================================
+const THEME_JSON = {
+  colors: {
+    brand: { "50":"#f0fdf4","100":"#dcfce7","200":"#bbf7d0","300":"#86efac","400":"#4ade80","500":"#2D8C54","600":"#22764a","700":"#166534","800":"#14532d","900":"#052e16" },
+    accent: { "50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#D4A843","600":"#b45309","700":"#92400e","800":"#78350f","900":"#451a03" },
+    neutral: { "50":"#fafafa","100":"#f5f5f5","200":"#e5e5e5","300":"#d4d4d4","400":"#a3a3a3","500":"#737373","600":"#525252","700":"#404040","800":"#262626","900":"#171717" }
+  },
+  radius: { sm:"4px", md:"8px", lg:"12px", xl:"16px", "2xl":"24px", "3xl":"32px", full:"9999px" },
+  shadows: {
+    sm:"0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)",
+    md:"0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)",
+    lg:"0 8px 24px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.04)",
+    brand:"0 4px 14px rgba(45,140,84,0.30)",
+    gold:"0 4px 14px rgba(212,168,67,0.35)"
+  },
+  transitions: { fast:"150ms ease", base:"250ms ease", slow:"400ms ease", spring:"300ms cubic-bezier(0.34,1.56,0.64,1)" },
+  typography: {
+    fontHeading:"'DM Serif Display', Georgia, 'Times New Roman', serif",
+    fontBody:"'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    fontChinese:"'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
+  }
+};
+
+function applyTheme(t) {
+  const r = document.documentElement.style;
+  const c = t.colors;
+  Object.entries(c.brand).forEach(([k,v]) => r.setProperty(`--brand-${k}`, v));
+  Object.entries(c.accent).forEach(([k,v]) => r.setProperty(`--accent-${k}`, v));
+  Object.entries(c.neutral).forEach(([k,v]) => r.setProperty(`--neutral-${k}`, v));
+  r.setProperty('--font-heading', t.typography.fontHeading);
+  r.setProperty('--font-body', t.typography.fontBody);
+  r.setProperty('--font-chinese', t.typography.fontChinese);
+  Object.entries(t.radius).forEach(([k,v]) => r.setProperty(`--radius-${k}`, v));
+  Object.entries(t.shadows).forEach(([k,v]) => r.setProperty(`--shadow-${k}`, v));
+  Object.entries(t.transitions).forEach(([k,v]) => r.setProperty(`--transition-${k}`, v));
+}
+applyTheme(THEME_JSON);
+
+// =============================================
+// STATE
+// =============================================
+let currentLang = 'en';
+let currentPage = 'quiz';
+let currentQ = 0;
+let cartCount = 2;
+let answers = {}; // questionIndex -> optionIndex
+let quizStarted = false;
+let scoringTimer = null;
+
+// =============================================
+// QUIZ DATA
+// =============================================
+const questions = [
+  {
+    en: "How often do you feel tired even after adequate sleep?",
+    zh: "您即使睡眠充足后也常感疲倦吗？",
+    contextEn: "This helps identify Qi and Blood patterns",
+    contextZh: "这有助于识别气血模式",
+    options: [
+      { en: "Rarely", zh: "很少" },
+      { en: "Occasionally", zh: "偶尔" },
+      { en: "Often", zh: "经常" },
+      { en: "Almost always", zh: "几乎总是" }
+    ]
+  },
+  {
+    en: "How do you typically feel in cold weather?",
+    zh: "您在寒冷天气中通常感觉如何？",
+    contextEn: "This helps identify Yang and Wei Qi patterns",
+    contextZh: "这有助于识别阳气和卫气模式",
+    options: [
+      { en: "Comfortable", zh: "感觉舒适" },
+      { en: "Slightly sensitive", zh: "略微敏感" },
+      { en: "Very sensitive / always chilly", zh: "非常敏感 / 总是感到寒冷" },
+      { en: "I prefer cold weather", zh: "我喜欢寒冷的天气" }
+    ]
+  },
+  {
+    en: "How would you describe your energy levels throughout the day?",
+    zh: "您如何描述您一天中的精力水平？",
+    contextEn: "This helps identify Qi circulation patterns",
+    contextZh: "这有助于识别气的循环模式",
+    options: [
+      { en: "I feel energetic and consistent throughout the day", zh: "我全天精力充沛且稳定" },
+      { en: "I start strong but tire by afternoon", zh: "我早上状态好，下午容易疲劳" },
+      { en: "I feel tired most of the day, especially in the morning", zh: "我大部分时间感到疲倦，尤其早晨" },
+      { en: "My energy is unpredictable — sometimes high, sometimes very low", zh: "我的精力不稳定——有时很高，有时很低" }
+    ]
+  },
+  {
+    en: "How is your digestion and appetite generally?",
+    zh: "您的消化和食欲通常如何？",
+    contextEn: "Spleen and Stomach Qi are central to overall health",
+    contextZh: "脾胃之气是整体健康的核心",
+    options: [
+      { en: "Strong and regular", zh: "强健且规律" },
+      { en: "Variable — sometimes good, sometimes poor", zh: "不稳定——时好时坏" },
+      { en: "Often bloated or sluggish", zh: "经常腹胀或消化迟缓" },
+      { en: "Frequently upset or irregular", zh: "频繁不适或不规律" }
+    ]
+  },
+  {
+    en: "How would you describe your emotional state most of the time?",
+    zh: "您如何描述您大多数时候的情绪状态？",
+    contextEn: "Emotional patterns reflect Liver Qi and Heart Shen",
+    contextZh: "情绪模式反映肝气和心神状态",
+    options: [
+      { en: "Generally calm and stable", zh: "通常平静稳定" },
+      { en: "Occasionally anxious or worried", zh: "偶尔焦虑或担忧" },
+      { en: "Often melancholy or withdrawn", zh: "经常忧郁或内向" },
+      { en: "Irritable or easily frustrated", zh: "易怒或容易沮丧" }
+    ]
+  }
+];
+
+const sideLabels = [
+  { en: "Fatigue & Sleep", zh: "疲劳与睡眠" },
+  { en: "Cold Sensitivity", zh: "寒冷敏感性" },
+  { en: "Daily Energy", zh: "日常精力" },
+  { en: "Digestion", zh: "消化" },
+  { en: "Emotional State", zh: "情绪状态" },
+  { en: "Complexion", zh: "面色" },
+  { en: "Thirst & Fluids", zh: "口渴与津液" },
+  { en: "Perspiration", zh: "出汗" },
+  { en: "Pain Patterns", zh: "疼痛规律" },
+  { en: "Sleep Quality", zh: "睡眠质量" },
+  { en: "Body Temperature", zh: "体温" },
+  { en: "Bowel Habits", zh: "排便习惯" },
+  { en: "Tongue Appearance", zh: "舌象" },
+  { en: "Pulse Quality", zh: "脉象" },
+  { en: "Overall Wellbeing", zh: "整体健康" }
+];
+
+// Constitution score data for results
+const constitutionScores = [
+  { key: "qiDeficient",   color: "#D4A843", en: "Qi Deficient",    zh: "气虚体质", pct: 68, primary: true },
+  { key: "phlegmDamp",    color: "#737373", en: "Phlegm-Damp",     zh: "痰湿体质", pct: 42 },
+  { key: "yangDeficient", color: "#3182CE", en: "Yang Deficient",  zh: "阳虚体质", pct: 35 },
+  { key: "balanced",      color: "#16a34a", en: "Balanced",        zh: "平和体质", pct: 30 },
+  { key: "yinDeficient",  color: "#E53E3E", en: "Yin Deficient",   zh: "阴虚体质", pct: 22 },
+  { key: "dampHeat",      color: "#ea580c", en: "Damp-Heat",       zh: "湿热体质", pct: 18 },
+  { key: "qiStagnant",    color: "#0284c7", en: "Qi-Stagnant",     zh: "气郁体质", pct: 15 },
+  { key: "bloodStasis",   color: "#7c3aed", en: "Blood Stasis",    zh: "血瘀体质", pct: 12 },
+  { key: "allergic",      color: "#dc2626", en: "Allergic (Special)", zh: "特禀体质", pct: 8 }
+];
+
+const otherConstitutions = [
+  { color: "#16a34a", en: "Balanced", zh: "平和体质",    desc: "Harmonious energy, strong digestion, emotional stability — the ideal constitution.", descZh: "气机调和，消化强健，情绪稳定——理想体质。" },
+  { color: "#D4A843", en: "Qi Deficient", zh: "气虚体质", desc: "Low vitality, easy fatigue, shortness of breath, weak immunity.", descZh: "活力低下，容易疲倦，气短，免疫力弱。" },
+  { color: "#3182CE", en: "Yang Deficient", zh: "阳虚体质", desc: "Persistent cold sensations, low metabolism, pale complexion, preference for warmth.", descZh: "持续怕冷，代谢低，面色苍白，喜温。" },
+  { color: "#E53E3E", en: "Yin Deficient", zh: "阴虚体质", desc: "Heat sensations, dryness, afternoon fever, insomnia, thin body type.", descZh: "有热感，干燥，午后发热，失眠，体型偏瘦。" },
+  { color: "#737373", en: "Phlegm-Damp", zh: "痰湿体质",  desc: "Tendency to gain weight, heaviness, phlegm accumulation, sluggish digestion.", descZh: "容易增重，身体沉重，痰湿积聚，消化迟缓。" },
+  { color: "#ea580c", en: "Damp-Heat", zh: "湿热体质",    desc: "Oily skin, acne, heavy stool, bitter taste, yellow urine, inflammatory tendency.", descZh: "皮肤油腻，痤疮，大便黏腻，口苦，尿黄，易炎症。" },
+  { color: "#7c3aed", en: "Blood Stasis", zh: "血瘀体质",  desc: "Poor circulation, dark complexion, fixed pain, spider veins, forgetfulness.", descZh: "循环不畅，面色晦暗，固定疼痛，静脉曲张，健忘。" },
+  { color: "#0284c7", en: "Qi-Stagnant", zh: "气郁体质",  desc: "Emotional sensitivity, depression tendency, chest tightness, sighing, anxiety.", descZh: "情感敏感，抑郁倾向，胸闷，叹气，焦虑。" },
+  { color: "#dc2626", en: "Allergic (Special)", zh: "特禀体质", desc: "Prone to allergies, eczema, asthma — special constitution requiring careful management.", descZh: "易过敏，湿疹，哮喘——需要特别护理的特殊体质。" }
+];
+
+// =============================================
+// PAGE NAVIGATION
+// =============================================
+function showPage(page) {
+  document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.proto-tab').forEach(el => el.classList.remove('active'));
+
+  const pageMap = { quiz: 0, scoring: 1, results: 2 };
+  document.getElementById(`page-${page}`).classList.add('active');
+  document.querySelectorAll('.proto-tab')[pageMap[page]].classList.add('active');
+  currentPage = page;
+
+  if (page === 'scoring') {
+    startScoringAnimation();
+  }
+  if (page === 'results') {
+    renderScoreBars();
+    renderOtherConstitutions();
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// =============================================
+// LANGUAGE TOGGLE
+// =============================================
+function setLang(lang) {
+  currentLang = lang;
+  document.body.classList.toggle('zh', lang === 'zh');
+
+  // Update all lang buttons
+  ['en','zh'].forEach(l => {
+    const active = l === lang;
+    const protoBtn = document.getElementById(`proto-${l}-btn`);
+    const headerBtn = document.getElementById(`header-${l}-btn`);
+    if (protoBtn) protoBtn.classList.toggle('active', active);
+    if (headerBtn) headerBtn.classList.toggle('active', active);
+  });
+
+  applyLangText(lang);
+}
+
+function applyLangText(lang) {
+  const zh = lang === 'zh';
+  const t = {
+    'intro-headline': ['Discover Your TCM Body Constitution', '了解您的中医体质'],
+    'intro-desc': ['Answer 15 questions to receive a personalized health profile and herb recommendations tailored to your unique body type.', '回答15个问题，获取根据您独特体质定制的个性化健康档案和草药推荐。'],
+    'chip-q': ['15 Questions', '15道问题'],
+    'chip-t': ['5 Minutes', '5分钟'],
+    'chip-f': ['Free', '免费'],
+    'start-btn-text': ['Start Quiz', '开始测试'],
+    'intro-browse-link': ['Already know your constitution? Browse by type →', '已知道您的体质？按类型浏览 →'],
+    'side-panel-title': ['YOUR PROGRESS', '您的进度'],
+    'prev-text': ['Previous', '上一题'],
+    'next-text': ['Next Question', '下一题'],
+    'save-text': ['Save progress', '保存进度'],
+    'scoring-title': ['Analyzing your TCM constitution...', '正在分析您的中医体质...'],
+    'scoring-title-zh': ['正在分析您的中医体质...', 'Analyzing your TCM constitution...'],
+    'scoring-note': ['Based on Traditional Chinese Medicine theory developed over 3,000 years', '基于3000多年传统中医理论'],
+    'scoring-skip-link': ['Skip to Results →', '跳至结果 →'],
+    'result-type-label': ['Qi Deficient Constitution', '气虚体质'],
+    'result-name': ['Qi Deficient Constitution', '气虚体质'],
+    'result-name-zh': ['气虚体质', 'Qi Deficient Constitution'],
+    'result-match': ['Your primary constitution · 68% match', '您的主要体质 · 匹配度68%'],
+    'result-desc-en': ['You have a Qi Deficient constitution, characterized by low energy, easy fatigue, and a tendency toward shortness of breath. Your body\'s vital energy (Qi) needs regular nourishment through diet, lifestyle, and targeted herbal support.', '您属于气虚体质，特征为精力不足、容易疲劳、倾向于气短。您的身体生命能量（气）需要通过饮食、生活方式和有针对性的草药支持来定期滋养。'],
+    'save-profile-text': ['Save to My Profile', '保存到我的档案'],
+    'share-text': ['Share Result', '分享结果'],
+    'retake-text': ['↺ Retake Quiz', '↺ 重新测试'],
+    'chart-heading': ['Constitution Score Breakdown', '体质评分分析'],
+    'chars-heading': ['Key Characteristics', '主要特征'],
+    'char1-en': ['Low energy, easily tired', '精力不足，易疲劳'],
+    'char2-en': ['Shortness of breath', '气短'],
+    'char3-en': ['Sensitive to cold', '怕冷'],
+    'char4-en': ['Oversleeping or poor sleep quality', '嗜睡或睡眠质量差'],
+    'char5-en': ['Poor appetite or weak digestion', '食欲差或消化弱'],
+    'char6-en': ['Soft voice, reluctance to speak', '声音低微'],
+    'recs-heading': ['Recommended for Qi Deficient Constitution', '适合气虚体质的推荐'],
+    'p1-name': ['Astragalus Immune Formula', '黄芪免疫方'],
+    'p2-name': ['Four Gentlemen Formula', '四君子汤'],
+    'p3-name': ['Jade Screen Formula', '玉屏风散'],
+    'p4-name': ['Ginseng & Astragalus Tea', '参芪茶'],
+    'p1-rationale': ['Astragalus (Huang Qi) is the premier Qi tonic herb, directly addressing Wei Qi deficiency and fatigue.', '黄芪是补气的主要草药，直接针对卫气不足和疲劳。'],
+    'p2-rationale': ['A classical formula of four herbs that tonifies Spleen and Stomach Qi — the foundational Qi tonic.', '由四味草药组成的经典方剂，补益脾胃之气——基础补气方。'],
+    'p3-rationale': ['Strengthens Wei Qi and stabilizes the body surface — ideal for frequent colds and low immunity.', '增强卫气，固表实卫——适合频繁感冒和免疫力低下。'],
+    'p4-rationale': ['A gentle daily tea combining Ren Shen and Huang Qi for sustained energy and Qi restoration.', '结合人参和黄芪的温和日常茶，持续补充能量和恢复元气。'],
+    'add-cart-text': ['Add to Cart', '加入购物车'],
+    'add-cart-text2': ['Add to Cart', '加入购物车'],
+    'add-cart-text3': ['Add to Cart', '加入购物车'],
+    'add-cart-text4': ['Add to Cart', '加入购物车'],
+    'lifestyle-heading': ['TCM Lifestyle Guidance', '中医生活方式建议'],
+    'acc-diet-title': ['Diet', '饮食'],
+    'acc-ex-title': ['Exercise', '运动'],
+    'acc-sleep-title': ['Sleep', '睡眠'],
+    'acc-herbs-title': ['Herbs', '草药'],
+    'acc-diet-content': ['Focus on warm, cooked foods. Avoid cold and raw foods. Recommended: yam (山药), red dates (红枣), ginger (姜), millet (小米), chicken, and root vegetables.', '重点食用温热、熟制食物。避免生冷食物。推荐：山药、红枣、生姜、小米、鸡肉和根茎类蔬菜。'],
+    'acc-ex-content': ['Gentle movement is ideal: Tai Chi (太极), Qi Gong (气功), walking, and light yoga. Avoid intense exertion which further depletes Qi.', '以温和运动为宜：太极拳、气功、散步和轻柔瑜伽。避免剧烈运动，以防进一步耗损气。'],
+    'acc-sleep-content': ['Prioritize 8+ hours of sleep per night. A 20-minute nap after lunch (午休) can help replenish Qi. Keep a consistent sleep schedule.', '保证每晚8小时以上睡眠。午饭后20分钟的午休有助于补充元气。保持规律的作息时间。'],
+    'acc-herbs-content': ['Take a regular course of Qi-tonifying herbs for 3–6 months for best results. Key herbs: Astragalus (黄芪), Ginseng (人参), Codonopsis (党参), White Atractylodes (白术).', '坚持服用补气草药3至6个月效果最佳。主要草药：黄芪、人参、党参、白术。请遵从医嘱。'],
+    'consult-heading': ['Get a personalized treatment plan', '获取个性化治疗方案'],
+    'consult-desc': ['from a licensed TCM practitioner. Based on your Qi Deficient constitution.', '来自持牌中医师。基于您的气虚体质。'],
+    'dr-name': ['Dr. Huang Wei, L.Ac, DAOM', '黄医师，针灸师，东方医学博士'],
+    'dr-cred': ['Licensed Acupuncturist · Doctor of Oriental Medicine', '执照针灸师 · 东方医学博士'],
+    'book-text': ['Book a Consultation', '预约咨询'],
+    'or-ai-link': ['Or ask our AI →', '或咨询我们的AI →'],
+    'ai-heading': ['Chat with our TCM AI', '与我们的中医AI对话'],
+    'ai-subtext': ['about your Qi Deficient constitution — get instant answers, herb explanations, and personalized tips.', '关于您的气虚体质——获取即时解答、草药说明和个性化建议。'],
+    'ask-ai-text': ['Ask TCM AI', '咨询中医AI'],
+    'other-heading': ['Explore All 9 Constitution Types', '探索全部9种体质类型'],
+    'search-placeholder': ['Search herbs, conditions…', '搜索草药、症状…'],
+    'header-cart-label': ['Cart', '购物车']
+  };
+
+  Object.entries(t).forEach(([id, vals]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = vals[zh ? 1 : 0];
+  });
+
+  // Update question if quiz is active
+  if (quizStarted) renderQuestion(currentQ);
+
+  // Update scoring status
+  if (currentPage === 'scoring') updateScoringStatusLang();
+}
+
+// =============================================
+// QUIZ LOGIC
+// =============================================
+function startQuiz() {
+  quizStarted = true;
+  document.getElementById('quiz-intro').style.display = 'none';
+  document.getElementById('quiz-questions').classList.add('visible');
+  document.getElementById('side-panel').style.display = 'block';
+  currentQ = 0;
+  renderQuestion(0);
+  renderSidePanel();
+}
+
+function renderQuestion(idx) {
+  const q = questions[idx];
+  const zh = currentLang === 'zh';
+  const total = 15;
+  const pct = Math.round(((idx + 1) / total) * 100);
+
+  document.getElementById('q-chip').textContent = `Q${idx + 1}`;
+  document.getElementById('q-text-en').textContent = zh ? q.zh : q.en;
+  document.getElementById('q-text-zh').textContent = zh ? q.en : q.zh;
+  document.getElementById('q-context-en').textContent = zh ? q.contextZh : q.contextEn;
+  document.getElementById('progress-label').textContent = zh ? `第${idx+1}题，共${total}题` : `Question ${idx+1} of ${total}`;
+  document.getElementById('progress-pct').textContent = `${pct}% ${zh ? '完成' : 'complete'}`;
+  document.getElementById('progress-bar').style.width = `${pct}%`;
+
+  // Render answers
+  const container = document.getElementById('answer-options');
+  const letters = ['A','B','C','D'];
+  container.innerHTML = q.options.map((opt, i) => `
+    <div class="answer-option ${answers[idx] === i ? 'selected' : ''}" onclick="selectAnswer(${idx}, ${i})">
+      <div class="answer-letter">${letters[i]}</div>
+      <div class="answer-text">
+        <div class="answer-en">${zh ? opt.zh : opt.en}</div>
+        <div class="answer-zh">${zh ? opt.en : opt.zh}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Nav buttons
+  document.getElementById('btn-prev').disabled = idx === 0;
+
+  const nextBtn = document.getElementById('btn-next');
+  const isLast = idx >= questions.length - 1;
+  if (isLast) {
+    nextBtn.textContent = zh ? '查看结果 →' : 'View Results →';
+    nextBtn.onclick = () => showPage('scoring');
+  } else {
+    nextBtn.innerHTML = `<span id="next-text">${zh ? '下一题' : 'Next Question'}</span> →`;
+    nextBtn.onclick = () => navigate(1);
+  }
+}
+
+function selectAnswer(qIdx, optIdx) {
+  answers[qIdx] = optIdx;
+  renderQuestion(qIdx);
+  renderSidePanel();
+}
+
+function navigate(dir) {
+  const newIdx = currentQ + dir;
+  if (newIdx < 0 || newIdx >= questions.length) return;
+  currentQ = newIdx;
+  renderQuestion(currentQ);
+  renderSidePanel();
+}
+
+function renderSidePanel() {
+  const list = document.getElementById('side-question-list');
+  const zh = currentLang === 'zh';
+  list.innerHTML = sideLabels.map((lbl, i) => {
+    const answered = answers[i] !== undefined;
+    const current = i === currentQ && quizStarted && i < questions.length;
+    const accessible = i < questions.length;
+    return `
+      <div class="side-q-item ${current ? 'current' : ''} ${answered ? 'answered' : ''}" onclick="${accessible ? `navigate(${i - currentQ})` : ''}">
+        <div class="side-q-dot">${answered ? '✓' : (i + 1)}</div>
+        <span>${zh ? lbl.zh : lbl.en}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function resetQuiz() {
+  answers = {};
+  currentQ = 0;
+  quizStarted = false;
+  document.getElementById('quiz-intro').style.display = 'flex';
+  document.getElementById('quiz-questions').classList.remove('visible');
+  document.getElementById('side-panel').style.display = 'none';
+}
+
+// =============================================
+// SCORING ANIMATION
+// =============================================
+const statusMessages = {
+  en: [
+    "Evaluating Qi circulation patterns...",
+    "Mapping Five Elements correspondence...",
+    "Preparing personalized herb recommendations..."
+  ],
+  zh: [
+    "评估气的循环模式...",
+    "绘制五行对应关系...",
+    "准备个性化草药推荐..."
+  ]
+};
+let statusIdx = 0;
+let statusInterval = null;
+let scoringTimeout = null;
+
+function startScoringAnimation() {
+  statusIdx = 0;
+  const el = document.getElementById('scoring-status');
+  const msgs = statusMessages[currentLang];
+  el.textContent = msgs[0];
+  el.style.opacity = '1';
+
+  if (statusInterval) clearInterval(statusInterval);
+  statusInterval = setInterval(() => {
+    el.classList.add('fade-out');
+    setTimeout(() => {
+      statusIdx = (statusIdx + 1) % msgs.length;
+      el.textContent = msgs[statusIdx];
+      el.classList.remove('fade-out');
+    }, 400);
+  }, 1000);
+
+  // Reset and restart the CSS animation on the bar
+  const bar = document.getElementById('scoring-bar');
+  bar.style.animation = 'none';
+  bar.offsetHeight; // reflow
+  bar.style.animation = 'sweep-progress 3s ease-in-out forwards';
+
+  if (scoringTimeout) clearTimeout(scoringTimeout);
+  scoringTimeout = setTimeout(() => {
+    clearInterval(statusInterval);
+    showPage('results');
+  }, 3200);
+}
+
+function updateScoringStatusLang() {
+  const msgs = statusMessages[currentLang];
+  document.getElementById('scoring-status').textContent = msgs[statusIdx % msgs.length];
+}
+
+// =============================================
+// RESULTS: SCORE BARS
+// =============================================
+function renderScoreBars() {
+  const zh = currentLang === 'zh';
+  const container = document.getElementById('score-bars');
+  container.innerHTML = constitutionScores.map(s => `
+    <div class="score-bar-row ${s.primary ? 'primary' : ''}">
+      <div class="score-bar-label">
+        <span class="score-bar-en">${zh ? s.zh : s.en}</span>
+        <span class="score-bar-zh">${zh ? s.en : s.zh}</span>
+      </div>
+      <div class="score-bar-track">
+        <div class="score-bar-fill" data-pct="${s.pct}" style="background:${s.color}; width:0%;">
+          <span class="score-pct">${s.pct}%</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Animate bars after paint
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.querySelectorAll('.score-bar-fill').forEach(el => {
+        const pct = el.getAttribute('data-pct');
+        el.style.width = pct + '%';
+      });
+    }, 80);
+  });
+}
+
+// =============================================
+// RESULTS: OTHER CONSTITUTIONS
+// =============================================
+function renderOtherConstitutions() {
+  const zh = currentLang === 'zh';
+  const list = document.getElementById('other-consts-list');
+  list.innerHTML = otherConstitutions.map(c => `
+    <div class="other-const-row">
+      <div class="other-const-dot" style="background:${c.color};"></div>
+      <span class="other-const-name">${zh ? c.zh : c.en}</span>
+      <span class="other-const-name-zh">${zh ? c.en : c.zh}</span>
+      <span class="other-const-desc">${zh ? c.descZh : c.desc}</span>
+    </div>
+  `).join('');
+}
+
+// =============================================
+// ACCORDION
+// =============================================
+function toggleAccordion(id) {
+  const item = document.getElementById(id);
+  item.classList.toggle('open');
+}
+
+// =============================================
+// CART
+// =============================================
+function addToCart() {
+  cartCount++;
+  document.getElementById('cart-count').textContent = cartCount;
+  const zh = currentLang === 'zh';
+  showToast(zh ? '已加入购物车 🛒' : 'Added to cart 🛒');
+}
+
+// =============================================
+// TOAST
+// =============================================
+let toastTimeout = null;
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  toast.classList.add('show');
+  if (toastTimeout) clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+// =============================================
+// INIT
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Show Q3 by default (index 2) in prototype — start quiz immediately
+  startQuiz();
+  currentQ = 2;
+  // Pre-answer Q1 and Q2 for context
+  answers[0] = 2;
+  answers[1] = 2;
+  renderQuestion(2);
+  renderSidePanel();
+});
+</script>
+</body>
+</html>

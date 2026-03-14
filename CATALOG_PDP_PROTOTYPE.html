@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalog & PDP Prototype — pureHerbHealth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand-50:  #E8F5EE; --brand-100: #A3D1B7; --brand-200: #76BA93;
+      --brand-400: #4AA370; --brand-500: #2D8C54; --brand-600: #247043;
+      --brand-700: #1B5432; --brand-900: #091C11;
+      --accent-100:#FFF8E7; --accent-300:#FFD666; --accent-500:#D4A843; --accent-700:#8B6F2A;
+      --n50:#FAFAF9; --n100:#F5F5F4; --n200:#E7E5E4; --n300:#D6D3D1;
+      --n400:#A8A29E; --n500:#78716C; --n700:#44403C; --n900:#1C1917;
+      --success:#16A34A; --warning:#EAB308; --error:#DC2626; --info:#2563EB;
+      --wood:#4AA370; --fire:#DC4A3F; --earth:#D4A843; --metal:#A0A0A0; --water:#2563EB;
+      --fh: 'DM Serif Display', Georgia, serif;
+      --fb: 'Inter', sans-serif;
+      --fz: 'Noto Sans SC', 'PingFang SC', sans-serif;
+      --r4:4px; --r8:8px; --r12:12px; --r16:16px; --rfull:9999px;
+      --s-sm:0 1px 2px rgba(0,0,0,.05);
+      --s-md:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+      --s-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px rgba(0,0,0,.04);
+      --s-xl:0 20px 25px -5px rgba(0,0,0,.10),0 10px 10px rgba(0,0,0,.04);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--fb);background:var(--n50);color:var(--n700);font-size:15px;line-height:1.6;}
+    body.zh{font-family:var(--fz),var(--fb);}
+    h1,h2,h3,h4{font-family:var(--fh);color:var(--n900);line-height:1.2;}
+    body.zh h1,body.zh h2,body.zh h3,body.zh h4{font-family:var(--fz),var(--fh);font-weight:500;}
+
+    /* ---- PROTOTYPE BAR ---- */
+    .proto{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1C1917;padding:0 20px;height:40px;display:flex;align-items:center;gap:16px;font-size:12px;}
+    .proto-title{color:white;font-weight:700;}
+    .proto-badge{background:var(--accent-500);color:#1C1917;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;}
+    .page-tabs{display:flex;background:#292524;border-radius:6px;overflow:hidden;border:1px solid #44403C;}
+    .page-tab{padding:5px 16px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#78716C;transition:all .15s;white-space:nowrap;}
+    .page-tab.active{background:var(--brand-500);color:white;}
+    .lang-sw{display:flex;background:#292524;border-radius:20px;overflow:hidden;border:1px solid #44403C;margin-left:auto;}
+    .lang-btn{padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#78716C;}
+    .lang-btn.active{background:var(--brand-500);color:white;}
+
+    /* ---- SHARED HEADER ---- */
+    .site-header{background:white;border-bottom:1px solid var(--n200);position:sticky;top:40px;z-index:100;box-shadow:var(--s-sm);}
+    .header-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:20px;padding:14px 32px;}
+    .logo{font-family:var(--fh);font-size:22px;color:var(--brand-600);text-decoration:none;white-space:nowrap;flex-shrink:0;}
+    .logo span{color:var(--accent-500);}
+    .nav{display:flex;gap:2px;flex:1;}
+    .nav a{padding:7px 12px;border-radius:var(--r8);font-size:13px;font-weight:500;color:var(--n700);text-decoration:none;}
+    .nav a:hover{background:var(--n100);}
+    .nav a.active{color:var(--brand-600);background:var(--brand-50);}
+    .search-bar{display:flex;align-items:center;gap:8px;background:var(--n100);border:1px solid var(--n200);border-radius:var(--rfull);padding:8px 16px;font-size:13px;color:var(--n500);min-width:200px;}
+    .header-right{display:flex;align-items:center;gap:10px;}
+    .icon-btn{width:36px;height:36px;border-radius:var(--r8);border:1px solid var(--n200);background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--n500);}
+    .cart-btn{background:var(--brand-500);color:white;border:none;border-radius:var(--r8);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+    .cart-cnt{background:var(--accent-500);color:white;border-radius:var(--rfull);font-size:11px;font-weight:700;padding:1px 6px;}
+    .h-lang{display:flex;background:var(--n100);border-radius:var(--rfull);padding:3px;border:1px solid var(--n200);}
+    .h-lang-btn{padding:3px 10px;border-radius:var(--rfull);font-size:12px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--n500);}
+    .h-lang-btn.active{background:white;color:var(--brand-600);box-shadow:var(--s-sm);}
+
+    /* ---- I18N ---- */
+    .en{display:block;} .zh-c{display:none;}
+    .ei{display:inline;} .zi{display:none;}
+    body.zh .en{display:none;} body.zh .zh-c{display:block;}
+    body.zh .ei{display:none;} body.zh .zi{display:inline;}
+
+    /* ---- PAGES ---- */
+    .page{display:none;margin-top:40px;}
+    .page.active{display:block;}
+
+    /* ============================================================
+       PAGE 1 — ALL PRODUCTS / CATALOG
+    ============================================================ */
+    .catalog-topbar{background:var(--brand-700);padding:8px 32px;color:var(--brand-100);font-size:13px;text-align:center;}
+    .catalog-topbar span{color:var(--accent-300);font-weight:600;}
+    .catalog-body{max-width:1280px;margin:0 auto;padding:32px;}
+    .catalog-layout{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:start;}
+
+    /* Breadcrumb */
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--n500);margin-bottom:20px;}
+    .breadcrumb a{color:var(--brand-500);text-decoration:none;}
+    .breadcrumb .sep{color:var(--n300);}
+    .breadcrumb .cur{color:var(--n700);font-weight:500;}
+
+    /* Filter Sidebar */
+    .sidebar{background:white;border-radius:var(--r12);border:1px solid var(--n200);overflow:hidden;position:sticky;top:100px;}
+    .sidebar-header{padding:16px 20px;border-bottom:1px solid var(--n200);display:flex;align-items:center;justify-content:space-between;}
+    .sidebar-header h3{font-size:15px;font-family:var(--fb);font-weight:700;color:var(--n900);}
+    .clear-all{font-size:12px;color:var(--brand-500);cursor:pointer;font-weight:600;border:none;background:none;}
+    .filter-section{padding:16px 20px;border-bottom:1px solid var(--n100);}
+    .filter-title{font-size:12px;font-weight:700;color:var(--n900);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+    .filter-title svg{color:var(--n400);transition:transform .15s;}
+    .filter-opts{display:flex;flex-direction:column;gap:8px;}
+    .filter-opt{display:flex;align-items:center;gap:8px;cursor:pointer;}
+    .filter-opt input[type=checkbox]{accent-color:var(--brand-500);width:15px;height:15px;}
+    .filter-opt label{font-size:13px;color:var(--n700);cursor:pointer;flex:1;}
+    .filter-opt .opt-count{font-size:11px;color:var(--n400);}
+    .price-range{padding:8px 0;}
+    .price-inputs{display:flex;gap:8px;align-items:center;}
+    .price-input{width:80px;padding:7px 10px;border:1px solid var(--n200);border-radius:var(--r8);font-size:13px;text-align:center;}
+    .price-sep{color:var(--n400);font-size:13px;}
+    .element-filters{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+    .el-filter{padding:6px 8px;border-radius:var(--r8);border:1px solid;font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all .15s;}
+    .el-filter:hover{opacity:.8;}
+    .el-wood{color:var(--wood);border-color:var(--wood);background:rgba(74,163,112,.08);}
+    .el-fire{color:var(--fire);border-color:var(--fire);background:rgba(220,74,63,.08);}
+    .el-earth{color:var(--earth);border-color:var(--earth);background:rgba(212,168,67,.08);}
+    .el-metal{color:var(--metal);border-color:var(--metal);background:rgba(160,160,160,.08);}
+    .el-water{color:var(--water);border-color:var(--water);background:rgba(37,99,235,.08);}
+    .el-filter.selected{color:white!important;}
+    .el-wood.selected{background:var(--wood)!important;border-color:var(--wood)!important;}
+    .el-fire.selected{background:var(--fire)!important;border-color:var(--fire)!important;}
+    .el-earth.selected{background:var(--earth)!important;border-color:var(--earth)!important;}
+    .el-water.selected{background:var(--water)!important;border-color:var(--water)!important;}
+
+    /* Active filters */
+    .active-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+    .filter-chip{display:inline-flex;align-items:center;gap:5px;background:var(--brand-50);border:1px solid var(--brand-200);border-radius:var(--rfull);padding:4px 10px;font-size:12px;color:var(--brand-700);font-weight:500;}
+    .filter-chip button{background:none;border:none;color:var(--brand-500);cursor:pointer;font-size:14px;line-height:1;padding:0;}
+
+    /* Catalog toolbar */
+    .catalog-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;}
+    .result-count{font-size:14px;color:var(--n500);flex:1;}
+    .result-count strong{color:var(--n900);}
+    .sort-select{padding:8px 12px;border:1px solid var(--n200);border-radius:var(--r8);font-size:13px;color:var(--n700);background:white;cursor:pointer;}
+    .view-toggle{display:flex;border:1px solid var(--n200);border-radius:var(--r8);overflow:hidden;}
+    .view-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;background:white;color:var(--n400);}
+    .view-btn.active{background:var(--brand-50);color:var(--brand-500);}
+
+    /* Product grid */
+    .product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .product-card{background:white;border-radius:var(--r12);border:1px solid var(--n200);overflow:hidden;transition:all .2s;cursor:pointer;position:relative;}
+    .product-card:hover{box-shadow:var(--s-lg);transform:translateY(-3px);border-color:var(--brand-200);}
+    .product-img{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;}
+    .p-badges{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;}
+    .p-badge{padding:3px 7px;border-radius:var(--rfull);font-size:10px;font-weight:700;}
+    .b-bs{background:var(--accent-500);color:white;}
+    .b-new{background:var(--info);color:white;}
+    .b-pick{background:var(--brand-500);color:white;}
+    .b-sale{background:var(--error);color:white;}
+    .wish{position:absolute;top:8px;right:8px;width:28px;height:28px;background:white;border:1px solid var(--n200);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;box-shadow:var(--s-sm);}
+    .p-info{padding:14px;}
+    .p-cat{font-size:10px;font-weight:700;color:var(--brand-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+    .p-name{font-size:14px;font-weight:600;color:var(--n900);margin-bottom:2px;line-height:1.3;}
+    .p-zh{font-size:12px;color:var(--n500);font-family:var(--fz);margin-bottom:7px;}
+    .tcm-tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px;}
+    .tcm-tag{padding:2px 7px;border-radius:var(--rfull);font-size:10px;font-weight:600;border:1px solid;}
+    .t-wood{color:var(--wood);border-color:var(--wood);background:rgba(74,163,112,.07);}
+    .t-fire{color:var(--fire);border-color:var(--fire);background:rgba(220,74,63,.07);}
+    .t-earth{color:var(--earth);border-color:var(--earth);background:rgba(212,168,67,.07);}
+    .t-water{color:var(--water);border-color:var(--water);background:rgba(37,99,235,.07);}
+    .t-qi{color:var(--brand-500);border-color:var(--brand-200);background:var(--brand-50);}
+    .stars{color:var(--accent-500);font-size:12px;}
+    .star-row{display:flex;align-items:center;gap:4px;margin-bottom:8px;font-size:11px;color:var(--n400);}
+    .price-row{display:flex;align-items:baseline;gap:6px;margin-bottom:10px;}
+    .price{font-size:18px;font-weight:700;color:var(--n900);}
+    .price-orig{font-size:12px;color:var(--n400);text-decoration:line-through;}
+    .price-save{font-size:11px;color:var(--error);font-weight:600;}
+    .stock-row{display:flex;align-items:center;gap:5px;font-size:11px;margin-bottom:10px;}
+    .dot{width:6px;height:6px;border-radius:50%;}
+    .dot-in{background:var(--success);}
+    .dot-low{background:var(--warning);}
+    .add-btn{width:100%;padding:9px;background:var(--brand-500);color:white;border:none;border-radius:var(--r8);font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;}
+    .add-btn:hover{background:var(--brand-600);}
+
+    /* Pagination */
+    .pagination{display:flex;align-items:center;gap:6px;justify-content:center;margin-top:36px;}
+    .page-btn{width:36px;height:36px;border:1px solid var(--n200);border-radius:var(--r8);background:white;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--n700);}
+    .page-btn.active{background:var(--brand-500);color:white;border-color:var(--brand-500);}
+    .page-btn:hover:not(.active){background:var(--n100);}
+
+    /* ============================================================
+       PAGE 2 — PRODUCT DETAIL PAGE (PDP)
+    ============================================================ */
+    .pdp-body{max-width:1280px;margin:0 auto;padding:28px 32px;}
+    .pdp-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:48px;}
+
+    /* Gallery */
+    .gallery{display:flex;flex-direction:column;gap:12px;}
+    .gallery-main{border-radius:var(--r16);overflow:hidden;background:linear-gradient(135deg,var(--brand-50),var(--brand-100));aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:140px;position:relative;border:1px solid var(--n200);}
+    .gallery-badges{position:absolute;top:16px;left:16px;display:flex;flex-direction:column;gap:6px;}
+    .gallery-wish{position:absolute;top:16px;right:16px;width:40px;height:40px;background:white;border:1px solid var(--n200);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:var(--s-sm);}
+    .gallery-thumbs{display:flex;gap:8px;}
+    .gallery-thumb{width:72px;height:72px;border-radius:var(--r8);border:2px solid var(--n200);display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;background:var(--n100);transition:all .15s;}
+    .gallery-thumb.active{border-color:var(--brand-500);background:var(--brand-50);}
+    .gallery-thumb:hover{border-color:var(--brand-300);}
+
+    /* PDP Info */
+    .pdp-info{}
+    .pdp-cat{font-size:12px;font-weight:700;color:var(--brand-500);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+    .pdp-name-en{font-size:32px;line-height:1.15;color:var(--n900);margin-bottom:4px;}
+    .pdp-name-zh{font-size:22px;color:var(--n700);font-family:var(--fz);margin-bottom:4px;}
+    .pdp-pinyin{font-size:14px;color:var(--n400);font-style:italic;margin-bottom:14px;}
+    .pdp-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+    .pdp-badge{padding:4px 10px;border-radius:var(--rfull);font-size:12px;font-weight:700;}
+    .pdp-star-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+    .pdp-stars{color:var(--accent-500);font-size:16px;}
+    .pdp-rating{font-size:15px;font-weight:600;color:var(--n900);}
+    .pdp-reviews{font-size:13px;color:var(--brand-500);text-decoration:underline;cursor:pointer;}
+    .pdp-price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+    .pdp-price{font-size:34px;font-weight:700;color:var(--n900);}
+    .pdp-price-orig{font-size:18px;color:var(--n400);text-decoration:line-through;}
+    .pdp-save-badge{background:var(--error);color:white;padding:3px 9px;border-radius:var(--rfull);font-size:12px;font-weight:700;}
+    .pdp-stock{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;margin-bottom:20px;}
+    .pdp-divider{height:1px;background:var(--n200);margin:20px 0;}
+
+    /* TCM properties block */
+    .tcm-props{background:var(--brand-50);border:1px solid var(--brand-100);border-radius:var(--r12);padding:16px;margin-bottom:20px;}
+    .tcm-props-title{font-size:12px;font-weight:700;color:var(--brand-600);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+    .tcm-props-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .tcm-prop{display:flex;flex-direction:column;gap:3px;}
+    .tcm-prop-label{font-size:11px;font-weight:600;color:var(--brand-600);text-transform:uppercase;letter-spacing:.05em;}
+    .tcm-prop-value{font-size:13px;color:var(--n900);font-weight:500;}
+    .tcm-prop-zh{font-size:12px;color:var(--n500);font-family:var(--fz);}
+    .meridian-dots{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px;}
+    .meridian-dot{padding:2px 8px;background:var(--brand-500);color:white;border-radius:var(--rfull);font-size:11px;font-weight:600;}
+
+    /* Qty + Add to cart */
+    .qty-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+    .qty-label{font-size:13px;font-weight:600;color:var(--n700);}
+    .qty-ctrl{display:flex;align-items:center;gap:0;border:1px solid var(--n200);border-radius:var(--r8);overflow:hidden;}
+    .qty-btn{width:36px;height:36px;border:none;background:var(--n100);cursor:pointer;font-size:17px;font-weight:600;color:var(--n700);transition:background .15s;}
+    .qty-btn:hover{background:var(--n200);}
+    .qty-val{width:44px;height:36px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:var(--n900);border-left:1px solid var(--n200);border-right:1px solid var(--n200);}
+    .pdp-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+    .btn-add-cart{padding:14px;background:var(--brand-500);color:white;border:none;border-radius:var(--r8);font-size:15px;font-weight:700;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn-add-cart:hover{background:var(--brand-600);}
+    .btn-buy-now{padding:14px;background:var(--n900);color:white;border:none;border-radius:var(--r8);font-size:15px;font-weight:700;cursor:pointer;transition:background .15s;}
+    .btn-buy-now:hover{background:var(--n700);}
+
+    /* Shipping info */
+    .shipping-info{background:var(--n100);border-radius:var(--r8);padding:14px;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+    .shipping-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--n700);}
+    .shipping-item svg{color:var(--brand-500);flex-shrink:0;}
+
+    /* Practitioner note */
+    .prac-note{background:linear-gradient(135deg,var(--brand-50),var(--accent-100));border:1px solid var(--brand-200);border-radius:var(--r12);padding:14px;display:flex;gap:12px;align-items:flex-start;}
+    .prac-av{width:44px;height:44px;border-radius:50%;background:var(--brand-200);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+    .prac-note-text strong{display:block;font-size:13px;color:var(--brand-700);margin-bottom:3px;}
+    .prac-note-text p{font-size:13px;color:var(--n700);line-height:1.5;font-style:italic;}
+    .prac-note-zh{font-family:var(--fz);}
+
+    /* AI CTA */
+    .ai-cta{background:var(--brand-700);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .15s;margin-bottom:8px;}
+    .ai-cta:hover{background:var(--brand-900);}
+    .ai-cta-icon{font-size:24px;}
+    .ai-cta-text strong{display:block;color:white;font-size:13px;font-family:var(--fb);}
+    .ai-cta-text span{color:var(--brand-300);font-size:12px;}
+    .ai-cta-arrow{margin-left:auto;color:var(--brand-300);font-size:18px;}
+
+    /* Tab section */
+    .pdp-tabs{border-bottom:2px solid var(--n200);display:flex;gap:0;margin-bottom:28px;}
+    .pdp-tab{padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;color:var(--n500);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;border:none;background:none;}
+    .pdp-tab.active{color:var(--brand-600);border-bottom-color:var(--brand-500);}
+    .pdp-tab:hover:not(.active){color:var(--n900);}
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;}
+
+    /* Description tab */
+    .desc-body{font-size:15px;color:var(--n700);line-height:1.8;margin-bottom:20px;}
+    .desc-body p{margin-bottom:14px;}
+    .benefits-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+    .benefits-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--n700);}
+    .benefit-icon{color:var(--brand-500);font-size:16px;flex-shrink:0;margin-top:1px;}
+    .usage-box{background:var(--accent-100);border:1px solid var(--accent-300);border-radius:var(--r12);padding:16px;margin-bottom:20px;}
+    .usage-box-title{font-size:13px;font-weight:700;color:var(--accent-700);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+    .usage-row{display:flex;gap:16px;flex-wrap:wrap;}
+    .usage-item{display:flex;flex-direction:column;gap:3px;}
+    .usage-label{font-size:11px;font-weight:600;color:var(--n500);text-transform:uppercase;}
+    .usage-val{font-size:14px;font-weight:600;color:var(--n900);}
+    .fda-disclaimer{background:#FEF3C7;border:1px solid var(--accent-300);border-radius:var(--r8);padding:12px 16px;font-size:12px;color:var(--accent-700);line-height:1.6;}
+
+    /* Ingredients tab */
+    .ingredients-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+    .ingredient-card{background:var(--n100);border-radius:var(--r8);border:1px solid var(--n200);padding:12px;display:flex;gap:10px;align-items:center;cursor:pointer;transition:all .15s;}
+    .ingredient-card:hover{background:var(--brand-50);border-color:var(--brand-200);}
+    .ing-emoji{font-size:24px;flex-shrink:0;}
+    .ing-info{}
+    .ing-name{font-size:13px;font-weight:600;color:var(--n900);}
+    .ing-zh{font-size:12px;color:var(--n500);font-family:var(--fz);}
+    .ing-role{font-size:11px;color:var(--brand-500);font-weight:500;margin-top:2px;}
+    .ing-pct{font-size:12px;color:var(--n400);margin-left:auto;align-self:center;font-weight:600;}
+
+    /* Reviews tab */
+    .review-summary{display:grid;grid-template-columns:180px 1fr;gap:24px;margin-bottom:28px;padding:20px;background:var(--n100);border-radius:var(--r12);border:1px solid var(--n200);}
+    .review-big-score{text-align:center;}
+    .review-big-num{font-size:56px;font-weight:700;color:var(--n900);line-height:1;}
+    .review-big-stars{color:var(--accent-500);font-size:22px;margin:6px 0;}
+    .review-big-count{font-size:13px;color:var(--n500);}
+    .review-bars{display:flex;flex-direction:column;gap:7px;justify-content:center;}
+    .review-bar-row{display:flex;align-items:center;gap:10px;font-size:13px;}
+    .review-bar-label{width:36px;color:var(--n700);font-weight:500;text-align:right;flex-shrink:0;}
+    .review-bar-track{flex:1;height:8px;background:var(--n200);border-radius:var(--rfull);overflow:hidden;}
+    .review-bar-fill{height:100%;background:var(--accent-500);border-radius:var(--rfull);}
+    .review-bar-count{width:30px;color:var(--n500);font-size:12px;}
+    .review-card{background:white;border:1px solid var(--n200);border-radius:var(--r12);padding:20px;margin-bottom:16px;}
+    .review-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+    .reviewer-av{width:38px;height:38px;border-radius:50%;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-size:18px;}
+    .reviewer-info strong{display:block;font-size:14px;color:var(--n900);}
+    .reviewer-info span{font-size:12px;color:var(--n400);}
+    .review-stars{margin-left:auto;color:var(--accent-500);font-size:14px;}
+    .verified-badge{display:inline-flex;align-items:center;gap:4px;background:var(--brand-50);border:1px solid var(--brand-200);border-radius:var(--rfull);padding:2px 8px;font-size:11px;color:var(--brand-600);font-weight:500;margin-bottom:8px;}
+    .review-text{font-size:14px;color:var(--n700);line-height:1.6;}
+    .review-helpful{font-size:12px;color:var(--n400);margin-top:10px;}
+
+    /* Related products */
+    .related-section{margin-top:48px;padding-top:40px;border-top:1px solid var(--n200);}
+    .section-title{font-size:26px;color:var(--n900);margin-bottom:24px;}
+    .related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+
+    /* Chat widget */
+    .chat-widget{position:fixed;bottom:24px;right:24px;z-index:200;}
+    .chat-fab{width:54px;height:54px;border-radius:50%;background:var(--brand-500);color:white;border:none;font-size:24px;cursor:pointer;box-shadow:var(--s-xl);transition:all .2s;}
+    .chat-fab:hover{background:var(--brand-600);transform:scale(1.05);}
+    .chat-panel{position:absolute;bottom:66px;right:0;width:320px;background:white;border-radius:var(--r16);box-shadow:var(--s-xl);border:1px solid var(--n200);overflow:hidden;display:none;flex-direction:column;}
+    .chat-panel.open{display:flex;}
+    .chat-head{background:var(--brand-500);padding:14px 16px;display:flex;align-items:center;gap:10px;}
+    .chat-head-av{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;}
+    .chat-head-info strong{display:block;font-size:13px;color:white;font-family:var(--fb);}
+    .chat-head-info span{font-size:11px;color:rgba(255,255,255,.7);}
+    .chat-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;}
+    .chat-msgs{padding:14px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+    .msg-row{display:flex;gap:7px;align-items:flex-start;}
+    .msg-row.u{flex-direction:row-reverse;}
+    .msg-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+    .msg-av.ai{background:var(--brand-500);}
+    .msg-av.ur{background:var(--n200);}
+    .bubble{max-width:210px;padding:8px 12px;border-radius:var(--r8);font-size:12px;line-height:1.5;}
+    .bubble.ai{background:var(--n100);color:var(--n700);border-radius:2px var(--r8) var(--r8) var(--r8);}
+    .bubble.u{background:var(--brand-500);color:white;border-radius:var(--r8) 2px var(--r8) var(--r8);}
+    .chat-disclaim{padding:6px 14px;font-size:10px;color:var(--n400);border-top:1px solid var(--n100);}
+    .chat-input-row{padding:10px;border-top:1px solid var(--n200);display:flex;gap:7px;}
+    .c-input{flex:1;padding:8px 12px;border:1px solid var(--n200);border-radius:var(--rfull);font-size:12px;outline:none;font-family:var(--fb);}
+    .c-input:focus{border-color:var(--brand-300);}
+    .c-send{width:32px;height:32px;background:var(--brand-500);color:white;border:none;border-radius:50%;cursor:pointer;font-size:14px;}
+  </style>
+</head>
+<body>
+
+<!-- PROTOTYPE BAR -->
+<div class="proto">
+  <span class="proto-title">CATALOG_PDP_PROTOTYPE</span>
+  <span class="proto-badge">VISUAL ONLY</span>
+  <div class="page-tabs">
+    <button class="page-tab active" onclick="showPage('catalog')">
+      📋 <span class="ei">All Products Page</span><span class="zi">所有产品页</span>
+    </button>
+    <button class="page-tab" onclick="showPage('pdp')">
+      🌿 <span class="ei">Product Detail Page</span><span class="zi">产品详情页</span>
+    </button>
+  </div>
+  <div class="lang-sw">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('zh')">中文</button>
+  </div>
+</div>
+
+<!-- SHARED HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo">pure<span>Herb</span>Health <span class="zi" style="font-family:var(--fz);font-size:16px;color:var(--n500)">纯草健康</span></a>
+    <nav class="nav">
+      <a href="#"><span class="ei">Shop</span><span class="zi">商店</span></a>
+      <a href="#" class="active"><span class="ei">Herbal Formulas</span><span class="zi">中药方剂</span></a>
+      <a href="#"><span class="ei">Single Herbs</span><span class="zi">单味草药</span></a>
+      <a href="#"><span class="ei">Learn</span><span class="zi">学习</span></a>
+    </nav>
+    <div class="search-bar">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span class="ei">Search herbs, formulas...</span><span class="zi">搜索草药、方剂...</span>
+    </div>
+    <div class="header-right">
+      <div class="h-lang">
+        <button class="h-lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="h-lang-btn" onclick="setLang('zh')">中文</button>
+      </div>
+      <button class="icon-btn">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </button>
+      <button class="cart-btn">
+        🛒 <span class="ei">Cart</span><span class="zi">购物车</span>
+        <span class="cart-cnt" id="cart-count">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     PAGE 1 — ALL PRODUCTS
+============================================================ -->
+<div class="page active" id="page-catalog">
+  <div class="catalog-topbar">
+    <span class="ei">🌿 Free shipping on orders over <span>$75</span> · Use code <span>WELCOME15</span> for 15% off</span>
+    <span class="zi">🌿 满<span>$75</span>免运费 · 使用优惠码 <span>WELCOME15</span> 享85折</span>
+  </div>
+
+  <div class="catalog-body">
+    <div class="breadcrumb">
+      <a href="#"><span class="ei">Home</span><span class="zi">首页</span></a>
+      <span class="sep">›</span>
+      <span class="cur"><span class="ei">All Products</span><span class="zi">所有产品</span></span>
+    </div>
+
+    <div class="catalog-layout">
+
+      <!-- SIDEBAR FILTERS -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3><span class="ei">Filters</span><span class="zi">筛选</span></h3>
+          <button class="clear-all"><span class="ei">Clear all</span><span class="zi">清除全部</span></button>
+        </div>
+
+        <!-- Category filter -->
+        <div class="filter-section">
+          <div class="filter-title">
+            <span><span class="ei">Category</span><span class="zi">类别</span></span>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="filter-opts">
+            <label class="filter-opt"><input type="checkbox" checked /><label><span class="ei">Herbal Formulas</span><span class="zi">中药方剂</span></label><span class="opt-count">68</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Single Herbs</span><span class="zi">单味草药</span></label><span class="opt-count">45</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Herbal Teas</span><span class="zi">草本茶</span></label><span class="opt-count">32</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Moxibustion</span><span class="zi">艾灸</span></label><span class="opt-count">18</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Wellness Tools</span><span class="zi">健康工具</span></label><span class="opt-count">27</span></label>
+          </div>
+        </div>
+
+        <!-- Five Elements filter -->
+        <div class="filter-section">
+          <div class="filter-title">
+            <span><span class="ei">Five Elements</span><span class="zi">五行</span></span>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="element-filters">
+            <div class="el-filter el-wood selected" onclick="toggleEl(this)">🌱 <span class="ei">Wood</span><span class="zi">木</span></div>
+            <div class="el-filter el-fire" onclick="toggleEl(this)">🔥 <span class="ei">Fire</span><span class="zi">火</span></div>
+            <div class="el-filter el-earth" onclick="toggleEl(this)">🌍 <span class="ei">Earth</span><span class="zi">土</span></div>
+            <div class="el-filter el-metal" onclick="toggleEl(this)" style="color:var(--metal);border-color:var(--metal);background:rgba(160,160,160,.08)">⚪ <span class="ei">Metal</span><span class="zi">金</span></div>
+            <div class="el-filter el-water" onclick="toggleEl(this)">💧 <span class="ei">Water</span><span class="zi">水</span></div>
+          </div>
+        </div>
+
+        <!-- TCM Nature filter -->
+        <div class="filter-section">
+          <div class="filter-title">
+            <span><span class="ei">TCM Nature</span><span class="zi">药性</span></span>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="filter-opts">
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Warm (温)</span><span class="zi">温性</span></label><span class="opt-count">48</span></label>
+            <label class="filter-opt"><input type="checkbox" checked /><label><span class="ei">Hot (热)</span><span class="zi">热性</span></label><span class="opt-count">12</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Neutral (平)</span><span class="zi">平性</span></label><span class="opt-count">34</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Cool (凉)</span><span class="zi">凉性</span></label><span class="opt-count">28</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Cold (寒)</span><span class="zi">寒性</span></label><span class="opt-count">20</span></label>
+          </div>
+        </div>
+
+        <!-- Action / Function filter -->
+        <div class="filter-section">
+          <div class="filter-title">
+            <span><span class="ei">TCM Action</span><span class="zi">功效</span></span>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="filter-opts">
+            <label class="filter-opt"><input type="checkbox" checked /><label><span class="ei">Tonify Qi (补气)</span><span class="zi">补气</span></label><span class="opt-count">26</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Nourish Blood (补血)</span><span class="zi">补血</span></label><span class="opt-count">19</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Calm Shen (安神)</span><span class="zi">安神</span></label><span class="opt-count">14</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Clear Heat (清热)</span><span class="zi">清热</span></label><span class="opt-count">22</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Move Blood (活血)</span><span class="zi">活血</span></label><span class="opt-count">17</span></label>
+          </div>
+        </div>
+
+        <!-- Price range -->
+        <div class="filter-section">
+          <div class="filter-title">
+            <span><span class="ei">Price Range</span><span class="zi">价格范围</span></span>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="price-range">
+            <div class="price-inputs">
+              <input class="price-input" value="$0" />
+              <span class="price-sep">—</span>
+              <input class="price-input" value="$120" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating filter -->
+        <div class="filter-section">
+          <div class="filter-title">
+            <span><span class="ei">Rating</span><span class="zi">评分</span></span>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="filter-opts">
+            <label class="filter-opt"><input type="checkbox" /><label>★★★★★ (5.0)</label><span class="opt-count">42</span></label>
+            <label class="filter-opt"><input type="checkbox" checked /><label>★★★★☆ (4.0+)</label><span class="opt-count">89</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label>★★★☆☆ (3.0+)</label><span class="opt-count">21</span></label>
+          </div>
+        </div>
+
+        <!-- In stock -->
+        <div class="filter-section" style="border-bottom:none">
+          <label class="filter-opt"><input type="checkbox" checked /><label style="font-weight:600"><span class="ei">In Stock Only</span><span class="zi">仅显示有货</span></label></label>
+          <div style="margin-top:10px">
+            <label class="filter-opt"><input type="checkbox" /><label style="font-weight:600"><span class="ei">Practitioner Picks Only</span><span class="zi">仅医生精选</span></label></label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <div>
+        <!-- Active filter chips -->
+        <div class="active-filters">
+          <span class="filter-chip">Herbal Formulas <button>×</button></span>
+          <span class="filter-chip">Wood (木) <button>×</button></span>
+          <span class="filter-chip">Hot Nature <button>×</button></span>
+          <span class="filter-chip">Tonify Qi <button>×</button></span>
+          <span class="filter-chip">4.0+ Stars <button>×</button></span>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="catalog-toolbar">
+          <div class="result-count">
+            <strong>68</strong> <span class="ei">products found</span><span class="zi">件产品</span>
+          </div>
+          <select class="sort-select">
+            <option><span class="ei">Sort: Best Sellers</span></option>
+            <option>Price: Low → High</option>
+            <option>Price: High → Low</option>
+            <option>Newest First</option>
+            <option>Highest Rated</option>
+          </select>
+          <div class="view-toggle">
+            <button class="view-btn active">⊞</button>
+            <button class="view-btn">☰</button>
+          </div>
+        </div>
+
+        <!-- Product grid -->
+        <div class="product-grid">
+
+          <!-- 1 -->
+          <div class="product-card" onclick="goToPDP()">
+            <div class="product-img" style="background:linear-gradient(135deg,var(--brand-50),var(--brand-100))">🌿
+              <div class="p-badges"><span class="p-badge b-bs">★ Best Seller</span><span class="p-badge b-pick">✓ Dr. Pick</span></div>
+              <div class="wish">♡</div>
+            </div>
+            <div class="p-info">
+              <div class="p-cat"><span class="ei">Herbal Formulas</span><span class="zi">中药方剂</span></div>
+              <div class="p-name"><span class="ei">Astragalus Immune Formula</span><span class="zi">黄芪免疫方</span></div>
+              <div class="p-zh"><span class="ei">黄芪免疫方 · Huáng Qí Miǎn Yì Fāng</span></div>
+              <div class="tcm-tags"><span class="tcm-tag t-wood">Wood</span><span class="tcm-tag t-earth">Earth</span><span class="tcm-tag t-qi">Tonify Qi</span></div>
+              <div class="star-row"><span class="stars">★★★★★</span> 4.9 (142)</div>
+              <div class="price-row"><span class="price">$38.00</span></div>
+              <div class="stock-row"><span class="dot dot-in"></span><span style="color:var(--success);font-weight:600"><span class="ei">In Stock</span><span class="zi">有货</span></span></div>
+              <button class="add-btn" onclick="event.stopPropagation();addCart(this)">+ <span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <div class="product-card">
+            <div class="product-img" style="background:linear-gradient(135deg,#FFF8E7,#FFD666)">🍯
+              <div class="p-badges"><span class="p-badge b-sale">20% OFF</span></div>
+              <div class="wish">♡</div>
+            </div>
+            <div class="p-info">
+              <div class="p-cat"><span class="ei">Herbal Formulas</span><span class="zi">中药方剂</span></div>
+              <div class="p-name"><span class="ei">Reishi Sleep & Calm Formula</span><span class="zi">灵芝安神方</span></div>
+              <div class="p-zh"><span class="ei">灵芝安神方 · Líng Zhī Ān Shén Fāng</span></div>
+              <div class="tcm-tags"><span class="tcm-tag t-fire">Fire</span><span class="tcm-tag t-water">Water</span><span class="tcm-tag t-qi">Calm Shen</span></div>
+              <div class="star-row"><span class="stars">★★★★★</span> 4.8 (89)</div>
+              <div class="price-row"><span class="price">$32.00</span><span class="price-orig">$40.00</span><span class="price-save">Save $8</span></div>
+              <div class="stock-row"><span class="dot dot-low"></span><span style="color:var(--warning);font-weight:600"><span class="ei">Only 5 left</span><span class="zi">仅剩5件</span></span></div>
+              <button class="add-btn" onclick="addCart(this)">+ <span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="product-card">
+            <div class="product-img" style="background:linear-gradient(135deg,#EEF2FF,#C7D2FE)">🌸
+              <div class="p-badges"><span class="p-badge b-new">NEW</span></div>
+              <div class="wish">♡</div>
+            </div>
+            <div class="p-info">
+              <div class="p-cat"><span class="ei">Single Herbs</span><span class="zi">单味草药</span></div>
+              <div class="p-name"><span class="ei">Dong Quai Root (Chinese Angelica)</span><span class="zi">当归</span></div>
+              <div class="p-zh"><span class="ei">当归 · Dāng Guī</span></div>
+              <div class="tcm-tags"><span class="tcm-tag t-wood">Wood</span><span class="tcm-tag t-fire">Fire</span><span class="tcm-tag t-qi">Nourish Blood</span></div>
+              <div class="star-row"><span class="stars">★★★★☆</span> 4.6 (56)</div>
+              <div class="price-row"><span class="price">$24.00</span></div>
+              <div class="stock-row"><span class="dot dot-in"></span><span style="color:var(--success);font-weight:600"><span class="ei">In Stock</span><span class="zi">有货</span></span></div>
+              <button class="add-btn" onclick="addCart(this)">+ <span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+            </div>
+          </div>
+
+          <!-- 4 -->
+          <div class="product-card">
+            <div class="product-img" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A)">🔥
+              <div class="p-badges"><span class="p-badge b-pick">✓ Dr. Pick</span></div>
+              <div class="wish">♡</div>
+            </div>
+            <div class="p-info">
+              <div class="p-cat"><span class="ei">Moxibustion</span><span class="zi">艾灸</span></div>
+              <div class="p-name"><span class="ei">Premium Moxa Stick Set (10 pack)</span><span class="zi">优质艾条套装</span></div>
+              <div class="p-zh"><span class="ei">优质艾条 · Yōu Zhì Ài Tiáo</span></div>
+              <div class="tcm-tags"><span class="tcm-tag t-fire">Fire</span><span class="tcm-tag t-earth">Earth</span><span class="tcm-tag t-qi">Warm Yang</span></div>
+              <div class="star-row"><span class="stars">★★★★★</span> 4.9 (203)</div>
+              <div class="price-row"><span class="price">$45.00</span></div>
+              <div class="stock-row"><span class="dot dot-in"></span><span style="color:var(--success);font-weight:600"><span class="ei">In Stock</span><span class="zi">有货</span></span></div>
+              <button class="add-btn" onclick="addCart(this)">+ <span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+            </div>
+          </div>
+
+          <!-- 5 -->
+          <div class="product-card">
+            <div class="product-img" style="background:linear-gradient(135deg,#F0FDF4,#86EFAC)">🍄
+              <div class="p-badges"><span class="p-badge b-bs">★ Popular</span></div>
+              <div class="wish">♡</div>
+            </div>
+            <div class="p-info">
+              <div class="p-cat"><span class="ei">Single Herbs</span><span class="zi">单味草药</span></div>
+              <div class="p-name"><span class="ei">Cordyceps Mushroom Powder</span><span class="zi">冬虫夏草粉</span></div>
+              <div class="p-zh"><span class="ei">冬虫夏草 · Dōng Chóng Xià Cǎo</span></div>
+              <div class="tcm-tags"><span class="tcm-tag t-water">Water</span><span class="tcm-tag t-qi">Tonify Kidney</span></div>
+              <div class="star-row"><span class="stars">★★★★★</span> 4.7 (78)</div>
+              <div class="price-row"><span class="price">$68.00</span></div>
+              <div class="stock-row"><span class="dot dot-in"></span><span style="color:var(--success);font-weight:600"><span class="ei">In Stock</span><span class="zi">有货</span></span></div>
+              <button class="add-btn" onclick="addCart(this)">+ <span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+            </div>
+          </div>
+
+          <!-- 6 -->
+          <div class="product-card">
+            <div class="product-img" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">🌺
+              <div class="p-badges"><span class="p-badge b-pick">✓ Dr. Pick</span></div>
+              <div class="wish">♡</div>
+            </div>
+            <div class="p-info">
+              <div class="p-cat"><span class="ei">Herbal Formulas</span><span class="zi">中药方剂</span></div>
+              <div class="p-name"><span class="ei">Ba Zhen Wan — Eight Treasure Pills</span><span class="zi">八珍丸</span></div>
+              <div class="p-zh"><span class="ei">八珍丸 · Bā Zhēn Wán</span></div>
+              <div class="tcm-tags"><span class="tcm-tag t-wood">Wood</span><span class="tcm-tag t-fire">Fire</span><span class="tcm-tag t-qi">Nourish Blood</span></div>
+              <div class="star-row"><span class="stars">★★★★★</span> 4.9 (115)</div>
+              <div class="price-row"><span class="price">$29.00</span></div>
+              <div class="stock-row"><span class="dot dot-in"></span><span style="color:var(--success);font-weight:600"><span class="ei">In Stock</span><span class="zi">有货</span></span></div>
+              <button class="add-btn" onclick="addCart(this)">+ <span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+            </div>
+          </div>
+
+        </div><!-- end product-grid -->
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <button class="page-btn">‹</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <span style="color:var(--n400);font-size:13px;padding:0 4px">…</span>
+          <button class="page-btn">12</button>
+          <button class="page-btn">›</button>
+        </div>
+
+      </div><!-- end main -->
+    </div><!-- end catalog-layout -->
+  </div><!-- end catalog-body -->
+</div><!-- end page-catalog -->
+
+
+<!-- ============================================================
+     PAGE 2 — PRODUCT DETAIL PAGE
+============================================================ -->
+<div class="page" id="page-pdp">
+  <div class="pdp-body">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb" style="margin-bottom:24px">
+      <a href="#"><span class="ei">Home</span><span class="zi">首页</span></a><span class="sep">›</span>
+      <a href="#"><span class="ei">Shop</span><span class="zi">商店</span></a><span class="sep">›</span>
+      <a href="#" onclick="showPage('catalog')"><span class="ei">Herbal Formulas</span><span class="zi">中药方剂</span></a><span class="sep">›</span>
+      <span class="cur"><span class="ei">Astragalus Immune Formula</span><span class="zi">黄芪免疫方</span></span>
+    </div>
+
+    <!-- PDP main grid -->
+    <div class="pdp-grid">
+
+      <!-- LEFT: Gallery -->
+      <div class="gallery">
+        <div class="gallery-main">
+          🌿
+          <div class="gallery-badges">
+            <span class="p-badge b-bs" style="font-size:13px;padding:5px 12px">★ Best Seller</span>
+            <span class="p-badge b-pick" style="font-size:13px;padding:5px 12px">✓ Dr. Huang Pick</span>
+          </div>
+          <div class="gallery-wish">♡</div>
+        </div>
+        <div class="gallery-thumbs">
+          <div class="gallery-thumb active">🌿</div>
+          <div class="gallery-thumb">📦</div>
+          <div class="gallery-thumb">📋</div>
+          <div class="gallery-thumb">🔬</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Product info -->
+      <div class="pdp-info">
+        <div class="pdp-cat"><span class="ei">Herbal Formulas · Single Herbs</span><span class="zi">中药方剂 · 单味草药</span></div>
+
+        <h1 class="pdp-name-en en">Astragalus Immune Formula</h1>
+        <h1 class="pdp-name-en zh-c" style="font-family:var(--fz);font-size:28px;font-weight:500">黄芪免疫方</h1>
+
+        <div class="pdp-name-zh"><span class="ei">黄芪免疫方</span><span class="zi">Astragalus Immune Formula</span></div>
+        <div class="pdp-pinyin"><span class="ei">Huáng Qí Miǎn Yì Fāng · 60 capsules</span><span class="zi">黄芪免疫方 · 60粒胶囊</span></div>
+
+        <div class="pdp-badges">
+          <span class="p-badge b-bs" style="font-size:12px;padding:4px 10px">★ Best Seller</span>
+          <span class="p-badge b-pick" style="font-size:12px;padding:4px 10px">✓ Dr. Huang Pick</span>
+          <span class="p-badge" style="background:var(--brand-50);color:var(--brand-600);border:1px solid var(--brand-200);font-size:12px;padding:4px 10px">GMP Certified</span>
+          <span class="p-badge" style="background:var(--n100);color:var(--n700);border:1px solid var(--n200);font-size:12px;padding:4px 10px"><span class="ei">Vegan</span><span class="zi">纯素</span></span>
+        </div>
+
+        <div class="pdp-star-row">
+          <span class="pdp-stars">★★★★★</span>
+          <span class="pdp-rating">4.9</span>
+          <span class="pdp-reviews"><span class="ei">142 reviews</span><span class="zi">142条评价</span></span>
+          <span style="font-size:13px;color:var(--n400);margin-left:6px">· <span class="ei">312 sold this month</span><span class="zi">本月已售312件</span></span>
+        </div>
+
+        <div class="pdp-price-row">
+          <span class="pdp-price">$38.00</span>
+        </div>
+        <div style="font-size:13px;color:var(--n500);margin-bottom:16px">
+          <span class="ei">or 4 interest-free payments of <strong>$9.50</strong> with Afterpay</span>
+          <span class="zi">或4期无息分期，每期<strong>$9.50</strong></span>
+        </div>
+
+        <div class="pdp-stock">
+          <span class="dot dot-in" style="width:8px;height:8px"></span>
+          <span style="color:var(--success)"><span class="ei">In Stock</span><span class="zi">有货</span></span>
+          <span style="color:var(--n400);font-size:12px">· <span class="ei">Ships in 1–2 business days</span><span class="zi">1-2个工作日发货</span></span>
+        </div>
+
+        <div class="pdp-divider"></div>
+
+        <!-- TCM Properties -->
+        <div class="tcm-props">
+          <div class="tcm-props-title">
+            ☯ <span class="ei">TCM Properties</span><span class="zi">中医药性</span>
+          </div>
+          <div class="tcm-props-grid">
+            <div class="tcm-prop">
+              <div class="tcm-prop-label"><span class="ei">Nature (性)</span><span class="zi">药性</span></div>
+              <div class="tcm-prop-value"><span class="ei">Slightly Warm</span><span class="zi">微温</span></div>
+              <div class="tcm-prop-zh"><span class="ei">微温 (Wēi Wēn)</span></div>
+            </div>
+            <div class="tcm-prop">
+              <div class="tcm-prop-label"><span class="ei">Flavor (味)</span><span class="zi">味</span></div>
+              <div class="tcm-prop-value"><span class="ei">Sweet</span><span class="zi">甘</span></div>
+              <div class="tcm-prop-zh"><span class="ei">甘 (Gān)</span></div>
+            </div>
+            <div class="tcm-prop">
+              <div class="tcm-prop-label"><span class="ei">Five Element</span><span class="zi">五行</span></div>
+              <div class="tcm-prop-value" style="color:var(--wood)">🌱 <span class="ei">Wood / Earth</span><span class="zi">木 / 土</span></div>
+            </div>
+            <div class="tcm-prop">
+              <div class="tcm-prop-label"><span class="ei">Primary Action</span><span class="zi">主要功效</span></div>
+              <div class="tcm-prop-value"><span class="ei">Tonify Wei Qi</span><span class="zi">补卫气</span></div>
+            </div>
+            <div class="tcm-prop" style="grid-column:1/-1">
+              <div class="tcm-prop-label"><span class="ei">Meridians Entered (归经)</span><span class="zi">归经</span></div>
+              <div class="meridian-dots">
+                <span class="meridian-dot"><span class="ei">Lung</span><span class="zi">肺</span></span>
+                <span class="meridian-dot"><span class="ei">Spleen</span><span class="zi">脾</span></span>
+                <span class="meridian-dot" style="background:var(--n700)"><span class="ei">Heart</span><span class="zi">心</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Qty + Actions -->
+        <div class="qty-row">
+          <span class="qty-label"><span class="ei">Quantity</span><span class="zi">数量</span></span>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <div class="qty-val" id="qty">1</div>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+          <span style="font-size:13px;color:var(--n400)"><span class="ei">12 units available</span><span class="zi">剩余12件</span></span>
+        </div>
+
+        <div class="pdp-actions">
+          <button class="btn-add-cart" onclick="addCartPDP()">
+            🛒 <span class="ei">Add to Cart — $38.00</span><span class="zi">加入购物车 — $38.00</span>
+          </button>
+          <button class="btn-buy-now">
+            ⚡ <span class="ei">Buy Now</span><span class="zi">立即购买</span>
+          </button>
+        </div>
+
+        <!-- Shipping info -->
+        <div class="shipping-info">
+          <div class="shipping-item">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span><span class="ei"><strong>Free shipping</strong> on this order (over $75)</span><span class="zi"><strong>免费配送</strong>（订单满$75）</span></span>
+          </div>
+          <div class="shipping-item">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span><span class="ei">Ships <strong>today</strong> if ordered before 2pm EST</span><span class="zi">下午2点前下单，<strong>当天</strong>发货</span></span>
+          </div>
+          <div class="shipping-item">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/></svg>
+            <span><span class="ei"><strong>30-day returns</strong> — hassle free</span><span class="zi"><strong>30天</strong>无忧退货</span></span>
+          </div>
+        </div>
+
+        <!-- Practitioner note -->
+        <div class="prac-note">
+          <div class="prac-av">👨‍⚕️</div>
+          <div class="prac-note-text">
+            <strong>Dr. Wei Huang, L.Ac., DAOM</strong>
+            <p class="en">"Astragalus is the cornerstone of immune support in TCM. I recommend this formula for patients with frequent colds, chronic fatigue, or anyone looking to strengthen their Wei Qi (defensive energy) going into cold season."</p>
+            <p class="zh-c prac-note-zh">"黄芪是中医免疫调节的基础药材。我为经常感冒、慢性疲劳或希望在寒冷季节增强卫气的患者推荐这个方剂。"</p>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="ai-cta" onclick="toggleChat()">
+            <span class="ai-cta-icon">🌿</span>
+            <div class="ai-cta-text">
+              <strong><span class="ei">Ask AI: Is this right for me?</span><span class="zi">询问AI：这适合我吗？</span></strong>
+              <span><span class="ei">Describe your symptoms · Get personalized advice</span><span class="zi">描述您的症状 · 获取个性化建议</span></span>
+            </div>
+            <span class="ai-cta-arrow">→</span>
+          </div>
+        </div>
+
+      </div><!-- end pdp-info -->
+    </div><!-- end pdp-grid -->
+
+    <!-- TAB SECTION -->
+    <div class="pdp-tabs">
+      <button class="pdp-tab active" onclick="switchTab('desc',this)"><span class="ei">Description</span><span class="zi">产品描述</span></button>
+      <button class="pdp-tab" onclick="switchTab('tcm',this)"><span class="ei">TCM Guide</span><span class="zi">中医指南</span></button>
+      <button class="pdp-tab" onclick="switchTab('ingredients',this)"><span class="ei">Ingredients</span><span class="zi">成分</span></button>
+      <button class="pdp-tab" onclick="switchTab('usage',this)"><span class="ei">Usage</span><span class="zi">用法</span></button>
+      <button class="pdp-tab" onclick="switchTab('reviews',this)"><span class="ei">Reviews (142)</span><span class="zi">评价 (142)</span></button>
+    </div>
+
+    <!-- Tab: Description -->
+    <div class="tab-panel active" id="tab-desc">
+      <div class="desc-body">
+        <p class="en">pureHerbHealth's Astragalus Immune Formula is a premium blend of <strong>Astragalus Root (Huáng Qí)</strong>, traditionally used in Chinese medicine for over 2,000 years to tonify the Spleen and Lung Qi, strengthen Wei Qi (defensive energy), and support the body's natural immune response.</p>
+        <p class="zh-c">纯草健康黄芪免疫方是一款优质配方，以<strong>黄芪</strong>为主要成分，在中医中已有2000多年的应用历史，用于补脾肺之气、强卫气、支持身体的自然免疫反应。</p>
+        <p class="en">Unlike synthetic immune supplements, this formula works with your body's natural energy systems as understood through TCM theory — addressing the root cause of immune weakness, not just the symptoms.</p>
+        <p class="zh-c">与合成免疫补充剂不同，这个方剂根据中医理论与身体的自然能量系统协同作用——针对免疫虚弱的根本原因，而不仅仅是症状。</p>
+      </div>
+      <div style="font-size:14px;font-weight:700;color:var(--n900);margin-bottom:12px"><span class="ei">Key Benefits</span><span class="zi">主要功效</span></div>
+      <ul class="benefits-list">
+        <li><span class="benefit-icon">✓</span><span><span class="ei">Supports and strengthens the immune system (Wei Qi)</span><span class="zi">支持并增强免疫系统（卫气）</span></span></li>
+        <li><span class="benefit-icon">✓</span><span><span class="ei">Tonifies Spleen and Lung Qi — addresses root cause of fatigue</span><span class="zi">补脾肺之气——解决疲劳的根本原因</span></span></li>
+        <li><span class="benefit-icon">✓</span><span><span class="ei">Reduces frequency and duration of seasonal illness</span><span class="zi">减少季节性疾病的发生频率和持续时间</span></span></li>
+        <li><span class="benefit-icon">✓</span><span><span class="ei">Adaptogenic — helps the body respond to physical and mental stress</span><span class="zi">适应原性——帮助身体应对身体和精神压力</span></span></li>
+        <li><span class="benefit-icon">✓</span><span><span class="ei">Non-GMO · Vegan · GMP Certified manufacturing</span><span class="zi">非转基因 · 纯素 · GMP认证制造</span></span></li>
+      </ul>
+      <div class="usage-box">
+        <div class="usage-box-title">⚡ <span class="ei">Quick Reference</span><span class="zi">快速参考</span></div>
+        <div class="usage-row">
+          <div class="usage-item"><div class="usage-label"><span class="ei">Dosage</span><span class="zi">剂量</span></div><div class="usage-val"><span class="ei">2 capsules twice daily</span><span class="zi">每日两次，每次2粒</span></div></div>
+          <div class="usage-item"><div class="usage-label"><span class="ei">Count</span><span class="zi">数量</span></div><div class="usage-val">60 <span class="ei">capsules</span><span class="zi">粒</span></div></div>
+          <div class="usage-item"><div class="usage-label"><span class="ei">Supply</span><span class="zi">供应期</span></div><div class="usage-val">30 <span class="ei">days</span><span class="zi">天</span></div></div>
+          <div class="usage-item"><div class="usage-label"><span class="ei">Form</span><span class="zi">剂型</span></div><div class="usage-val"><span class="ei">Capsule</span><span class="zi">胶囊</span></div></div>
+        </div>
+      </div>
+      <div class="fda-disclaimer">
+        ⚠️ <span class="ei"><strong>FDA Disclaimer:</strong> These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease. Consult your healthcare provider before use, especially if pregnant, nursing, or taking medications.</span>
+        <span class="zi"><strong>FDA免责声明：</strong>本产品的相关声明未经美国食品药品监督管理局评估。本产品无意用于诊断、治疗、治愈或预防任何疾病。使用前请咨询您的医疗保健提供者，尤其是孕妇、哺乳期妇女或正在服用药物者。</span>
+      </div>
+    </div>
+
+    <!-- Tab: TCM Guide -->
+    <div class="tab-panel" id="tab-tcm">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div>
+          <h3 style="font-size:18px;margin-bottom:14px"><span class="ei">When to Use This Formula</span><span class="zi">何时使用本方</span></h3>
+          <p style="font-size:14px;color:var(--n700);line-height:1.7;margin-bottom:16px" class="en">This formula is indicated for <strong>Qi Deficiency patterns</strong>, particularly when they manifest as immune weakness. In TCM, a strong Wei Qi (defensive Qi) forms a protective barrier against external pathogens.</p>
+          <p style="font-size:14px;color:var(--n700);line-height:1.7;margin-bottom:16px" class="zh-c">本方适用于<strong>气虚证</strong>，特别是表现为免疫力低下的情况。在中医中，强壮的卫气形成抵御外邪的防护屏障。</p>
+          <div style="background:var(--brand-50);border-radius:var(--r8);padding:14px;margin-bottom:16px">
+            <div style="font-size:12px;font-weight:700;color:var(--brand-600);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em"><span class="ei">Common Presenting Symptoms</span><span class="zi">常见症状</span></div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--n700)">
+              <span>• <span class="ei">Frequent colds or infections</span><span class="zi">频繁感冒或感染</span></span>
+              <span>• <span class="ei">Fatigue, low energy, shortness of breath</span><span class="zi">疲劳、精力不足、气短</span></span>
+              <span>• <span class="ei">Spontaneous sweating</span><span class="zi">自汗</span></span>
+              <span>• <span class="ei">Pale complexion, weak voice</span><span class="zi">面色苍白，声音低弱</span></span>
+              <span>• <span class="ei">Poor appetite, loose stools</span><span class="zi">食欲不振，大便稀溏</span></span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:18px;margin-bottom:14px"><span class="ei">Classical Formula Background</span><span class="zi">经典方剂背景</span></h3>
+          <div style="background:var(--accent-100);border:1px solid var(--accent-300);border-radius:var(--r8);padding:14px;margin-bottom:16px">
+            <div style="font-size:12px;font-weight:700;color:var(--accent-700);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em"><span class="ei">Formula Category</span><span class="zi">方剂类别</span></div>
+            <p style="font-size:13px;color:var(--n700)"><span class="ei">Tonifying formulas (补益剂) — Qi Tonifying (补气)</span><span class="zi">补益剂 — 补气类</span></p>
+          </div>
+          <h3 style="font-size:18px;margin-bottom:14px;margin-top:20px"><span class="ei">Cautions & Contraindications</span><span class="zi">注意事项与禁忌</span></h3>
+          <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:var(--r8);padding:14px">
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;font-size:13px;color:var(--n700)">
+              <li>⚠️ <span class="ei">Do not use during acute illness (cold, flu, fever)</span><span class="zi">急性病期间（感冒、流感、发烧）禁用</span></li>
+              <li>⚠️ <span class="ei">Discontinue 2 weeks before surgery</span><span class="zi">手术前2周停用</span></li>
+              <li>⚠️ <span class="ei">Consult practitioner if taking immunosuppressants</span><span class="zi">服用免疫抑制剂时请咨询中医师</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Ingredients -->
+    <div class="tab-panel" id="tab-ingredients">
+      <div style="font-size:14px;color:var(--n500);margin-bottom:20px"><span class="ei">All ingredients are sourced from GMP-certified suppliers and tested for heavy metals, pesticides, and microbial contamination.</span><span class="zi">所有成分均来自GMP认证供应商，并经过重金属、农药和微生物污染检测。</span></div>
+      <div class="ingredients-grid">
+        <div class="ingredient-card"><div class="ing-emoji">🌱</div><div class="ing-info"><div class="ing-name"><span class="ei">Astragalus Root</span><span class="zi">黄芪</span></div><div class="ing-zh"><span class="ei">黄芪 (Huáng Qí)</span></div><div class="ing-role"><span class="ei">Chief Herb — Tonify Wei Qi</span><span class="zi">君药 — 补卫气</span></div></div><div class="ing-pct">500mg</div></div>
+        <div class="ingredient-card"><div class="ing-emoji">🍄</div><div class="ing-info"><div class="ing-name"><span class="ei">Reishi Mushroom</span><span class="zi">灵芝</span></div><div class="ing-zh"><span class="ei">灵芝 (Líng Zhī)</span></div><div class="ing-role"><span class="ei">Deputy — Calm Shen, support immunity</span><span class="zi">臣药 — 安神，支持免疫</span></div></div><div class="ing-pct">200mg</div></div>
+        <div class="ingredient-card"><div class="ing-emoji">🌿</div><div class="ing-info"><div class="ing-name"><span class="ei">Codonopsis Root</span><span class="zi">党参</span></div><div class="ing-zh"><span class="ei">党参 (Dǎng Shēn)</span></div><div class="ing-role"><span class="ei">Deputy — Tonify Spleen Qi</span><span class="zi">臣药 — 补脾气</span></div></div><div class="ing-pct">200mg</div></div>
+        <div class="ingredient-card"><div class="ing-emoji">🟤</div><div class="ing-info"><div class="ing-name"><span class="ei">Atractylodes (White)</span><span class="zi">白术</span></div><div class="ing-zh"><span class="ei">白术 (Bái Zhú)</span></div><div class="ing-role"><span class="ei">Assisting — Strengthen Spleen</span><span class="zi">佐药 — 健脾</span></div></div><div class="ing-pct">150mg</div></div>
+        <div class="ingredient-card"><div class="ing-emoji">🟡</div><div class="ing-info"><div class="ing-name"><span class="ei">Licorice Root (Honey-Fried)</span><span class="zi">炙甘草</span></div><div class="ing-zh"><span class="ei">炙甘草 (Zhì Gān Cǎo)</span></div><div class="ing-role"><span class="ei">Envoy — Harmonize formula</span><span class="zi">使药 — 调和诸药</span></div></div><div class="ing-pct">50mg</div></div>
+        <div class="ingredient-card"><div class="ing-emoji">🍃</div><div class="ing-info"><div class="ing-name"><span class="ei">Schisandra Berry</span><span class="zi">五味子</span></div><div class="ing-zh"><span class="ei">五味子 (Wǔ Wèi Zǐ)</span></div><div class="ing-role"><span class="ei">Assisting — Astringent Lung Qi</span><span class="zi">佐药 — 敛肺气</span></div></div><div class="ing-pct">100mg</div></div>
+      </div>
+      <div style="background:var(--n100);border-radius:var(--r8);padding:14px;font-size:13px;color:var(--n700)">
+        <strong><span class="ei">Other Ingredients:</span><span class="zi">其他成分：</span></strong>
+        <span class="ei"> Vegetarian capsule (hypromellose), rice flour. Free from: gluten, soy, dairy, artificial colors, fillers.</span>
+        <span class="zi"> 植物胶囊（羟丙基甲基纤维素）、米粉。不含：麸质、大豆、乳制品、人工色素、填充剂。</span>
+      </div>
+    </div>
+
+    <!-- Tab: Usage -->
+    <div class="tab-panel" id="tab-usage">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div>
+          <div class="usage-box" style="margin-bottom:20px">
+            <div class="usage-box-title">📋 <span class="ei">Directions</span><span class="zi">用法用量</span></div>
+            <div style="font-size:14px;color:var(--n700);line-height:1.7">
+              <p class="en">Take <strong>2 capsules twice daily</strong>, preferably with warm water before meals. For best results, use consistently for at least 4–6 weeks.</p>
+              <p class="zh-c">每日<strong>两次，每次2粒</strong>，最好饭前用温水送服。为获得最佳效果，建议持续使用至少4-6周。</p>
+            </div>
+          </div>
+          <h3 style="font-size:16px;margin-bottom:12px"><span class="ei">Storage</span><span class="zi">储存</span></h3>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--n700)">
+            <li>📦 <span class="ei">Store in a cool, dry place below 77°F (25°C)</span><span class="zi">储存于阴凉干燥处，温度低于25°C（77°F）</span></li>
+            <li>☀️ <span class="ei">Keep away from direct sunlight and heat</span><span class="zi">避免阳光直射和高温</span></li>
+            <li>👶 <span class="ei">Keep out of reach of children</span><span class="zi">放置于儿童不能触及的地方</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="font-size:16px;margin-bottom:12px"><span class="ei">Preparation Tips from Dr. Huang</span><span class="zi">黄医生的使用建议</span></h3>
+          <div style="background:var(--brand-50);border-radius:var(--r8);padding:14px;font-size:13px;color:var(--n700);line-height:1.6;margin-bottom:16px">
+            <p class="en">"For maximum benefit, I recommend taking these capsules in the morning and early afternoon — not late at night. The formula has an energizing quality that can interfere with sleep if taken too close to bedtime."</p>
+            <p class="zh-c">"为获得最佳效果，我建议在早晨和下午早些时候服用——不要在晚间服用。这个方剂具有提振精神的特性，若在睡前过近的时间服用可能会影响睡眠。"</p>
+          </div>
+          <div class="fda-disclaimer">
+            ⚠️ <span class="ei">Consult your healthcare provider before use if pregnant, nursing, taking medications, or have a medical condition.</span>
+            <span class="zi">如果您正在怀孕、哺乳、服用药物或有医疗状况，使用前请咨询您的医疗保健提供者。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Reviews -->
+    <div class="tab-panel" id="tab-reviews">
+      <div class="review-summary">
+        <div class="review-big-score">
+          <div class="review-big-num">4.9</div>
+          <div class="review-big-stars">★★★★★</div>
+          <div class="review-big-count"><span class="ei">142 reviews</span><span class="zi">142条评价</span></div>
+        </div>
+        <div class="review-bars">
+          <div class="review-bar-row"><span class="review-bar-label">5★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:88%"></div></div><span class="review-bar-count">125</span></div>
+          <div class="review-bar-row"><span class="review-bar-label">4★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:8%"></div></div><span class="review-bar-count">11</span></div>
+          <div class="review-bar-row"><span class="review-bar-label">3★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:3%"></div></div><span class="review-bar-count">4</span></div>
+          <div class="review-bar-row"><span class="review-bar-label">2★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:1%"></div></div><span class="review-bar-count">2</span></div>
+          <div class="review-bar-row"><span class="review-bar-label">1★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:0%"></div></div><span class="review-bar-count">0</span></div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-av">😊</div>
+          <div class="reviewer-info"><strong>Sarah M.</strong><span>New York, NY · March 2026</span></div>
+          <span class="review-stars">★★★★★</span>
+        </div>
+        <span class="verified-badge">✓ <span class="ei">Verified Purchase</span><span class="zi">已验证购买</span></span>
+        <p class="review-text en">I've been taking this for 3 months and haven't gotten sick once — my whole family catches everything and I've been immune! The AI chat actually helped me figure out which formula was right for my constitution. Highly recommend.</p>
+        <p class="review-text zh-c">我已经服用了3个月，一次也没有生病——我全家都容易感冒，但我一直保持健康！AI聊天实际上帮助我找出了适合我体质的方剂。强烈推荐。</p>
+        <div class="review-helpful"><span class="ei">37 people found this helpful</span><span class="zi">37人觉得此评价有帮助</span></div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-av">🧑</div>
+          <div class="reviewer-info"><strong>Michael C.</strong><span>Flushing, NY · February 2026</span></div>
+          <span class="review-stars">★★★★★</span>
+        </div>
+        <span class="verified-badge">✓ <span class="ei">Verified Purchase · Dr. Huang Patient</span><span class="zi">已验证购买 · 黄医生患者</span></span>
+        <p class="review-text en">Dr. Huang recommended this for my chronic fatigue. After 6 weeks I feel a noticeable difference in my energy levels. The product quality is excellent — you can tell the herbs are high grade. Will keep buying.</p>
+        <p class="review-text zh-c">黄医生为我的慢性疲劳推荐了这款产品。服用6周后，我明显感到精力有所改善。产品质量优秀——可以看出草药品质高级。会继续购买。</p>
+        <div class="review-helpful"><span class="ei">24 people found this helpful</span><span class="zi">24人觉得此评价有帮助</span></div>
+      </div>
+
+    </div><!-- end tab-reviews -->
+
+    <!-- RELATED PRODUCTS -->
+    <div class="related-section">
+      <h2 class="section-title"><span class="ei">Frequently Bought Together</span><span class="zi">经常一起购买</span></h2>
+      <div class="related-grid">
+        <div class="product-card"><div class="product-img" style="background:linear-gradient(135deg,#FFF8E7,#FFD666);font-size:40px">🍯<div class="p-badges"><span class="p-badge b-pick">✓ Dr. Pick</span></div></div><div class="p-info"><div class="p-cat"><span class="ei">Herbal Formulas</span><span class="zi">中药方剂</span></div><div class="p-name"><span class="ei">Reishi Sleep Formula</span><span class="zi">灵芝安神方</span></div><div class="p-zh"><span class="ei">灵芝安神方</span></div><div class="star-row"><span class="stars">★★★★★</span> (89)</div><div class="price-row"><span class="price">$32.00</span></div><button class="add-btn" onclick="addCart(this)">+</button></div></div>
+        <div class="product-card"><div class="product-img" style="background:linear-gradient(135deg,#EEF2FF,#C7D2FE);font-size:40px">🌸<div class="p-badges"><span class="p-badge b-new">NEW</span></div></div><div class="p-info"><div class="p-cat"><span class="ei">Single Herbs</span><span class="zi">单味草药</span></div><div class="p-name"><span class="ei">Dong Quai Root</span><span class="zi">当归</span></div><div class="p-zh"><span class="ei">当归 (Dāng Guī)</span></div><div class="star-row"><span class="stars">★★★★☆</span> (56)</div><div class="price-row"><span class="price">$24.00</span></div><button class="add-btn" onclick="addCart(this)">+</button></div></div>
+        <div class="product-card"><div class="product-img" style="background:linear-gradient(135deg,#F0FDF4,#86EFAC);font-size:40px">🍄<div class="p-badges"><span class="p-badge b-bs">★ Popular</span></div></div><div class="p-info"><div class="p-cat"><span class="ei">Single Herbs</span><span class="zi">单味草药</span></div><div class="p-name"><span class="ei">Cordyceps Powder</span><span class="zi">冬虫夏草粉</span></div><div class="p-zh"><span class="ei">冬虫夏草</span></div><div class="star-row"><span class="stars">★★★★★</span> (78)</div><div class="price-row"><span class="price">$68.00</span></div><button class="add-btn" onclick="addCart(this)">+</button></div></div>
+        <div class="product-card"><div class="product-img" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);font-size:40px">🔥<div class="p-badges"><span class="p-badge b-pick">✓ Dr. Pick</span></div></div><div class="p-info"><div class="p-cat"><span class="ei">Moxibustion</span><span class="zi">艾灸</span></div><div class="p-name"><span class="ei">Premium Moxa Set</span><span class="zi">优质艾条套装</span></div><div class="p-zh"><span class="ei">优质艾条</span></div><div class="star-row"><span class="stars">★★★★★</span> (203)</div><div class="price-row"><span class="price">$45.00</span></div><button class="add-btn" onclick="addCart(this)">+</button></div></div>
+      </div>
+    </div>
+
+  </div><!-- end pdp-body -->
+</div><!-- end page-pdp -->
+
+<!-- AI CHAT WIDGET -->
+<div class="chat-widget">
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-head">
+      <div class="chat-head-av">🌿</div>
+      <div class="chat-head-info">
+        <strong>Herb AI Assistant</strong>
+        <span>● <span class="ei">Online</span><span class="zi">在线</span></span>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="msg-row">
+        <div class="msg-av ai">🌿</div>
+        <div class="bubble ai"><span class="ei">I can see you're looking at the Astragalus Immune Formula. Want me to explain if it's right for your constitution, or compare it with similar products?</span><span class="zi">我看到您正在查看黄芪免疫方。需要我解释它是否适合您的体质，或与类似产品进行比较吗？</span></div>
+      </div>
+    </div>
+    <div class="chat-disclaim">⚠️ <span class="ei">Educational only. Not medical advice.</span><span class="zi">仅供教育目的。</span></div>
+    <div class="chat-input-row">
+      <input class="c-input" id="chatInput" placeholder="Ask about this product..." onkeydown="if(event.key==='Enter')sendChat()" />
+      <button class="c-send" onclick="sendChat()">→</button>
+    </div>
+  </div>
+  <button class="chat-fab" onclick="toggleChat()">🌿</button>
+</div>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.page-tab').forEach((t, i) => {
+      t.classList.toggle('active', (id === 'catalog' && i === 0) || (id === 'pdp' && i === 1));
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function setLang(lang) {
+    document.body.className = lang === 'zh' ? 'zh' : '';
+    document.querySelectorAll('.lang-btn,.h-lang-btn').forEach((b, i) => {
+      if (b.classList.contains('lang-btn')) b.classList.toggle('active', (i % 2 === 0 && lang === 'en') || (i % 2 === 1 && lang === 'zh'));
+    });
+    document.querySelectorAll('.lang-btn').forEach((b, i) => b.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'zh')));
+    document.querySelectorAll('.h-lang-btn').forEach((b, i) => b.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'zh')));
+    document.documentElement.lang = lang;
+  }
+
+  function toggleEl(el) { el.classList.toggle('selected'); }
+
+  let qty = 1;
+  function changeQty(d) {
+    qty = Math.max(1, Math.min(12, qty + d));
+    document.getElementById('qty').textContent = qty;
+  }
+
+  function addCart(btn) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓'; btn.style.background = 'var(--success)';
+    const c = document.getElementById('cart-count');
+    c.textContent = parseInt(c.textContent) + 1;
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1400);
+  }
+
+  function addCartPDP() {
+    const btn = document.querySelector('.btn-add-cart');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Added to Cart!'; btn.style.background = 'var(--success)';
+    const c = document.getElementById('cart-count');
+    c.textContent = parseInt(c.textContent) + qty;
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1600);
+  }
+
+  function goToPDP() { showPage('pdp'); }
+
+  function switchTab(id, el) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    document.querySelectorAll('.pdp-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  let chatOpen = false;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById('chatPanel').classList.toggle('open', chatOpen);
+  }
+
+  function sendChat() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const msgs = document.getElementById('chatMsgs');
+    const zh = document.body.classList.contains('zh');
+    msgs.insertAdjacentHTML('beforeend', `
+      <div class="msg-row u"><div class="msg-av ur">👤</div><div class="bubble u">${msg}</div></div>
+      <div class="msg-row" id="thinking"><div class="msg-av ai">🌿</div><div class="bubble ai" style="color:var(--n400);font-style:italic">${zh ? '思考中...' : 'Thinking...'}</div></div>
+    `);
+    input.value = ''; msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(() => {
+      const t = document.getElementById('thinking');
+      if (t) { t.querySelector('.bubble').innerHTML = zh ? '基于您的问题，这款黄芪免疫方非常适合气虚体质。如果您经常感到疲劳或容易感冒，这是我们推荐的首选方剂。' : 'Based on your question, the Astragalus Immune Formula is excellent for Qi Deficiency patterns. If you experience frequent fatigue or catch colds easily, this is our top recommendation.'; t.removeAttribute('id'); }
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 1000);
+  }
+</script>
+</body>
+</html>

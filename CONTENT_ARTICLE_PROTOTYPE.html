@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Content Hub & Article Prototype — pureHerbHealth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --brand-50:#E8F5EE; --brand-100:#A3D1B7; --brand-200:#76BA93;
+      --brand-400:#4AA370; --brand-500:#2D8C54; --brand-600:#247043;
+      --brand-700:#1B5432; --brand-900:#091C11;
+      --accent-100:#FFF8E7; --accent-300:#FFD666; --accent-500:#D4A843; --accent-700:#8B6F2A;
+      --n50:#FAFAF9; --n100:#F5F5F4; --n200:#E7E5E4; --n300:#D6D3D1;
+      --n400:#A8A29E; --n500:#78716C; --n700:#44403C; --n900:#1C1917;
+      --success:#16A34A; --warning:#EAB308; --error:#DC2626; --info:#2563EB;
+      --wood:#4AA370; --fire:#DC4A3F; --earth:#D4A843; --metal:#A0A0A0; --water:#2563EB;
+      --fh:'DM Serif Display',Georgia,serif;
+      --fb:'Inter',sans-serif;
+      --fz:'Noto Sans SC','PingFang SC',sans-serif;
+      --r4:4px; --r8:8px; --r12:12px; --r16:16px; --rfull:9999px;
+      --s-sm:0 1px 2px rgba(0,0,0,.05);
+      --s-md:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+      --s-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px rgba(0,0,0,.04);
+      --s-xl:0 20px 25px -5px rgba(0,0,0,.10);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--fb);background:var(--n50);color:var(--n700);font-size:15px;line-height:1.6;}
+    body.zh{font-family:var(--fz),var(--fb);}
+    h1,h2,h3,h4{font-family:var(--fh);color:var(--n900);line-height:1.25;}
+    body.zh h1,body.zh h2,body.zh h3,body.zh h4{font-family:var(--fz),var(--fh);font-weight:500;}
+
+    /* PROTO BAR */
+    .proto{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1C1917;height:40px;display:flex;align-items:center;padding:0 20px;gap:14px;font-size:12px;}
+    .proto-title{color:white;font-weight:700;}
+    .proto-badge{background:var(--accent-500);color:#1C1917;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;}
+    .page-tabs{display:flex;background:#292524;border-radius:6px;overflow:hidden;border:1px solid #44403C;}
+    .page-tab{padding:5px 16px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#78716C;transition:all .15s;white-space:nowrap;}
+    .page-tab.active{background:var(--brand-500);color:white;}
+    .lang-sw{display:flex;background:#292524;border-radius:var(--rfull);overflow:hidden;border:1px solid #44403C;margin-left:auto;}
+    .lang-btn{padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#78716C;}
+    .lang-btn.active{background:var(--brand-500);color:white;}
+
+    /* SHARED HEADER */
+    .site-header{background:white;border-bottom:1px solid var(--n200);position:sticky;top:40px;z-index:100;box-shadow:var(--s-sm);}
+    .header-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:20px;padding:14px 32px;}
+    .logo{font-family:var(--fh);font-size:22px;color:var(--brand-600);text-decoration:none;white-space:nowrap;flex-shrink:0;}
+    .logo em{color:var(--accent-500);font-style:normal;}
+    .nav{display:flex;gap:2px;flex:1;}
+    .nav a{padding:7px 12px;border-radius:var(--r8);font-size:13px;font-weight:500;color:var(--n700);text-decoration:none;transition:all .15s;}
+    .nav a:hover{background:var(--n100);}
+    .nav a.active{color:var(--brand-600);background:var(--brand-50);}
+    .search-bar{display:flex;align-items:center;gap:8px;background:var(--n100);border:1px solid var(--n200);border-radius:var(--rfull);padding:8px 16px;font-size:13px;color:var(--n500);min-width:200px;}
+    .h-lang{display:flex;background:var(--n100);border-radius:var(--rfull);padding:3px;border:1px solid var(--n200);}
+    .h-lang-btn{padding:3px 10px;border-radius:var(--rfull);font-size:12px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--n500);}
+    .h-lang-btn.active{background:white;color:var(--brand-600);box-shadow:var(--s-sm);}
+    .cart-btn{background:var(--brand-500);color:white;border:none;border-radius:var(--r8);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+    .cart-cnt{background:var(--accent-500);color:white;border-radius:var(--rfull);font-size:11px;font-weight:700;padding:1px 6px;}
+
+    /* I18N */
+    .en{display:block;} .zh-c{display:none;}
+    .ei{display:inline;} .zi{display:none;}
+    body.zh .en{display:none;} body.zh .zh-c{display:block;}
+    body.zh .ei{display:none;} body.zh .zi{display:inline;}
+
+    /* PAGES */
+    .page{display:none;margin-top:40px;}
+    .page.active{display:block;}
+
+    /* ============================================================
+       PAGE 1 — CONTENT HUB / LEARN
+    ============================================================ */
+    .hub-hero{background:linear-gradient(135deg,var(--brand-800) 0%,var(--brand-600) 100%);padding:48px 32px;}
+    .hub-hero-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+    .hub-hero-content{color:white;}
+    .hub-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(212,168,67,.2);border:1px solid rgba(212,168,67,.4);border-radius:var(--rfull);padding:5px 12px;font-size:12px;font-weight:600;color:var(--accent-300);letter-spacing:.07em;text-transform:uppercase;margin-bottom:14px;}
+    .hub-hero h1{font-size:40px;color:white;margin-bottom:12px;}
+    .hub-hero h1 em{color:var(--accent-300);font-style:normal;}
+    .hub-hero p{font-size:15px;color:var(--brand-200);line-height:1.7;margin-bottom:24px;max-width:420px;}
+    .hub-search{display:flex;gap:0;background:white;border-radius:var(--r8);overflow:hidden;box-shadow:var(--s-lg);}
+    .hub-search-input{flex:1;padding:13px 18px;border:none;font-size:14px;color:var(--n900);outline:none;font-family:var(--fb);}
+    .hub-search-btn{padding:13px 20px;background:var(--brand-500);color:white;border:none;font-size:14px;font-weight:600;cursor:pointer;}
+    .hub-stats{display:flex;gap:28px;margin-top:28px;}
+    .hub-stat .num{font-size:24px;font-weight:700;color:white;}
+    .hub-stat .lbl{font-size:12px;color:var(--brand-300);}
+    .hub-featured-card{background:rgba(255,255,255,.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);border-radius:var(--r16);overflow:hidden;cursor:pointer;transition:all .2s;}
+    .hub-featured-card:hover{background:rgba(255,255,255,.14);}
+    .hub-featured-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:72px;background:rgba(255,255,255,.06);}
+    .hub-featured-body{padding:18px;}
+    .hub-featured-tag{display:inline-flex;align-items:center;gap:5px;background:var(--accent-500);color:#1C1917;border-radius:var(--rfull);padding:3px 10px;font-size:11px;font-weight:700;margin-bottom:10px;}
+    .hub-featured-title{font-size:18px;color:white;margin-bottom:8px;}
+    .hub-featured-meta{font-size:12px;color:rgba(255,255,255,.6);display:flex;gap:10px;}
+    .hub-products-in{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+    .hub-prod-chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:var(--rfull);padding:3px 10px;font-size:11px;color:rgba(255,255,255,.85);cursor:pointer;}
+
+    /* Category tabs */
+    .cat-tabs-wrap{background:white;border-bottom:1px solid var(--n200);}
+    .cat-tabs{max-width:1280px;margin:0 auto;padding:0 32px;display:flex;gap:0;overflow-x:auto;}
+    .cat-tab{padding:14px 18px;font-size:13px;font-weight:600;color:var(--n500);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;}
+    .cat-tab.active{color:var(--brand-600);border-bottom-color:var(--brand-500);}
+    .cat-tab:hover:not(.active){color:var(--n900);}
+
+    /* Hub body */
+    .hub-body{max-width:1280px;margin:0 auto;padding:36px 32px;display:grid;grid-template-columns:1fr 320px;gap:36px;align-items:start;}
+
+    /* Article grid */
+    .article-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+    .article-card{background:white;border-radius:var(--r12);border:1px solid var(--n200);overflow:hidden;cursor:pointer;transition:all .2s;}
+    .article-card:hover{box-shadow:var(--s-lg);transform:translateY(-2px);}
+    .article-card.featured{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;}
+    .article-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:72px;position:relative;}
+    .article-card.featured .article-img{height:100%;}
+    .article-type-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:var(--rfull);font-size:11px;font-weight:700;}
+    .badge-guide{background:var(--info);color:white;}
+    .badge-herb{background:var(--brand-500);color:white;}
+    .badge-condition{background:var(--fire);color:white;}
+    .badge-blog{background:var(--n700);color:white;}
+    .badge-fiveEl{background:var(--earth);color:#1C1917;}
+    .article-body{padding:20px;}
+    .article-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+    .article-cat{font-size:11px;font-weight:700;color:var(--brand-500);text-transform:uppercase;letter-spacing:.06em;}
+    .article-dot{width:3px;height:3px;border-radius:50%;background:var(--n300);}
+    .article-date{font-size:11px;color:var(--n400);}
+    .article-read{font-size:11px;color:var(--n400);}
+    .article-title{font-size:18px;color:var(--n900);margin-bottom:6px;line-height:1.35;}
+    .article-title-zh{font-size:15px;color:var(--n700);font-family:var(--fz);margin-bottom:8px;}
+    .article-excerpt{font-size:13px;color:var(--n500);line-height:1.6;margin-bottom:14px;}
+    .article-footer{display:flex;align-items:center;justify-content:space-between;}
+    .author-row{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--n700);font-weight:500;}
+    .author-av{width:26px;height:26px;border-radius:50%;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-size:13px;}
+    .read-more{font-size:13px;color:var(--brand-500);font-weight:600;}
+    .article-products{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+    .prod-chip{display:inline-flex;align-items:center;gap:5px;background:var(--brand-50);border:1px solid var(--brand-200);border-radius:var(--rfull);padding:3px 9px;font-size:11px;color:var(--brand-700);font-weight:500;cursor:pointer;transition:all .15s;}
+    .prod-chip:hover{background:var(--brand-100);}
+    .prod-chip-icon{font-size:13px;}
+
+    /* SIDEBAR */
+    .sidebar{display:flex;flex-direction:column;gap:20px;}
+    .sidebar-widget{background:white;border-radius:var(--r12);border:1px solid var(--n200);overflow:hidden;}
+    .widget-header{padding:14px 16px;border-bottom:1px solid var(--n100);font-size:13px;font-weight:700;color:var(--n900);}
+    .widget-body{padding:16px;}
+    .popular-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--n100);cursor:pointer;align-items:flex-start;}
+    .popular-item:last-child{border-bottom:none;}
+    .popular-num{font-size:20px;font-weight:700;color:var(--n200);flex-shrink:0;width:28px;line-height:1;}
+    .popular-title{font-size:13px;color:var(--n900);font-weight:500;line-height:1.4;}
+    .popular-meta{font-size:11px;color:var(--n400);margin-top:2px;}
+    .herb-quick-list{display:flex;flex-direction:column;gap:6px;}
+    .herb-quick-item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--r8);cursor:pointer;transition:background .15s;}
+    .herb-quick-item:hover{background:var(--brand-50);}
+    .herb-emoji{font-size:20px;flex-shrink:0;}
+    .herb-name{font-size:13px;font-weight:600;color:var(--n900);}
+    .herb-zh{font-size:11px;color:var(--n500);font-family:var(--fz);}
+    .herb-arrow{margin-left:auto;color:var(--n300);}
+    .newsletter-widget{background:linear-gradient(135deg,var(--brand-700),var(--brand-500));}
+    .newsletter-widget .widget-header{background:transparent;border-bottom:1px solid rgba(255,255,255,.15);color:white;}
+    .newsletter-widget .widget-body{padding:16px;}
+    .newsletter-widget p{font-size:13px;color:var(--brand-200);margin-bottom:14px;line-height:1.5;}
+    .newsletter-input{width:100%;padding:10px 14px;border-radius:var(--r8);border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);color:white;font-size:13px;margin-bottom:8px;font-family:var(--fb);}
+    .newsletter-input::placeholder{color:rgba(255,255,255,.4);}
+    .newsletter-btn{width:100%;padding:10px;background:var(--accent-500);color:#1C1917;border:none;border-radius:var(--r8);font-size:13px;font-weight:700;cursor:pointer;}
+
+    /* ============================================================
+       PAGE 2 — ARTICLE DETAIL
+    ============================================================ */
+    .article-detail-wrap{max-width:1280px;margin:0 auto;padding:32px;display:grid;grid-template-columns:1fr 320px;gap:40px;align-items:start;}
+
+    /* Article header */
+    .article-header{margin-bottom:32px;}
+    .article-header-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+    .header-cat-badge{padding:4px 12px;border-radius:var(--rfull);font-size:12px;font-weight:700;background:var(--brand-500);color:white;}
+    .header-date{font-size:13px;color:var(--n400);}
+    .header-read{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--n400);}
+    .header-share{display:flex;gap:6px;margin-left:auto;}
+    .share-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--n200);background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--n500);}
+    .article-header h1{font-size:40px;line-height:1.15;margin-bottom:10px;}
+    .article-header .zh-title{font-size:28px;font-family:var(--fz);font-weight:500;color:var(--n700);margin-bottom:16px;}
+    .article-header .excerpt-lead{font-size:18px;color:var(--n500);line-height:1.6;margin-bottom:20px;font-style:italic;}
+    .author-card{display:flex;align-items:center;gap:12px;padding:14px;background:var(--n100);border-radius:var(--r12);border:1px solid var(--n200);margin-bottom:12px;}
+    .author-card-av{width:48px;height:48px;border-radius:50%;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+    .author-card-info strong{display:block;font-size:14px;color:var(--n900);}
+    .author-card-info span{font-size:12px;color:var(--n500);}
+    .toc{background:var(--brand-50);border:1px solid var(--brand-100);border-radius:var(--r12);padding:16px;margin-bottom:12px;}
+    .toc-title{font-size:12px;font-weight:700;color:var(--brand-600);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+    .toc-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
+    .toc-item{font-size:13px;color:var(--brand-600);cursor:pointer;display:flex;align-items:center;gap:6px;}
+    .toc-item:hover{color:var(--brand-800);text-decoration:underline;}
+    .toc-num{font-size:11px;font-weight:700;color:var(--brand-300);width:18px;}
+    .hero-img-full{width:100%;height:320px;background:linear-gradient(135deg,var(--brand-50),var(--brand-100));border-radius:var(--r16);display:flex;align-items:center;justify-content:center;font-size:100px;margin-bottom:8px;border:1px solid var(--n200);}
+    .img-caption{font-size:12px;color:var(--n400);text-align:center;margin-bottom:28px;font-style:italic;}
+
+    /* Article body prose */
+    .article-prose{}
+    .prose-p{font-size:16px;color:var(--n700);line-height:1.8;margin-bottom:20px;}
+    .prose-h2{font-size:26px;color:var(--n900);margin:36px 0 16px;}
+    .prose-h3{font-size:20px;color:var(--n900);margin:28px 0 12px;font-family:var(--fb);font-weight:700;}
+    .prose-ul{margin:0 0 20px 20px;display:flex;flex-direction:column;gap:8px;}
+    .prose-ul li{font-size:15px;color:var(--n700);line-height:1.6;}
+
+    /* TCM callout boxes */
+    .callout{border-radius:var(--r12);padding:20px;margin:28px 0;}
+    .callout-tcm{background:var(--brand-50);border-left:4px solid var(--brand-500);}
+    .callout-warning{background:#FEF3C7;border-left:4px solid var(--accent-500);}
+    .callout-tip{background:#EFF6FF;border-left:4px solid var(--info);}
+    .callout-fda{background:#FEF2F2;border-left:4px solid var(--error);}
+    .callout-icon{font-size:18px;margin-bottom:6px;}
+    .callout-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
+    .callout-tcm .callout-title{color:var(--brand-600);}
+    .callout-warning .callout-title{color:var(--accent-700);}
+    .callout-tip .callout-title{color:var(--info);}
+    .callout-fda .callout-title{color:var(--error);}
+    .callout-body{font-size:14px;line-height:1.7;}
+    .callout-tcm .callout-body{color:var(--brand-800);}
+    .callout-warning .callout-body{color:var(--accent-700);}
+    .callout-tip .callout-body{color:#1E40AF;}
+    .callout-fda .callout-body{color:var(--error);}
+
+    /* INLINE PRODUCT CARD — embedded in article */
+    .inline-product{background:white;border:1px solid var(--brand-200);border-radius:var(--r12);padding:16px;display:flex;gap:16px;align-items:center;margin:28px 0;box-shadow:var(--s-md);transition:all .2s;cursor:pointer;}
+    .inline-product:hover{box-shadow:var(--s-lg);border-color:var(--brand-400);}
+    .inline-product-label{font-size:10px;font-weight:700;color:var(--brand-500);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+    .inline-product-img{width:80px;height:80px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:40px;background:var(--brand-50);flex-shrink:0;}
+    .inline-product-info{flex:1;}
+    .inline-product-name{font-size:16px;font-weight:700;color:var(--n900);margin-bottom:2px;}
+    .inline-product-zh{font-size:13px;color:var(--n500);font-family:var(--fz);margin-bottom:6px;}
+    .inline-product-desc{font-size:13px;color:var(--n500);line-height:1.5;margin-bottom:8px;}
+    .inline-product-tags{display:flex;gap:4px;margin-bottom:8px;}
+    .inline-tag{padding:2px 7px;border-radius:var(--rfull);font-size:10px;font-weight:600;border:1px solid;}
+    .inline-price-row{display:flex;align-items:center;gap:10px;}
+    .inline-price{font-size:20px;font-weight:700;color:var(--n900);}
+    .inline-rating{font-size:12px;color:var(--n400);}
+    .inline-add-btn{background:var(--brand-500);color:white;border:none;border-radius:var(--r8);padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s;}
+    .inline-add-btn:hover{background:var(--brand-600);}
+
+    /* INLINE MULTI-PRODUCT GRID */
+    .inline-products-grid{margin:28px 0;}
+    .inline-products-header{font-size:13px;font-weight:700;color:var(--brand-600);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .inline-products-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .mini-product-card{background:white;border:1px solid var(--n200);border-radius:var(--r12);overflow:hidden;cursor:pointer;transition:all .2s;}
+    .mini-product-card:hover{box-shadow:var(--s-md);border-color:var(--brand-200);}
+    .mini-prod-img{height:100px;display:flex;align-items:center;justify-content:center;font-size:44px;}
+    .mini-prod-body{padding:12px;}
+    .mini-prod-name{font-size:13px;font-weight:700;color:var(--n900);margin-bottom:2px;line-height:1.3;}
+    .mini-prod-zh{font-size:11px;color:var(--n500);font-family:var(--fz);margin-bottom:6px;}
+    .mini-prod-price{font-size:15px;font-weight:700;color:var(--n900);margin-bottom:8px;}
+    .mini-prod-btn{width:100%;padding:8px;background:var(--brand-500);color:white;border:none;border-radius:var(--r8);font-size:12px;font-weight:600;cursor:pointer;}
+
+    /* CTA blocks */
+    .quiz-cta{background:linear-gradient(135deg,var(--brand-700),var(--brand-500));border-radius:var(--r16);padding:24px;text-align:center;margin:36px 0;cursor:pointer;}
+    .quiz-cta h3{color:white;font-size:22px;margin-bottom:8px;}
+    .quiz-cta p{color:var(--brand-200);font-size:14px;margin-bottom:18px;}
+    .quiz-cta-btn{background:var(--accent-500);color:#1C1917;border:none;border-radius:var(--r8);padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;}
+    .ai-cta{background:var(--n900);border-radius:var(--r12);padding:18px;display:flex;align-items:center;gap:14px;margin:28px 0;cursor:pointer;transition:background .15s;}
+    .ai-cta:hover{background:var(--n700);}
+    .ai-cta-txt strong{display:block;color:white;font-size:15px;font-family:var(--fb);}
+    .ai-cta-txt span{font-size:13px;color:var(--n400);}
+
+    /* Herb profile card (mid-article) */
+    .herb-profile-card{background:white;border:1px solid var(--brand-200);border-radius:var(--r16);overflow:hidden;margin:28px 0;box-shadow:var(--s-md);}
+    .herb-profile-header{background:linear-gradient(90deg,var(--brand-500),var(--brand-400));padding:16px 20px;display:flex;align-items:center;gap:14px;}
+    .herb-profile-emoji{font-size:36px;}
+    .herb-profile-names strong{display:block;font-size:18px;color:white;}
+    .herb-profile-names span{font-size:14px;color:var(--brand-200);font-family:var(--fz);}
+    .herb-profile-pinyin{font-size:13px;color:var(--brand-300);font-style:italic;}
+    .herb-profile-body{padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .herb-prop{display:flex;flex-direction:column;gap:3px;}
+    .herb-prop-label{font-size:11px;font-weight:700;color:var(--n400);text-transform:uppercase;letter-spacing:.06em;}
+    .herb-prop-val{font-size:14px;color:var(--n900);font-weight:500;}
+    .herb-prop-zh{font-size:12px;color:var(--n500);font-family:var(--fz);}
+
+    /* Pull quote */
+    .pull-quote{border-left:4px solid var(--accent-500);padding:16px 24px;margin:28px 0;background:var(--accent-100);}
+    .pull-quote p{font-size:18px;color:var(--n900);line-height:1.6;font-style:italic;font-family:var(--fh);}
+    .pull-quote cite{display:block;font-size:13px;color:var(--n500);margin-top:10px;font-style:normal;}
+
+    /* Related articles */
+    .related-articles{border-top:1px solid var(--n200);padding-top:36px;margin-top:36px;}
+    .related-title{font-size:24px;margin-bottom:20px;}
+    .related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+    .related-card{background:white;border-radius:var(--r12);border:1px solid var(--n200);overflow:hidden;cursor:pointer;transition:all .2s;}
+    .related-card:hover{box-shadow:var(--s-md);transform:translateY(-2px);}
+    .related-img{height:130px;display:flex;align-items:center;justify-content:center;font-size:52px;}
+    .related-body{padding:14px;}
+    .related-card-cat{font-size:10px;font-weight:700;color:var(--brand-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+    .related-card-title{font-size:14px;font-weight:600;color:var(--n900);line-height:1.35;}
+
+    /* Article sidebar */
+    .article-sidebar{display:flex;flex-direction:column;gap:20px;position:sticky;top:100px;}
+    .sticky-toc{background:white;border:1px solid var(--n200);border-radius:var(--r12);overflow:hidden;}
+    .sticky-toc-header{padding:14px 16px;border-bottom:1px solid var(--n100);font-size:13px;font-weight:700;color:var(--n900);}
+    .sticky-toc-list{padding:12px 16px;display:flex;flex-direction:column;gap:6px;}
+    .sticky-toc-item{font-size:13px;color:var(--n500);cursor:pointer;padding:4px 0;display:flex;align-items:center;gap:6px;border-left:2px solid transparent;padding-left:8px;transition:all .15s;}
+    .sticky-toc-item.active{color:var(--brand-600);border-left-color:var(--brand-500);}
+    .sticky-toc-item:hover{color:var(--brand-600);}
+    .products-widget{background:white;border:1px solid var(--n200);border-radius:var(--r12);overflow:hidden;}
+    .products-widget-header{padding:14px 16px;border-bottom:1px solid var(--n100);font-size:13px;font-weight:700;color:var(--n900);}
+    .sidebar-product{display:flex;gap:10px;padding:12px 14px;border-bottom:1px solid var(--n100);cursor:pointer;transition:background .15s;}
+    .sidebar-product:hover{background:var(--brand-50);}
+    .sidebar-product:last-child{border-bottom:none;}
+    .sp-img{width:44px;height:44px;border-radius:var(--r8);background:var(--n100);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+    .sp-info{flex:1;}
+    .sp-name{font-size:13px;font-weight:600;color:var(--n900);line-height:1.3;}
+    .sp-zh{font-size:11px;color:var(--n400);font-family:var(--fz);}
+    .sp-price{font-size:13px;font-weight:700;color:var(--brand-500);margin-top:2px;}
+    .sp-add{background:var(--brand-500);color:white;border:none;border-radius:var(--r4);padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;align-self:center;flex-shrink:0;}
+
+    /* Author bio */
+    .author-bio{background:var(--n100);border-radius:var(--r16);border:1px solid var(--n200);padding:24px;margin-top:40px;display:flex;gap:20px;align-items:flex-start;}
+    .author-bio-av{width:72px;height:72px;border-radius:50%;background:var(--brand-100);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;}
+    .author-bio-info{}
+    .author-bio-info strong{display:block;font-size:17px;color:var(--n900);margin-bottom:3px;}
+    .author-bio-info .title{font-size:13px;color:var(--brand-500);font-weight:600;margin-bottom:8px;}
+    .author-bio-info p{font-size:14px;color:var(--n700);line-height:1.6;}
+
+    /* CHAT */
+    .chat-widget{position:fixed;bottom:24px;right:24px;z-index:200;}
+    .chat-fab{width:54px;height:54px;border-radius:50%;background:var(--brand-500);color:white;border:none;font-size:24px;cursor:pointer;box-shadow:var(--s-xl);}
+    .chat-panel{position:absolute;bottom:66px;right:0;width:310px;background:white;border-radius:var(--r16);box-shadow:var(--s-xl);border:1px solid var(--n200);overflow:hidden;display:none;flex-direction:column;}
+    .chat-panel.open{display:flex;}
+    .chat-head{background:var(--brand-500);padding:13px 16px;display:flex;align-items:center;gap:10px;}
+    .chat-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:17px;}
+    .chat-head-info strong{display:block;font-size:13px;color:white;font-family:var(--fb);}
+    .chat-head-info span{font-size:11px;color:rgba(255,255,255,.7);}
+    .chat-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;}
+    .chat-msgs{padding:14px;max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+    .msg-row{display:flex;gap:7px;align-items:flex-start;}
+    .msg-row.u{flex-direction:row-reverse;}
+    .msg-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+    .msg-av.ai{background:var(--brand-500);}
+    .msg-av.ur{background:var(--n200);}
+    .bubble{max-width:210px;padding:8px 12px;border-radius:var(--r8);font-size:12px;line-height:1.5;}
+    .bubble.ai{background:var(--n100);color:var(--n700);}
+    .bubble.u{background:var(--brand-500);color:white;}
+    .chat-disclaim{padding:6px 14px;font-size:10px;color:var(--n400);border-top:1px solid var(--n100);}
+    .chat-input-row{padding:10px;border-top:1px solid var(--n200);display:flex;gap:7px;}
+    .c-input{flex:1;padding:8px 12px;border:1px solid var(--n200);border-radius:var(--rfull);font-size:12px;outline:none;font-family:var(--fb);}
+    .c-input:focus{border-color:var(--brand-300);}
+    .c-send{width:32px;height:32px;background:var(--brand-500);color:white;border:none;border-radius:50%;cursor:pointer;font-size:14px;}
+
+    /* BREADCRUMB */
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--n500);margin-bottom:20px;}
+    .breadcrumb a{color:var(--brand-500);text-decoration:none;}
+    .breadcrumb .sep{color:var(--n300);}
+    .breadcrumb .cur{color:var(--n700);font-weight:500;}
+    .pagination{display:flex;align-items:center;gap:6px;justify-content:center;margin-top:36px;}
+    .pg-btn{width:36px;height:36px;border:1px solid var(--n200);border-radius:var(--r8);background:white;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--n700);}
+    .pg-btn.active{background:var(--brand-500);color:white;border-color:var(--brand-500);}
+    .pg-btn:hover:not(.active){background:var(--n100);}
+  </style>
+</head>
+<body>
+
+<!-- PROTO BAR -->
+<div class="proto">
+  <span class="proto-title">CONTENT_ARTICLE_PROTOTYPE</span>
+  <span class="proto-badge">VISUAL ONLY</span>
+  <div class="page-tabs">
+    <button class="page-tab active" onclick="showPage('hub')">
+      📚 <span class="ei">Learn Hub (Article List)</span><span class="zi">学习中心（文章列表）</span>
+    </button>
+    <button class="page-tab" onclick="showPage('article')">
+      📖 <span class="ei">Article Detail Page</span><span class="zi">文章详情页</span>
+    </button>
+  </div>
+  <div class="lang-sw">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('zh')">中文</button>
+  </div>
+</div>
+
+<!-- SHARED HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo">pure<em>Herb</em>Health <span class="zi" style="font-family:var(--fz);font-size:16px;color:var(--n500);font-style:normal">纯草健康</span></a>
+    <nav class="nav">
+      <a href="#"><span class="ei">Shop</span><span class="zi">商店</span></a>
+      <a href="#"><span class="ei">Herbal Formulas</span><span class="zi">中药方剂</span></a>
+      <a href="#" class="active"><span class="ei">Learn</span><span class="zi">学习</span></a>
+      <a href="#"><span class="ei">AI Chat</span><span class="zi">AI咨询</span></a>
+    </nav>
+    <div class="search-bar">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span class="ei">Search articles, herbs...</span><span class="zi">搜索文章、草药...</span>
+    </div>
+    <div class="h-lang">
+      <button class="h-lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="h-lang-btn" onclick="setLang('zh')">中文</button>
+    </div>
+    <button class="cart-btn">🛒 <span class="ei">Cart</span><span class="zi">购物车</span> <span class="cart-cnt" id="cart-count">0</span></button>
+  </div>
+</header>
+
+<!-- ============================================================
+     PAGE 1 — LEARN HUB
+============================================================ -->
+<div class="page active" id="page-hub">
+
+  <!-- Hero -->
+  <div class="hub-hero">
+    <div class="hub-hero-inner">
+      <div class="hub-hero-content">
+        <div class="hub-eyebrow">✦ <span class="ei">TCM Knowledge Hub</span><span class="zi">中医知识中心</span></div>
+        <h1 class="en">Learn TCM.<br/><em>Shop with confidence.</em></h1>
+        <h1 class="zh-c" style="font-family:var(--fz);font-size:34px;font-weight:500">学习中医知识<br/><em style="color:var(--accent-300);font-style:normal">放心购物</em></h1>
+        <p class="en">Practitioner-written, AI-assisted articles on TCM theory, herbs, and wellness. Every article links directly to the products that can help.</p>
+        <p class="zh-c">由中医师撰写、AI辅助的中医理论、草药和健康文章。每篇文章直接链接到可以帮助您的产品。</p>
+        <div class="hub-search">
+          <input class="hub-search-input" placeholder="Search: immunity, sleep, Astragalus..." id="hubSearch"/>
+          <button class="hub-search-btn"><span class="ei">Search</span><span class="zi">搜索</span></button>
+        </div>
+        <div class="hub-stats">
+          <div class="hub-stat"><div class="num">120+</div><div class="lbl"><span class="ei">Articles</span><span class="zi">文章</span></div></div>
+          <div class="hub-stat"><div class="num">80+</div><div class="lbl"><span class="ei">Herb Profiles</span><span class="zi">草药档案</span></div></div>
+          <div class="hub-stat"><div class="num">40+</div><div class="lbl"><span class="ei">Condition Guides</span><span class="zi">疾病指南</span></div></div>
+        </div>
+      </div>
+
+      <!-- Featured article card -->
+      <div class="hub-featured-card" onclick="showPage('article')">
+        <div class="hub-featured-img">🌿</div>
+        <div class="hub-featured-body">
+          <span class="hub-featured-tag">★ <span class="ei">Featured Article</span><span class="zi">精选文章</span></span>
+          <div class="hub-featured-title en">How to Boost Immunity with TCM Herbs: A Complete Guide</div>
+          <div class="hub-featured-title zh-c" style="font-family:var(--fz)">如何用中草药提升免疫力：完整指南</div>
+          <div class="hub-featured-meta">
+            <span>👨‍⚕️ Dr. Huang, L.Ac.</span>
+            <span>·</span><span class="ei">8 min read</span><span class="zi">8分钟阅读</span>
+            <span>·</span><span>Mar 8, 2026</span>
+          </div>
+          <div class="hub-products-in">
+            <span class="hub-prod-chip">🌿 <span class="ei">Astragalus Formula</span><span class="zi">黄芪方</span></span>
+            <span class="hub-prod-chip">🍄 <span class="ei">Reishi Formula</span><span class="zi">灵芝方</span></span>
+            <span class="hub-prod-chip">🍄 <span class="ei">Cordyceps</span><span class="zi">冬虫夏草</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category tabs -->
+  <div class="cat-tabs-wrap">
+    <div class="cat-tabs">
+      <button class="cat-tab active"><span class="ei">All</span><span class="zi">全部</span></button>
+      <button class="cat-tab"><span class="ei">Immunity</span><span class="zi">免疫力</span></button>
+      <button class="cat-tab"><span class="ei">Sleep & Stress</span><span class="zi">睡眠与压力</span></button>
+      <button class="cat-tab"><span class="ei">Digestion</span><span class="zi">消化</span></button>
+      <button class="cat-tab"><span class="ei">Women's Health</span><span class="zi">女性健康</span></button>
+      <button class="cat-tab"><span class="ei">Energy & Fatigue</span><span class="zi">精力与疲劳</span></button>
+      <button class="cat-tab"><span class="ei">Five Elements</span><span class="zi">五行</span></button>
+      <button class="cat-tab"><span class="ei">Herb Profiles</span><span class="zi">草药档案</span></button>
+      <button class="cat-tab"><span class="ei">Condition Guides</span><span class="zi">疾病指南</span></button>
+    </div>
+  </div>
+
+  <!-- Hub body -->
+  <div class="hub-body">
+
+    <!-- Articles -->
+    <div>
+      <div class="article-grid">
+
+        <!-- FEATURED (full-width) -->
+        <div class="article-card featured" onclick="showPage('article')">
+          <div class="article-img" style="background:linear-gradient(135deg,var(--brand-50),var(--brand-100))">
+            🌿
+            <span class="article-type-badge badge-guide"><span class="ei">Complete Guide</span><span class="zi">完整指南</span></span>
+          </div>
+          <div class="article-body">
+            <div class="article-meta">
+              <span class="article-cat"><span class="ei">Immunity</span><span class="zi">免疫力</span></span>
+              <span class="article-dot"></span>
+              <span class="article-date">Mar 8, 2026</span>
+              <span class="article-dot"></span>
+              <span class="article-read"><span class="ei">8 min read</span><span class="zi">8分钟</span></span>
+            </div>
+            <div class="article-title en">How to Boost Immunity with TCM Herbs: A Complete Practitioner Guide</div>
+            <div class="article-title zh-c" style="font-size:17px">如何用中草药提升免疫力：中医师完整指南</div>
+            <div class="article-title-zh"><span class="ei">中草药提升免疫力指南</span></div>
+            <div class="article-excerpt en">Astragalus, Reishi, and Cordyceps are the "three pillars" of TCM immune support. Dr. Huang explains when and how to use each one, which constitutions they suit, and how to combine them effectively.</div>
+            <div class="article-excerpt zh-c">黄芪、灵芝和冬虫夏草是中医免疫支持的"三大支柱"。黄医生解释了何时以及如何使用每种草药、适合哪种体质，以及如何有效地组合使用。</div>
+            <div class="article-products">
+              <span class="prod-chip"><span class="prod-chip-icon">🌿</span> <span class="ei">Astragalus Immune Formula — $38</span><span class="zi">黄芪免疫方 — $38</span></span>
+              <span class="prod-chip"><span class="prod-chip-icon">🍯</span> <span class="ei">Reishi Sleep Formula — $32</span><span class="zi">灵芝安神方 — $32</span></span>
+              <span class="prod-chip"><span class="prod-chip-icon">🍄</span> <span class="ei">Cordyceps Powder — $68</span><span class="zi">冬虫夏草粉 — $68</span></span>
+            </div>
+            <div class="article-footer">
+              <div class="author-row"><div class="author-av">👨‍⚕️</div> Dr. Huang, L.Ac., DAOM</div>
+              <span class="read-more"><span class="ei">Read article →</span><span class="zi">阅读文章 →</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#FFF8E7,#FFD666)">
+            😴
+            <span class="article-type-badge badge-condition">Condition Guide</span>
+          </div>
+          <div class="article-body">
+            <div class="article-meta">
+              <span class="article-cat"><span class="ei">Sleep & Stress</span><span class="zi">睡眠与压力</span></span>
+              <span class="article-dot"></span><span class="article-date">Mar 5, 2026</span>
+              <span class="article-dot"></span><span class="article-read"><span class="ei">6 min</span><span class="zi">6分钟</span></span>
+            </div>
+            <div class="article-title en">TCM Approach to Insomnia: Calming the Shen</div>
+            <div class="article-title zh-c">中医治疗失眠：安神之道</div>
+            <div class="article-title-zh"><span class="ei">中医失眠治疗指南</span></div>
+            <div class="article-excerpt en">In TCM, poor sleep is linked to Heart Blood deficiency or Liver Qi stagnation. Different patterns need different herbs.</div>
+            <div class="article-excerpt zh-c">中医认为睡眠不佳与心血不足或肝气郁结有关，不同证型需要不同的草药。</div>
+            <div class="article-products">
+              <span class="prod-chip"><span class="prod-chip-icon">🍯</span> <span class="ei">Reishi Sleep Formula</span><span class="zi">灵芝安神方</span></span>
+            </div>
+            <div class="article-footer">
+              <div class="author-row"><div class="author-av">👨‍⚕️</div> Dr. Huang</div>
+              <span class="read-more"><span class="ei">Read →</span><span class="zi">阅读 →</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">
+            🌸
+            <span class="article-type-badge badge-herb">Herb Profile</span>
+          </div>
+          <div class="article-body">
+            <div class="article-meta">
+              <span class="article-cat"><span class="ei">Herb Profile</span><span class="zi">草药档案</span></span>
+              <span class="article-dot"></span><span class="article-date">Mar 1, 2026</span>
+              <span class="article-dot"></span><span class="article-read"><span class="ei">5 min</span><span class="zi">5分钟</span></span>
+            </div>
+            <div class="article-title en">Dong Quai: The Queen of Women's Herbs Explained</div>
+            <div class="article-title zh-c">当归：女性草药之后详解</div>
+            <div class="article-title-zh"><span class="ei">当归完整药理指南</span></div>
+            <div class="article-excerpt en">Called "female ginseng," Dong Quai nourishes blood and regulates the menstrual cycle. Used in TCM for 2,000+ years.</div>
+            <div class="article-excerpt zh-c">被称为"女性人参"，当归滋养血液并调节月经周期，在中医中已使用2000多年。</div>
+            <div class="article-products">
+              <span class="prod-chip"><span class="prod-chip-icon">🌸</span> <span class="ei">Dong Quai Root — $24</span><span class="zi">当归 — $24</span></span>
+            </div>
+            <div class="article-footer">
+              <div class="author-row"><div class="author-av">👩‍⚕️</div> Dr. Chen, DAOM</div>
+              <span class="read-more"><span class="ei">Read →</span><span class="zi">阅读 →</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="article-card">
+          <div class="article-img" style="background:linear-gradient(135deg,#EEF2FF,#C7D2FE)">
+            ☯️
+            <span class="article-type-badge badge-fiveEl">Five Elements</span>
+          </div>
+          <div class="article-body">
+            <div class="article-meta">
+              <span class="article-cat"><span class="ei">Five Elements</span><span class="zi">五行</span></span>
+              <span class="article-dot"></span><span class="article-date">Feb 28, 2026</span>
+              <span class="article-dot"></span><span class="article-read"><span class="ei">10 min</span><span class="zi">10分钟</span></span>
+            </div>
+            <div class="article-title en">Understanding Your TCM Constitution: Which Element Are You?</div>
+            <div class="article-title zh-c">了解您的中医体质：您属于哪种五行？</div>
+            <div class="article-title-zh"><span class="ei">中医体质辨识完整指南</span></div>
+            <div class="article-excerpt en">Wood, Fire, Earth, Metal, Water — discover your dominant element and which herbs support your natural constitution.</div>
+            <div class="article-excerpt zh-c">木、火、土、金、水——发现您的主导元素以及哪些草药支持您的自然体质。</div>
+            <div class="article-products">
+              <span class="prod-chip"><span class="prod-chip-icon">📋</span> <span class="ei">Take Constitution Quiz</span><span class="zi">测试体质</span></span>
+            </div>
+            <div class="article-footer">
+              <div class="author-row"><div class="author-av">👨‍⚕️</div> Dr. Huang</div>
+              <span class="read-more"><span class="ei">Read →</span><span class="zi">阅读 →</span></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="pagination" style="margin-top:32px">
+        <button class="pg-btn">‹</button>
+        <button class="pg-btn active">1</button>
+        <button class="pg-btn">2</button>
+        <button class="pg-btn">3</button>
+        <span style="color:var(--n400);font-size:13px;padding:0 4px">…</span>
+        <button class="pg-btn">8</button>
+        <button class="pg-btn">›</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <!-- Popular articles -->
+      <div class="sidebar-widget">
+        <div class="widget-header">🔥 <span class="ei">Most Read This Month</span><span class="zi">本月最多阅读</span></div>
+        <div class="widget-body" style="padding:0">
+          <div class="popular-item" onclick="showPage('article')">
+            <div class="popular-num">1</div>
+            <div><div class="popular-title en">How to Boost Immunity with TCM Herbs</div><div class="popular-title zh-c">如何用中草药提升免疫力</div><div class="popular-meta">8 min · <span class="ei">Dr. Huang</span></div></div>
+          </div>
+          <div class="popular-item">
+            <div class="popular-num">2</div>
+            <div><div class="popular-title en">TCM Constitution Quiz — Which Type Are You?</div><div class="popular-title zh-c">中医体质测试——您是哪种体质？</div><div class="popular-meta">5 min · <span class="ei">Interactive</span><span class="zi">互动</span></div></div>
+          </div>
+          <div class="popular-item">
+            <div class="popular-num">3</div>
+            <div><div class="popular-title en">5 Signs You Have Qi Deficiency</div><div class="popular-title zh-c">气虚的5个症状</div><div class="popular-meta">4 min · <span class="ei">Dr. Huang</span></div></div>
+          </div>
+          <div class="popular-item">
+            <div class="popular-num">4</div>
+            <div><div class="popular-title en">Astragalus vs Ginseng: Which to Choose?</div><div class="popular-title zh-c">黄芪vs人参：如何选择？</div><div class="popular-meta">6 min · <span class="ei">Dr. Chen</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Herb encyclopedia quick links -->
+      <div class="sidebar-widget">
+        <div class="widget-header">🌱 <span class="ei">Herb Encyclopedia</span><span class="zi">草药百科</span></div>
+        <div class="widget-body" style="padding:8px">
+          <div class="herb-quick-list">
+            <div class="herb-quick-item"><span class="herb-emoji">🌿</span><div><div class="herb-name"><span class="ei">Astragalus</span><span class="zi">黄芪</span></div><div class="herb-zh"><span class="ei">黄芪 (Huáng Qí)</span></div></div><span class="herb-arrow">›</span></div>
+            <div class="herb-quick-item"><span class="herb-emoji">🍯</span><div><div class="herb-name"><span class="ei">Reishi</span><span class="zi">灵芝</span></div><div class="herb-zh"><span class="ei">灵芝 (Líng Zhī)</span></div></div><span class="herb-arrow">›</span></div>
+            <div class="herb-quick-item"><span class="herb-emoji">🌸</span><div><div class="herb-name"><span class="ei">Dong Quai</span><span class="zi">当归</span></div><div class="herb-zh"><span class="ei">当归 (Dāng Guī)</span></div></div><span class="herb-arrow">›</span></div>
+            <div class="herb-quick-item"><span class="herb-emoji">🍄</span><div><div class="herb-name"><span class="ei">Cordyceps</span><span class="zi">冬虫夏草</span></div><div class="herb-zh"><span class="ei">冬虫夏草 (Dōng Chóng)</span></div></div><span class="herb-arrow">›</span></div>
+            <div class="herb-quick-item" style="border-top:1px solid var(--n100);padding-top:6px;margin-top:4px"><span style="font-size:13px;color:var(--brand-500);font-weight:600"><span class="ei">View all 80+ herbs →</span><span class="zi">查看全部80+种草药 →</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="sidebar-widget newsletter-widget">
+        <div class="widget-header">📬 <span class="ei">Weekly TCM Tips</span><span class="zi">每周中医健康贴士</span></div>
+        <div class="widget-body">
+          <p class="en">Get free herbal guides and seasonal wellness tips from Dr. Huang, every Tuesday.</p>
+          <p class="zh-c">每周二获得黄医生的免费草药指南和季节性健康贴士。</p>
+          <input class="newsletter-input" type="email" placeholder="your@email.com"/>
+          <button class="newsletter-btn"><span class="ei">Subscribe Free</span><span class="zi">免费订阅</span></button>
+          <div style="font-size:11px;color:var(--brand-300);margin-top:8px;text-align:center"><span class="ei">No spam. Unsubscribe anytime.</span><span class="zi">不发送垃圾邮件，随时退订。</span></div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</div><!-- end page-hub -->
+
+
+<!-- ============================================================
+     PAGE 2 — ARTICLE DETAIL
+============================================================ -->
+<div class="page" id="page-article">
+  <div style="background:var(--n50);padding:20px 32px 0;border-bottom:1px solid var(--n200)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div class="breadcrumb">
+        <a href="#"><span class="ei">Home</span><span class="zi">首页</span></a><span class="sep">›</span>
+        <a href="#" onclick="showPage('hub')"><span class="ei">Learn</span><span class="zi">学习</span></a><span class="sep">›</span>
+        <a href="#"><span class="ei">Immunity</span><span class="zi">免疫力</span></a><span class="sep">›</span>
+        <span class="cur"><span class="ei">How to Boost Immunity with TCM Herbs</span><span class="zi">如何用中草药提升免疫力</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-detail-wrap">
+
+    <!-- MAIN ARTICLE CONTENT -->
+    <main>
+
+      <!-- Article header -->
+      <div class="article-header">
+        <div class="article-header-meta">
+          <span class="header-cat-badge"><span class="ei">Complete Guide · Immunity</span><span class="zi">完整指南 · 免疫力</span></span>
+          <span class="header-date">March 8, 2026</span>
+          <span class="header-read">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span class="ei">8 min read</span><span class="zi">8分钟阅读</span>
+          </span>
+          <div class="header-share">
+            <button class="share-btn">𝕏</button>
+            <button class="share-btn">in</button>
+            <button class="share-btn">🔗</button>
+          </div>
+        </div>
+
+        <h1 class="en">How to Boost Immunity with TCM Herbs: A Complete Practitioner Guide</h1>
+        <div class="zh-title zh-c">如何用中草药提升免疫力：中医师完整指南</div>
+
+        <p class="article-excerpt-lead en excerpt-lead">Astragalus, Reishi, and Cordyceps form the foundation of TCM immune support. In this guide, Dr. Huang explains the theory behind each herb, which constitution types they suit, and how to build a personalized immune protocol.</p>
+        <p class="excerpt-lead zh-c" style="font-size:17px;color:var(--n500);line-height:1.6;margin-bottom:20px;font-style:italic">黄芪、灵芝和冬虫夏草构成了中医免疫支持的基础。在本指南中，黄医生解释了每种草药背后的理论、适合哪些体质类型，以及如何制定个性化的免疫方案。</p>
+
+        <div class="author-card">
+          <div class="author-card-av">👨‍⚕️</div>
+          <div class="author-card-info">
+            <strong>Dr. Wei Huang, L.Ac., DAOM</strong>
+            <span><span class="ei">Licensed Acupuncturist · Doctor of Oriental Medicine · 15 years clinical practice</span><span class="zi">执照针灸师 · 东方医学博士 · 15年临床经验</span></span>
+          </div>
+          <div style="margin-left:auto;font-size:12px;color:var(--n400);text-align:right">
+            <span class="ei">Reviewed March 2026<br/>Medically accurate</span>
+            <span class="zi">2026年3月审核<br/>医学准确</span>
+          </div>
+        </div>
+
+        <!-- Table of contents -->
+        <div class="toc">
+          <div class="toc-title">📋 <span class="ei">In This Article</span><span class="zi">本文内容</span></div>
+          <ul class="toc-list">
+            <li class="toc-item"><span class="toc-num">1</span><span class="ei">Why TCM Approaches Immunity Differently</span><span class="zi">为何中医对免疫的理解不同</span></li>
+            <li class="toc-item"><span class="toc-num">2</span><span class="ei">The Three Pillars: Astragalus, Reishi & Cordyceps</span><span class="zi">三大支柱：黄芪、灵芝与冬虫夏草</span></li>
+            <li class="toc-item"><span class="toc-num">3</span><span class="ei">Which Constitution Benefits Most?</span><span class="zi">哪种体质获益最多？</span></li>
+            <li class="toc-item"><span class="toc-num">4</span><span class="ei">Building Your Immune Protocol</span><span class="zi">制定您的免疫方案</span></li>
+            <li class="toc-item"><span class="toc-num">5</span><span class="ei">When NOT to Take These Herbs</span><span class="zi">何时不应服用这些草药</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Hero image -->
+      <div class="hero-img-full">🌿</div>
+      <div class="img-caption"><span class="ei">Astragalus root (Huáng Qí) — the cornerstone of Wei Qi tonification in TCM</span><span class="zi">黄芪——中医卫气补益的基石</span></div>
+
+      <!-- ARTICLE BODY -->
+      <div class="article-prose">
+
+        <h2 class="prose-h2 en">1. Why TCM Approaches Immunity Differently</h2>
+        <h2 class="prose-h2 zh-c">1. 为何中医对免疫的理解不同</h2>
+
+        <p class="prose-p en">Western medicine views immunity as a defense system that fights pathogens after they enter the body. Traditional Chinese Medicine takes a fundamentally different approach: instead of fighting disease, TCM focuses on <strong>building the body's resistance</strong> so pathogens cannot gain a foothold in the first place.</p>
+        <p class="prose-p zh-c">西医将免疫视为病原体进入体内后与之对抗的防御系统。中医则采取了根本不同的方法：中医不是抗击疾病，而是专注于<strong>增强身体的抵抗力</strong>，使病原体从一开始就无法立足。</p>
+
+        <div class="callout callout-tcm">
+          <div class="callout-icon">☯</div>
+          <div class="callout-title"><span class="ei">TCM Concept: Wei Qi (卫气)</span><span class="zi">中医概念：卫气</span></div>
+          <p class="callout-body en">Wei Qi — "defensive Qi" — is the body's outermost layer of energy, circulating just beneath the skin and in the muscles. It acts as a protective shield against external pathogens (Wind, Cold, Heat, Dampness). When Wei Qi is strong, you rarely get sick. When it's weak, even minor exposure causes illness.</p>
+          <p class="callout-body zh-c">卫气是身体最外层的能量，循行于皮下和肌肉之间。它充当抵御外邪（风、寒、热、湿）的保护屏障。卫气强壮时，您很少生病；卫气虚弱时，即使是轻微的暴露也会导致疾病。</p>
+        </div>
+
+        <h2 class="prose-h2 en">2. The Three Pillars: Astragalus, Reishi & Cordyceps</h2>
+        <h2 class="prose-h2 zh-c">2. 三大支柱：黄芪、灵芝与冬虫夏草</h2>
+
+        <p class="prose-p en">Of the hundreds of herbs in the TCM pharmacopeia, three stand out as the most clinically effective and well-researched for immune support. Each addresses a different aspect of immune function, and they work synergistically when combined.</p>
+        <p class="prose-p zh-c">在中药药典的数百种草药中，有三种在免疫支持方面最具临床疗效和研究基础。每种草药针对免疫功能的不同方面，联合使用时具有协同作用。</p>
+
+        <!-- INLINE HERB PROFILE — Astragalus -->
+        <div class="herb-profile-card">
+          <div class="herb-profile-header">
+            <div class="herb-profile-emoji">🌿</div>
+            <div class="herb-profile-names">
+              <strong><span class="ei">Astragalus Root</span><span class="zi">黄芪</span></strong>
+              <span><span class="ei">黄芪 (Huáng Qí)</span></span>
+              <div class="herb-profile-pinyin"><span class="ei">Astragalus membranaceus · Root · Slightly Warm · Sweet</span><span class="zi">黄芪 · 根 · 微温 · 甘</span></div>
+            </div>
+          </div>
+          <div class="herb-profile-body">
+            <div class="herb-prop"><div class="herb-prop-label"><span class="ei">Primary Action</span><span class="zi">主要功效</span></div><div class="herb-prop-val"><span class="ei">Tonify Wei Qi and Spleen Qi</span><span class="zi">补卫气和脾气</span></div></div>
+            <div class="herb-prop"><div class="herb-prop-label"><span class="ei">Five Element</span><span class="zi">五行</span></div><div class="herb-prop-val" style="color:var(--wood)">🌱 Wood / Earth</div></div>
+            <div class="herb-prop"><div class="herb-prop-label"><span class="ei">Meridians</span><span class="zi">归经</span></div><div class="herb-prop-val"><span class="ei">Lung · Spleen</span><span class="zi">肺 · 脾</span></div></div>
+            <div class="herb-prop"><div class="herb-prop-label"><span class="ei">Best For</span><span class="zi">适用于</span></div><div class="herb-prop-val"><span class="ei">Frequent colds, fatigue, weak immunity</span><span class="zi">频繁感冒、疲劳、免疫力弱</span></div></div>
+          </div>
+        </div>
+
+        <!-- INLINE PRODUCT — embeds naturally in article -->
+        <div class="inline-product" onclick="document.getElementById('cart-count').textContent=parseInt(document.getElementById('cart-count').textContent)+1">
+          <div style="font-size:11px;font-weight:700;color:var(--brand-500);text-transform:uppercase;letter-spacing:.08em;position:absolute;margin-top:-36px">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px;position:absolute;margin-top:-22px;left:16px">
+            <span style="font-size:10px;font-weight:700;color:var(--brand-500);text-transform:uppercase;letter-spacing:.08em;background:var(--brand-50);border:1px solid var(--brand-200);border-radius:var(--rfull);padding:2px 8px">
+              🌿 <span class="ei">Mentioned in this article</span><span class="zi">本文提及产品</span>
+            </span>
+          </div>
+          <div class="inline-product-img">🌿</div>
+          <div class="inline-product-info">
+            <div class="inline-product-name"><span class="ei">Astragalus Immune Formula</span><span class="zi">黄芪免疫方</span></div>
+            <div class="inline-product-zh"><span class="ei">黄芪免疫方 · 60 capsules · GMP Certified</span><span class="zi">60粒胶囊 · GMP认证</span></div>
+            <div class="inline-product-desc en">Dr. Huang's clinical-grade Astragalus formula — the product discussed in this article. Contains 500mg Astragalus root per serving with synergistic supporting herbs.</div>
+            <div class="inline-product-desc zh-c">黄医生的临床级黄芪方——本文讨论的产品。每份含500mg黄芪根及协同辅助草药。</div>
+            <div class="inline-product-tags">
+              <span class="inline-tag t-wood" style="color:var(--wood);border-color:var(--wood);background:rgba(74,163,112,.07)">Wood</span>
+              <span class="inline-tag t-earth" style="color:var(--earth);border-color:var(--earth);background:rgba(212,168,67,.07)">Earth</span>
+              <span class="inline-tag" style="color:var(--brand-500);border-color:var(--brand-200);background:var(--brand-50)">Tonify Qi</span>
+            </div>
+            <div class="inline-price-row">
+              <span class="inline-price">$38.00</span>
+              <span class="inline-rating">★★★★★ 4.9 (142)</span>
+            </div>
+          </div>
+          <button class="inline-add-btn" onclick="event.stopPropagation();addCart(this)">
+            + <span class="ei">Add to Cart</span><span class="zi">加入购物车</span>
+          </button>
+        </div>
+
+        <p class="prose-p en">Clinical studies have confirmed what TCM practitioners knew for centuries: Astragalus polysaccharides (APS) significantly enhance the activity of natural killer (NK) cells and T-lymphocytes — the immune system's first and second line of defense respectively.</p>
+        <p class="prose-p zh-c">临床研究证实了中医师数百年来的认知：黄芪多糖（APS）能显著增强自然杀伤（NK）细胞和T淋巴细胞的活性——分别是免疫系统的第一和第二道防线。</p>
+
+        <div class="pull-quote">
+          <p class="en">"In 15 years of clinical practice, Astragalus is the herb I prescribe most often for immune support — not just in winter, but year-round as a foundation for overall Wei Qi strength."</p>
+          <p class="zh-c">"在15年的临床实践中，黄芪是我最常开具用于免疫支持的草药——不仅仅在冬季，而是全年作为整体卫气强化的基础。"</p>
+          <cite>— Dr. Wei Huang, L.Ac., DAOM</cite>
+        </div>
+
+        <!-- Herb Profile: Reishi -->
+        <div class="herb-profile-card">
+          <div class="herb-profile-header" style="background:linear-gradient(90deg,var(--n700),var(--n500))">
+            <div class="herb-profile-emoji">🍯</div>
+            <div class="herb-profile-names">
+              <strong><span class="ei">Reishi Mushroom</span><span class="zi">灵芝</span></strong>
+              <span><span class="ei">灵芝 (Líng Zhī)</span></span>
+              <div class="herb-profile-pinyin"><span class="ei">Ganoderma lucidum · Fruiting Body · Neutral · Bitter/Sweet</span><span class="zi">灵芝 · 子实体 · 平 · 苦/甘</span></div>
+            </div>
+          </div>
+          <div class="herb-profile-body">
+            <div class="herb-prop"><div class="herb-prop-label"><span class="ei">Primary Action</span><span class="zi">主要功效</span></div><div class="herb-prop-val"><span class="ei">Calm Shen, Tonify Heart & Lung Qi</span><span class="zi">安神，补心肺之气</span></div></div>
+            <div class="herb-prop"><div class="herb-prop-label"><span class="ei">Five Element</span><span class="zi">五行</span></div><div class="herb-prop-val" style="color:var(--fire)">🔥 Fire / Water</div></div>
+            <div class="herb-prop"><div class="herb-prop-label"><span class="ei">Meridians</span><span class="zi">归经</span></div><div class="herb-prop-val"><span class="ei">Heart · Lung · Liver · Kidney</span><span class="zi">心 · 肺 · 肝 · 肾</span></div></div>
+            <div class="herb-prop"><div class="herb-prop-label"><span class="ei">Best For</span><span class="zi">适用于</span></div><div class="herb-prop-val"><span class="ei">Stress-related immune weakness, insomnia</span><span class="zi">压力相关免疫力下降、失眠</span></div></div>
+          </div>
+        </div>
+
+        <h2 class="prose-h2 en">3. Which Constitution Benefits Most?</h2>
+        <h2 class="prose-h2 zh-c">3. 哪种体质获益最多？</h2>
+
+        <p class="prose-p en">Not every immune herb is right for every person. TCM individualizes treatment based on constitution. Here's a quick guide:</p>
+        <p class="prose-p zh-c">并非每种免疫草药都适合每个人。中医根据体质进行个性化治疗。以下是快速指南：</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-icon">💡</div>
+          <div class="callout-title"><span class="ei">Quick Constitution Matching Guide</span><span class="zi">体质快速匹配指南</span></div>
+          <p class="callout-body en"><strong>Qi Deficiency (气虚体质):</strong> Astragalus is your primary herb. Add Codonopsis and White Atractylodes.<br/><strong>Yin Deficiency (阴虚体质):</strong> Avoid hot-nature herbs. Use Cordyceps and American Ginseng instead.<br/><strong>Yang Deficiency (阳虚体质):</strong> Warming formulas work best. Combine Astragalus with Cinnamon Bark.<br/><strong>Phlegm-Dampness (痰湿体质):</strong> Add herbs to transform phlegm: Pinellia and Poria alongside Astragalus.</p>
+          <p class="callout-body zh-c"><strong>气虚体质：</strong>黄芪是您的主要草药，可加入党参和白术。<br/><strong>阴虚体质：</strong>避免热性草药，改用冬虫夏草和西洋参。<br/><strong>阳虚体质：</strong>温阳方剂效果最佳，将黄芪与桂枝结合使用。<br/><strong>痰湿体质：</strong>加入化痰草药：半夏和茯苓与黄芪配合使用。</p>
+        </div>
+
+        <div class="quiz-cta">
+          <h3 class="en">Not Sure Which Constitution You Are?</h3>
+          <h3 class="zh-c" style="font-family:var(--fz);font-size:20px;font-weight:500">不确定您属于哪种体质？</h3>
+          <p class="en">Take our free 15-question TCM Constitution Quiz. Get a personalized herb recommendation from Dr. Huang's AI assistant in under 3 minutes.</p>
+          <p class="zh-c">参加我们免费的15题中医体质测试。在3分钟内从黄医生的AI助手获得个性化草药推荐。</p>
+          <button class="quiz-cta-btn">📋 <span class="ei">Take the Free Quiz</span><span class="zi">参加免费测试</span></button>
+        </div>
+
+        <h2 class="prose-h2 en">4. Building Your Immune Protocol</h2>
+        <h2 class="prose-h2 zh-c">4. 制定您的免疫方案</h2>
+
+        <p class="prose-p en">After identifying your constitution, the next step is choosing the right combination. For most people with Qi Deficiency presenting as immune weakness, Dr. Huang recommends starting with a two-herb combination before adding a third:</p>
+        <p class="prose-p zh-c">确定体质后，下一步是选择正确的组合。对于大多数表现为免疫虚弱的气虚体质者，黄医生建议先从两种草药组合开始，然后再添加第三种：</p>
+
+        <!-- INLINE MULTI-PRODUCT GRID -->
+        <div class="inline-products-grid">
+          <div class="inline-products-header">
+            🌿 <span class="ei">Products Mentioned in This Section</span><span class="zi">本节提及的产品</span>
+          </div>
+          <div class="inline-products-row">
+            <div class="mini-product-card">
+              <div class="mini-prod-img" style="background:linear-gradient(135deg,var(--brand-50),var(--brand-100))">🌿</div>
+              <div class="mini-prod-body">
+                <div style="background:var(--brand-500);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:5px">Step 1</div>
+                <div class="mini-prod-name"><span class="ei">Astragalus Immune Formula</span><span class="zi">黄芪免疫方</span></div>
+                <div class="mini-prod-zh"><span class="ei">黄芪免疫方 (Huáng Qí)</span></div>
+                <div class="mini-prod-price">$38.00</div>
+                <button class="mini-prod-btn" onclick="addCart(this)">+ <span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+              </div>
+            </div>
+            <div class="mini-product-card">
+              <div class="mini-prod-img" style="background:linear-gradient(135deg,#FFF8E7,#FFD666)">🍯</div>
+              <div class="mini-prod-body">
+                <div style="background:var(--n700);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:5px">Step 2</div>
+                <div class="mini-prod-name"><span class="ei">Reishi Sleep & Calm Formula</span><span class="zi">灵芝安神方</span></div>
+                <div class="mini-prod-zh"><span class="ei">灵芝安神方 (Líng Zhī)</span></div>
+                <div class="mini-prod-price">$32.00</div>
+                <button class="mini-prod-btn" onclick="addCart(this)">+ <span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+              </div>
+            </div>
+            <div class="mini-product-card">
+              <div class="mini-prod-img" style="background:linear-gradient(135deg,#F0FDF4,#86EFAC)">🍄</div>
+              <div class="mini-prod-body">
+                <div style="background:var(--accent-500);color:#1C1917;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:5px">Step 3 (Optional)</div>
+                <div class="mini-prod-name"><span class="ei">Cordyceps Mushroom Powder</span><span class="zi">冬虫夏草粉</span></div>
+                <div class="mini-prod-zh"><span class="ei">冬虫夏草 (Dōng Chóng)</span></div>
+                <div class="mini-prod-price">$68.00</div>
+                <button class="mini-prod-btn" onclick="addCart(this)">+ <span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="prose-h2 en">5. When NOT to Take These Herbs</h2>
+        <h2 class="prose-h2 zh-c">5. 何时不应服用这些草药</h2>
+
+        <p class="prose-p en">Even beneficial herbs have contraindications. Dr. Huang emphasizes these critical cautions:</p>
+        <p class="prose-p zh-c">即使是有益的草药也有禁忌症。黄医生特别强调以下重要注意事项：</p>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-title"><span class="ei">Important Cautions</span><span class="zi">重要注意事项</span></div>
+          <ul class="prose-ul" style="margin-left:16px;margin-bottom:0">
+            <li class="en"><strong>During acute illness:</strong> Do NOT take tonifying herbs while actively fighting a cold or flu — they can trap pathogens inside. Wait until you recover.</li>
+            <li class="zh-c"><strong>急性病期间：</strong>在积极对抗感冒或流感时，切勿服用补益草药——它们可能会将病邪困于体内。等待康复后再服用。</li>
+            <li class="en"><strong>Before surgery:</strong> Discontinue all adaptogenic herbs at least 2 weeks before any surgical procedure.</li>
+            <li class="zh-c"><strong>手术前：</strong>在任何手术前至少2周停用所有适应原类草药。</li>
+            <li class="en"><strong>Immunosuppressant medications:</strong> Herbs that upregulate immunity may interfere with immunosuppressants. Consult your physician.</li>
+            <li class="zh-c"><strong>免疫抑制剂：</strong>增强免疫的草药可能与免疫抑制剂发生相互作用。请咨询您的医生。</li>
+          </ul>
+        </div>
+
+        <div class="callout callout-fda">
+          <div class="callout-title">⚠️ <span class="ei">FDA Disclaimer</span><span class="zi">FDA免责声明</span></div>
+          <p class="callout-body en">These statements have not been evaluated by the Food and Drug Administration. These products are not intended to diagnose, treat, cure, or prevent any disease. The information in this article is for educational purposes only and does not constitute medical advice. Always consult a licensed healthcare provider.</p>
+          <p class="callout-body zh-c">本产品的相关声明未经美国食品药品监督管理局评估。本产品无意用于诊断、治疗、治愈或预防任何疾病。本文信息仅供教育目的，不构成医疗建议。请务必咨询持牌医疗保健提供者。</p>
+        </div>
+
+        <!-- AI Chat CTA -->
+        <div class="ai-cta" onclick="toggleChat()">
+          <span style="font-size:28px">🌿</span>
+          <div class="ai-cta-txt">
+            <strong><span class="ei">Ask AI: Which herb is right for my constitution?</span><span class="zi">询问AI：哪种草药适合我的体质？</span></strong>
+            <span><span class="ei">Describe your symptoms · Get a personalized TCM recommendation</span><span class="zi">描述您的症状 · 获取个性化中医推荐</span></span>
+          </div>
+          <span style="color:var(--n500);font-size:20px;margin-left:auto">→</span>
+        </div>
+
+        <!-- Author bio -->
+        <div class="author-bio">
+          <div class="author-bio-av">👨‍⚕️</div>
+          <div class="author-bio-info">
+            <strong>Dr. Wei Huang, L.Ac., DAOM</strong>
+            <div class="title">Licensed Acupuncturist · Doctor of Oriental Medicine · pureHerbHealth Medical Advisor</div>
+            <p class="en">Dr. Huang has been practicing Traditional Chinese Medicine in Flushing, New York for over 15 years. He specializes in immune disorders, chronic fatigue, and women's health. All articles on pureHerbHealth are reviewed and approved by Dr. Huang before publication.</p>
+            <p class="zh-c">黄医生在纽约法拉盛从事中医临床实践超过15年，专长于免疫疾病、慢性疲劳和女性健康。纯草健康上的所有文章在发布前均经过黄医生的审核和批准。</p>
+          </div>
+        </div>
+
+        <!-- Related articles -->
+        <div class="related-articles">
+          <h2 class="related-title"><span class="ei">You Might Also Like</span><span class="zi">您可能还喜欢</span></h2>
+          <div class="related-grid">
+            <div class="related-card">
+              <div class="related-img" style="background:linear-gradient(135deg,#FFF8E7,#FFD666)">😴</div>
+              <div class="related-body">
+                <div class="related-card-cat">Condition Guide</div>
+                <div class="related-card-title en">TCM Approach to Insomnia: Calming the Shen</div>
+                <div class="related-card-title zh-c">中医治疗失眠：安神之道</div>
+              </div>
+            </div>
+            <div class="related-card">
+              <div class="related-img" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">🌸</div>
+              <div class="related-body">
+                <div class="related-card-cat">Herb Profile</div>
+                <div class="related-card-title en">Dong Quai: The Queen of Women's Herbs</div>
+                <div class="related-card-title zh-c">当归：女性草药之后</div>
+              </div>
+            </div>
+            <div class="related-card">
+              <div class="related-img" style="background:linear-gradient(135deg,#EEF2FF,#C7D2FE)">☯️</div>
+              <div class="related-body">
+                <div class="related-card-cat">Five Elements</div>
+                <div class="related-card-title en">Understanding Your TCM Constitution</div>
+                <div class="related-card-title zh-c">了解您的中医体质</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end article-prose -->
+    </main>
+
+    <!-- ARTICLE SIDEBAR -->
+    <aside class="article-sidebar">
+
+      <!-- Sticky TOC -->
+      <div class="sticky-toc">
+        <div class="sticky-toc-header">📋 <span class="ei">Contents</span><span class="zi">目录</span></div>
+        <div class="sticky-toc-list">
+          <div class="sticky-toc-item active"><span>1.</span><span class="ei">Why TCM Approaches Immunity Differently</span><span class="zi">中医免疫理念</span></div>
+          <div class="sticky-toc-item"><span>2.</span><span class="ei">The Three Pillars</span><span class="zi">三大支柱</span></div>
+          <div class="sticky-toc-item"><span>3.</span><span class="ei">Which Constitution Benefits Most?</span><span class="zi">哪种体质获益最多</span></div>
+          <div class="sticky-toc-item"><span>4.</span><span class="ei">Building Your Protocol</span><span class="zi">制定您的方案</span></div>
+          <div class="sticky-toc-item"><span>5.</span><span class="ei">When NOT to Take These</span><span class="zi">何时不应服用</span></div>
+        </div>
+      </div>
+
+      <!-- Products in this article -->
+      <div class="products-widget">
+        <div class="products-widget-header">🛍 <span class="ei">Products in This Article</span><span class="zi">本文提及产品</span></div>
+        <div class="sidebar-product">
+          <div class="sp-img">🌿</div>
+          <div class="sp-info">
+            <div class="sp-name"><span class="ei">Astragalus Immune Formula</span><span class="zi">黄芪免疫方</span></div>
+            <div class="sp-zh"><span class="ei">黄芪免疫方</span></div>
+            <div class="sp-price">$38.00 · ★★★★★ (142)</div>
+          </div>
+          <button class="sp-add" onclick="addCart(this)">+ <span class="ei">Add</span><span class="zi">加入</span></button>
+        </div>
+        <div class="sidebar-product">
+          <div class="sp-img">🍯</div>
+          <div class="sp-info">
+            <div class="sp-name"><span class="ei">Reishi Sleep Formula</span><span class="zi">灵芝安神方</span></div>
+            <div class="sp-zh"><span class="ei">灵芝安神方</span></div>
+            <div class="sp-price">$32.00 · ★★★★★ (89)</div>
+          </div>
+          <button class="sp-add" onclick="addCart(this)">+ <span class="ei">Add</span><span class="zi">加入</span></button>
+        </div>
+        <div class="sidebar-product">
+          <div class="sp-img">🍄</div>
+          <div class="sp-info">
+            <div class="sp-name"><span class="ei">Cordyceps Powder</span><span class="zi">冬虫夏草粉</span></div>
+            <div class="sp-zh"><span class="ei">冬虫夏草</span></div>
+            <div class="sp-price">$68.00 · ★★★★★ (78)</div>
+          </div>
+          <button class="sp-add" onclick="addCart(this)">+ <span class="ei">Add</span><span class="zi">加入</span></button>
+        </div>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="sidebar-widget newsletter-widget">
+        <div class="widget-header">📬 <span class="ei">Weekly TCM Tips</span><span class="zi">每周中医贴士</span></div>
+        <div class="widget-body">
+          <p class="en">Get free herbal guides from Dr. Huang every Tuesday.</p>
+          <p class="zh-c">每周二获取黄医生的免费草药指南。</p>
+          <input class="newsletter-input" type="email" placeholder="your@email.com"/>
+          <button class="newsletter-btn"><span class="ei">Subscribe Free</span><span class="zi">免费订阅</span></button>
+        </div>
+      </div>
+
+    </aside>
+  </div><!-- end article-detail-wrap -->
+</div><!-- end page-article -->
+
+<!-- AI CHAT -->
+<div class="chat-widget">
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-head">
+      <div class="chat-av">🌿</div>
+      <div class="chat-head-info">
+        <strong>Herb AI Assistant</strong>
+        <span>● <span class="ei">Online</span><span class="zi">在线</span></span>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="msg-row">
+        <div class="msg-av ai">🌿</div>
+        <div class="bubble ai"><span class="ei">I can see you're reading about TCM immunity. Which of the three herbs — Astragalus, Reishi, or Cordyceps — would you like to learn more about?</span><span class="zi">我看到您正在阅读中医免疫相关内容。您想了解更多关于黄芪、灵芝还是冬虫夏草的信息？</span></div>
+      </div>
+    </div>
+    <div class="chat-disclaim">⚠️ <span class="ei">Educational only. Not medical advice.</span><span class="zi">仅供教育目的。</span></div>
+    <div class="chat-input-row">
+      <input class="c-input" id="chatInput" placeholder="Ask about immunity herbs..." onkeydown="if(event.key==='Enter')sendChat()"/>
+      <button class="c-send" onclick="sendChat()">→</button>
+    </div>
+  </div>
+  <button class="chat-fab" onclick="toggleChat()">🌿</button>
+</div>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.page-tab').forEach((t, i) => {
+      t.classList.toggle('active', (id === 'hub' && i === 0) || (id === 'article' && i === 1));
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function setLang(lang) {
+    document.body.className = lang === 'zh' ? 'zh' : '';
+    document.querySelectorAll('.lang-btn,.h-lang-btn').forEach(b => {
+      const isEn = b.textContent.trim() === 'EN';
+      b.classList.toggle('active', (lang === 'en' && isEn) || (lang === 'zh' && !isEn));
+    });
+    document.documentElement.lang = lang;
+  }
+
+  function addCart(btn) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓'; btn.style.background = '#16A34A';
+    const c = document.getElementById('cart-count');
+    c.textContent = parseInt(c.textContent) + 1;
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1400);
+  }
+
+  let chatOpen = false;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById('chatPanel').classList.toggle('open', chatOpen);
+  }
+
+  function sendChat() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const msgs = document.getElementById('chatMsgs');
+    const zh = document.body.classList.contains('zh');
+    msgs.insertAdjacentHTML('beforeend', `
+      <div class="msg-row u"><div class="msg-av ur">👤</div><div class="bubble u">${msg}</div></div>
+      <div class="msg-row" id="thinking"><div class="msg-av ai">🌿</div><div class="bubble ai" style="color:var(--n400);font-style:italic">${zh?'思考中...':'Thinking...'}</div></div>
+    `);
+    input.value = ''; msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(() => {
+      const t = document.getElementById('thinking');
+      if (t) { t.querySelector('.bubble').innerHTML = zh ? '基于您的问题，我推荐从黄芪免疫方开始。它是补卫气最温和、最有效的方式，适合大多数气虚体质人群。需要更多关于剂量或体质匹配的信息吗？' : 'Based on your question, I recommend starting with the Astragalus Immune Formula. It\'s the most gentle and effective way to tonify Wei Qi for most Qi Deficiency constitutions. Would you like more information on dosing or constitution matching?'; t.removeAttribute('id'); }
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 1000);
+  }
+
+  // Category tabs interactive
+  document.querySelectorAll('.cat-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

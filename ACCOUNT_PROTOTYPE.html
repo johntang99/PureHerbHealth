@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<!-- Theme sourced from theme.json — keep in sync -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account — pureHerbHealth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* =============================================
+       DESIGN SYSTEM — pureHerbHealth v1.0
+       Source: theme.json — keep vars in sync
+    ============================================= */
+    :root {
+      --brand:#2D8C54; --brand-dark:#166534; --brand-light:#f0fdf4;
+      --accent:#D4A843; --accent-dark:#b45309;
+      --n50:#fafafa; --n100:#f5f5f5; --n200:#e5e5e5;
+      --n400:#a3a3a3; --n600:#525252; --n800:#262626;
+      --font-heading:'DM Serif Display',Georgia,serif;
+      --font-body:'Inter',sans-serif;
+      --font-zh:'Noto Sans SC',sans-serif;
+      --r-md:8px; --r-lg:12px; --r-xl:16px; --r-full:9999px;
+      --shadow-md:0 4px 12px rgba(0,0,0,0.08);
+      --shadow-sm:0 1px 3px rgba(0,0,0,0.08);
+      --shadow-lg:0 8px 24px rgba(0,0,0,0.10);
+      --success:#16a34a; --error:#dc2626; --info:#2563eb; --warning:#d97706;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-body);background:var(--n100);color:var(--n800);line-height:1.6;font-size:15px}
+    body.zh,body.zh h1,body.zh h2,body.zh h3{font-family:var(--font-zh),var(--font-body)}
+    a{color:var(--brand);text-decoration:none}a:hover{text-decoration:underline}
+    button{cursor:pointer;font-family:inherit;border:none}
+    input,select,textarea{font-family:inherit}
+
+    /* Layout */
+    .container{max-width:1280px;margin:0 auto;padding:0 24px}
+    .flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
+    .flex-col{flex-direction:column}.gap-1{gap:4px}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}.gap-6{gap:24px}
+    .w-full{width:100%}.hidden{display:none!important}.text-center{text-align:center}
+    .mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.mt-6{margin-top:24px}
+    .mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}
+    .p-3{padding:12px}.p-4{padding:16px}.p-5{padding:20px}.p-6{padding:24px}
+
+    /* Typography */
+    .font-heading{font-family:var(--font-heading)}
+    .text-brand{color:var(--brand)}.text-muted{color:var(--n600)}.text-dark{color:var(--n800)}
+    .text-success{color:var(--success)}.text-error{color:var(--error)}.text-accent{color:var(--accent-dark)}
+    .text-xs{font-size:0.72rem}.text-sm{font-size:0.875rem}.text-base{font-size:1rem}
+    .text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-3xl{font-size:1.875rem}
+    .font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}
+
+    /* Cards */
+    .card{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-md)}
+    .card-border{background:#fff;border-radius:var(--r-lg);border:1px solid var(--n200)}
+    .brand-callout{background:var(--brand-light);border:1px solid #86efac;border-radius:var(--r-md);padding:12px 16px}
+    .accent-card{background:#fffbeb;border:1px solid #fde68a;border-radius:var(--r-lg)}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:var(--r-md);font-size:0.875rem;font-weight:600;transition:all 180ms ease;line-height:1;cursor:pointer}
+    .btn-primary{background:var(--brand);color:#fff;border:none}
+    .btn-primary:hover{background:var(--brand-dark)}
+    .btn-outline{background:transparent;border:1.5px solid var(--brand);color:var(--brand)}
+    .btn-outline:hover{background:var(--brand-light)}
+    .btn-ghost{background:transparent;border:none;color:var(--brand);padding:0;font-size:0.875rem;font-weight:500}
+    .btn-ghost:hover{text-decoration:underline}
+    .btn-gray{background:var(--n100);color:var(--n600);border:1px solid var(--n200)}
+    .btn-gray:hover{background:var(--n200)}
+    .btn-sm{padding:6px 12px;font-size:0.78rem}
+    .btn-danger{background:transparent;border:none;color:var(--error);font-size:0.8rem;cursor:pointer}
+
+    /* Chips / badges */
+    .chip{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:var(--r-full);font-size:0.7rem;font-weight:600}
+    .chip-green{background:#f0fdf4;color:#166534;border:1px solid #86efac}
+    .chip-gold{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+    .chip-blue{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe}
+    .chip-purple{background:#faf5ff;color:#6b21a8;border:1px solid #e9d5ff}
+    .chip-red{background:#fff5f5;color:#991b1b;border:1px solid #fecaca}
+    .chip-orange{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+    .chip-gray{background:var(--n100);color:var(--n600);border:1px solid var(--n200)}
+
+    /* Status badges */
+    .badge-processing{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
+    .badge-shipped{background:#faf5ff;color:#7c3aed;border:1px solid #e9d5ff}
+    .badge-delivered{background:#f0fdf4;color:#16a34a;border:1px solid #86efac}
+    .badge-cancelled{background:#fff5f5;color:#dc2626;border:1px solid #fecaca}
+
+    /* Form elements */
+    .form-group{display:flex;flex-direction:column;gap:4px}
+    .form-label{font-size:0.78rem;font-weight:600;color:var(--n600);text-transform:uppercase;letter-spacing:.04em}
+    .form-input{width:100%;padding:9px 13px;border:1.5px solid var(--n200);border-radius:var(--r-md);font-size:0.9rem;color:var(--n800);background:#fff;transition:border-color 180ms}
+    .form-input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(45,140,84,.12)}
+    .form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+    /* Toggle switch */
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--n200)}
+    .toggle-row:last-child{border-bottom:none}
+    .toggle-switch{position:relative;width:42px;height:24px;flex-shrink:0}
+    .toggle-switch input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;inset:0;background:var(--n200);border-radius:12px;cursor:pointer;transition:background 200ms}
+    .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform 200ms;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+    .toggle-switch input:checked+.toggle-slider{background:var(--brand)}
+    .toggle-switch input:checked+.toggle-slider::before{transform:translateX(18px)}
+
+    /* Radio */
+    .radio-group{display:flex;flex-direction:column;gap:8px}
+    .radio-option{display:flex;align-items:center;gap:8px;font-size:0.875rem;cursor:pointer}
+    .radio-option input{accent-color:var(--brand);width:15px;height:15px}
+
+    /* Progress bar */
+    .progress-bar-wrap{height:6px;background:var(--n200);border-radius:3px;overflow:hidden}
+    .progress-bar-fill{height:100%;background:var(--brand);border-radius:3px;transition:width .8s ease}
+    .progress-bar-fill.accent{background:var(--accent)}
+
+    /* Constitution bars */
+    .const-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .const-bar-label{width:130px;font-size:0.78rem;color:var(--n600);text-align:right;flex-shrink:0}
+    .const-bar-track{flex:1;height:10px;background:var(--n200);border-radius:5px;overflow:hidden}
+    .const-bar-fill{height:100%;border-radius:5px;width:0;transition:width 1s ease .1s}
+    .const-bar-pct{width:32px;font-size:0.72rem;font-weight:600;color:var(--n600);flex-shrink:0}
+
+    /* Prototype bar */
+    #proto-bar{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1a1a1a;color:#e5e5e5;height:44px;display:flex;align-items:center;padding:0 16px;gap:12px;font-size:0.75rem}
+    .proto-label{font-weight:600;color:#aaa;white-space:nowrap;flex-shrink:0}
+    .proto-tabs{display:flex;gap:4px;margin-left:8px}
+    .proto-tab{padding:4px 10px;border-radius:4px;background:transparent;border:1px solid #444;color:#aaa;font-size:0.7rem;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:all 150ms}
+    .proto-tab:hover,.proto-tab.active{background:var(--brand);border-color:var(--brand);color:#fff}
+    .proto-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .lang-toggle{display:flex;border:1px solid #444;border-radius:4px;overflow:hidden}
+    .lang-btn{padding:3px 8px;background:transparent;border:none;color:#aaa;font-size:0.7rem;font-weight:600;cursor:pointer;transition:all 150ms}
+    .lang-btn.active{background:var(--brand);color:#fff}
+    .theme-label{font-size:0.65rem;color:#555}
+
+    /* Shared header */
+    .topbar{background:var(--brand-dark);color:#fff;font-size:0.8rem;padding:7px 0}
+    .topbar .container{display:flex;justify-content:space-between;align-items:center}
+    .site-header{background:#fff;box-shadow:var(--shadow-sm);position:sticky;top:44px;z-index:200}
+    .site-header .container{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{font-family:var(--font-heading);font-size:1.4rem;color:var(--brand);display:flex;align-items:center;gap:6px;text-decoration:none}
+    .site-nav{display:flex;gap:22px;list-style:none}
+    .site-nav a{font-size:0.875rem;font-weight:500;color:var(--n600);text-decoration:none;padding-bottom:2px}
+    .site-nav a:hover{color:var(--brand)}
+    .site-nav a.active{color:var(--brand);border-bottom:2px solid var(--brand)}
+    .header-icons{display:flex;align-items:center;gap:14px}
+    .icon-btn{background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--n600);position:relative;padding:4px}
+    .cart-badge{position:absolute;top:-4px;right:-6px;background:var(--brand);color:#fff;font-size:0.6rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+    /* Page wrap */
+    #page-wrap{padding-top:108px}
+
+    /* Account layout */
+    .account-layout{display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:start;padding:24px 0 60px}
+
+    /* Sidebar */
+    .sidebar{position:sticky;top:128px;display:flex;flex-direction:column;gap:0}
+    .sidebar-card{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-md);overflow:hidden}
+    .sidebar-user{padding:20px 16px 14px;border-bottom:1px solid var(--n200)}
+    .avatar{width:50px;height:50px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .sidebar-nav{padding:8px 0}
+    .sidebar-nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:0.875rem;font-weight:500;color:var(--n600);cursor:pointer;transition:all 150ms;border:none;background:transparent;width:100%;text-align:left}
+    .sidebar-nav-item:hover{background:var(--n100);color:var(--n800)}
+    .sidebar-nav-item.active{background:var(--brand-light);color:var(--brand);font-weight:600}
+    .sidebar-nav-item .nav-icon{width:20px;text-align:center;font-size:1rem}
+    .sidebar-promo{margin-top:12px;background:#fff;border-radius:var(--r-lg);border:1px solid #fde68a;padding:14px 16px}
+
+    /* Tab panels */
+    .tab-panel{display:none}.tab-panel.active{display:block}
+
+    /* Welcome banner */
+    .welcome-banner{background:var(--brand-light);border:1px solid #86efac;border-radius:var(--r-xl);padding:20px 24px;margin-bottom:20px;position:relative;overflow:hidden}
+    .welcome-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(45,140,84,.08) 0%,transparent 60%),radial-gradient(circle at 20% 80%,rgba(45,140,84,.06) 0%,transparent 40%)}
+
+    /* Stat cards */
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+    .stat-card{background:#fff;border-radius:var(--r-lg);border:1px solid var(--n200);padding:16px;transition:box-shadow 180ms}
+    .stat-card:hover{box-shadow:var(--shadow-md)}
+    .stat-icon{font-size:1.5rem;margin-bottom:6px}
+    .stat-value{font-size:1.5rem;font-weight:700;color:var(--n800);line-height:1.1}
+    .stat-label{font-size:0.75rem;color:var(--n600);margin-top:2px}
+    .stat-sub{font-size:0.72rem;color:var(--n400);margin-top:6px}
+
+    /* Section headers */
+    .section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .section-title{font-size:1rem;font-weight:700;color:var(--n800)}
+
+    /* Order rows */
+    .order-row{background:#fff;border-radius:var(--r-lg);border:1px solid var(--n200);margin-bottom:10px;overflow:hidden;transition:box-shadow 180ms}
+    .order-row:hover{box-shadow:var(--shadow-md)}
+    .order-row-hd{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer}
+    .order-row-body{display:none;padding:0 16px 16px;border-top:1px solid var(--n100)}
+    .order-row.expanded .order-row-body{display:block}
+    .order-chevron{font-size:0.75rem;color:var(--n400);transition:transform 200ms;margin-left:auto}
+    .order-row.expanded .order-chevron{transform:rotate(180deg)}
+    .order-item-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--n100);font-size:0.875rem}
+    .order-item-row:last-child{border-bottom:none}
+    .order-totals{margin-top:12px;border-top:1px solid var(--n200);padding-top:12px}
+    .order-total-row{display:flex;justify-content:space-between;font-size:0.85rem;padding:3px 0}
+    .order-total-row.grand{font-weight:700;font-size:0.95rem;border-top:1.5px solid var(--n200);margin-top:6px;padding-top:8px}
+
+    /* Filter tabs */
+    .filter-tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+    .filter-tab{padding:6px 14px;border-radius:var(--r-full);border:1.5px solid var(--n200);background:#fff;font-size:0.8rem;font-weight:600;color:var(--n600);cursor:pointer;transition:all 150ms}
+    .filter-tab:hover,.filter-tab.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+    /* Product card (wishlist/recs) */
+    .product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .product-card{background:#fff;border-radius:var(--r-lg);border:1px solid var(--n200);overflow:hidden;transition:all 200ms;position:relative}
+    .product-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+    .product-card.removing{opacity:0;transform:scale(.92);transition:all 300ms ease}
+    .product-thumb{height:120px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:var(--n50)}
+    .product-thumb.bg-green{background:#f0fdf4}
+    .product-thumb.bg-gold{background:#fffbeb}
+    .product-thumb.bg-blue{background:#eff6ff}
+    .product-thumb.bg-purple{background:#faf5ff}
+    .product-body{padding:12px}
+    .product-name{font-size:0.875rem;font-weight:600;color:var(--n800);line-height:1.3}
+    .product-name-zh{font-size:0.75rem;color:var(--n600);margin-top:1px}
+    .product-price{font-size:1rem;font-weight:700;color:var(--brand);margin-top:6px}
+    .product-remove{position:absolute;top:8px;right:8px;background:#fff;border:1px solid var(--n200);border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:var(--n400);cursor:pointer;transition:all 150ms}
+    .product-remove:hover{background:var(--error);border-color:var(--error);color:#fff}
+
+    /* Symptom tracker */
+    .symptom-log{background:#fff;border:1px solid var(--n200);border-radius:var(--r-md);padding:12px 14px;margin-bottom:8px}
+    .score-dots{display:flex;gap:4px;margin-top:4px}
+    .score-dot{width:8px;height:8px;border-radius:50%;background:var(--n200);transition:background .5s ease}
+    .score-dot.filled{background:var(--brand)}
+    .score-dot.filled-accent{background:var(--accent)}
+
+    /* AI chat list */
+    .chat-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--n100);font-size:0.875rem}
+    .chat-item:last-child{border-bottom:none}
+
+    /* Settings sub-nav */
+    .settings-subnav{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--n200);padding-bottom:0}
+    .settings-tab{padding:8px 14px;font-size:0.875rem;font-weight:500;color:var(--n600);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 150ms;background:transparent;border-top:none;border-left:none;border-right:none}
+    .settings-tab:hover{color:var(--brand)}
+    .settings-tab.active{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+
+    /* Toast */
+    #toast{position:fixed;bottom:24px;right:24px;background:var(--n800);color:#fff;padding:12px 20px;border-radius:var(--r-lg);font-size:0.875rem;font-weight:500;z-index:9998;opacity:0;transform:translateY(8px);transition:all 250ms ease;pointer-events:none}
+    #toast.show{opacity:1;transform:translateY(0)}
+
+    /* Practitioner note */
+    .practitioner-note{background:#fff;border-radius:var(--r-lg);border:1px solid var(--n200);padding:18px}
+    .protocol-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--n100)}
+    .protocol-row:last-child{border-bottom:none}
+    .protocol-dot{width:36px;height:36px;border-radius:50%;background:var(--brand-light);border:2px solid #86efac;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .protocol-info{flex:1;min-width:0}
+    .protocol-progress-wrap{margin-top:6px;display:flex;align-items:center;gap:8px}
+
+    /* Constitution bars color map */
+    .cb-balanced{background:var(--success)}
+    .cb-qidef{background:var(--accent)}
+    .cb-yangdef{background:#3182CE}
+    .cb-yindef{background:#E53E3E}
+    .cb-phlegm{background:#737373}
+    .cb-dampheat{background:#ea580c}
+    .cb-bloodstasis{background:#7c3aed}
+    .cb-qistag{background:#0284c7}
+    .cb-yin{background:#db2777}
+
+    /* Footer */
+    .site-footer{background:var(--brand-dark);color:#fff;padding:48px 0 24px;margin-top:0}
+    .footer-grid{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:32px;margin-bottom:40px}
+    .footer-logo{font-family:var(--font-heading);font-size:1.3rem;margin-bottom:10px}
+    .footer-tagline{font-size:0.8rem;color:rgba(255,255,255,.7);line-height:1.5}
+    .footer-col h4{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);margin-bottom:12px}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .footer-col li a{font-size:0.82rem;color:rgba(255,255,255,.8);text-decoration:none}
+    .footer-col li a:hover{color:#fff}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.2);padding-top:20px;font-size:0.75rem;color:rgba(255,255,255,.6)}
+    .fda-note{font-size:0.7rem;color:var(--n400);font-style:italic;line-height:1.5}
+    .divider{height:1px;background:var(--n200);margin:12px 0}
+
+    /* Loyalty point bar */
+    .loyalty-bar{margin-top:8px}
+    .loyalty-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:var(--n400);margin-bottom:3px}
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     PROTOTYPE BAR
+════════════════════════════════════ -->
+<div id="proto-bar">
+  <span class="proto-label">ACCOUNT PROTOTYPE — pureHerbHealth</span>
+  <div class="proto-tabs">
+    <button class="proto-tab active" onclick="switchTab('dashboard',this)">Dashboard</button>
+    <button class="proto-tab" onclick="switchTab('orders',this)">Orders</button>
+    <button class="proto-tab" onclick="switchTab('tcm',this)">TCM Profile</button>
+    <button class="proto-tab" onclick="switchTab('wishlist',this)">Wishlist</button>
+    <button class="proto-tab" onclick="switchTab('settings',this)">Settings</button>
+  </div>
+  <div class="proto-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="lang-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="lang-zh" onclick="setLang('zh')">ZH</button>
+    </div>
+    <span class="theme-label">theme.json v1.0</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SHARED HEADER
+════════════════════════════════════ -->
+<div id="page-wrap">
+<div class="topbar">
+  <div class="container">
+    <span class="en">Free shipping over $75 · Use code HERBWELCOME for 15% off your first order</span>
+    <span class="zh hidden">满$75免运费 · 首单使用优惠码HERBWELCOME享85折</span>
+    <span>📞 1-800-TCM-HERB</span>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <a href="#" class="logo">🌿 pureHerbHealth</a>
+    <nav>
+      <ul class="site-nav">
+        <li><a href="#"><span class="en">Shop</span><span class="zh hidden">商城</span></a></li>
+        <li><a href="#"><span class="en">Learn</span><span class="zh hidden">学习</span></a></li>
+        <li><a href="#"><span class="en">Quiz</span><span class="zh hidden">体质测评</span></a></li>
+        <li><a href="#"><span class="en">AI Advisor</span><span class="zh hidden">AI顾问</span></a></li>
+        <li><a href="#" class="active"><span class="en">Account ✓</span><span class="zh hidden">账户 ✓</span></a></li>
+      </ul>
+    </nav>
+    <div class="header-icons">
+      <button class="icon-btn" title="Search">🔍</button>
+      <button class="icon-btn" title="Language">🌐</button>
+      <button class="icon-btn" title="Cart" id="cart-icon-btn">
+        🛒
+        <span class="cart-badge" id="cart-count">2</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════
+     ACCOUNT LAYOUT
+════════════════════════════════════ -->
+<main>
+  <div class="container">
+    <div class="account-layout">
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-card">
+          <!-- User info -->
+          <div class="sidebar-user">
+            <div class="flex gap-3 items-center mb-3">
+              <div class="avatar">SL</div>
+              <div>
+                <div class="font-bold" style="font-size:.9rem;line-height:1.2">Sarah Liu <span class="zh hidden">/ 刘莎拉</span></div>
+                <div class="text-muted text-xs mt-1">sarah@example.com</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="chip chip-gold">🌟 <span class="en">Qi Deficient · 气虚体质</span><span class="zh hidden">气虚体质</span></span>
+            </div>
+            <a href="#" class="text-xs text-brand" onclick="switchTab('tcm',null);return false"><span class="en">Retake Quiz →</span><span class="zh hidden">重新测评 →</span></a>
+          </div>
+
+          <!-- Loyalty -->
+          <div style="padding:12px 16px;border-bottom:1px solid var(--n200)">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-sm font-semibold">🌿 <span class="en">248 Herb Points</span><span class="zh hidden">248草药积分</span></span>
+              <span class="chip chip-gold text-xs"><span class="en">Silver</span><span class="zh hidden">白银</span></span>
+            </div>
+            <div class="loyalty-bar">
+              <div class="loyalty-labels">
+                <span>248 pts</span><span><span class="en">500 = Gold</span><span class="zh hidden">500=黄金</span></span>
+              </div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill accent" style="width:49.6%"></div>
+              </div>
+            </div>
+            <div class="text-xs text-muted mt-1"><span class="en">252 pts to Gold tier</span><span class="zh hidden">再252积分升级黄金</span></div>
+          </div>
+
+          <!-- Nav -->
+          <nav class="sidebar-nav">
+            <button class="sidebar-nav-item active" onclick="switchTab('dashboard',null);syncSidebar('dashboard')" id="snav-dashboard">
+              <span class="nav-icon">📊</span>
+              <span><span class="en">Dashboard</span><span class="zh hidden">仪表板</span></span>
+            </button>
+            <button class="sidebar-nav-item" onclick="switchTab('orders',null);syncSidebar('orders')" id="snav-orders">
+              <span class="nav-icon">📦</span>
+              <span><span class="en">Orders</span><span class="zh hidden">我的订单</span></span>
+            </button>
+            <button class="sidebar-nav-item" onclick="switchTab('tcm',null);syncSidebar('tcm')" id="snav-tcm">
+              <span class="nav-icon">🌿</span>
+              <span><span class="en">TCM Profile</span><span class="zh hidden">体质档案</span></span>
+            </button>
+            <button class="sidebar-nav-item" onclick="switchTab('wishlist',null);syncSidebar('wishlist')" id="snav-wishlist">
+              <span class="nav-icon">❤️</span>
+              <span><span class="en">Wishlist</span><span class="zh hidden">收藏夹</span></span>
+            </button>
+            <button class="sidebar-nav-item" onclick="switchTab('settings',null);syncSidebar('settings')" id="snav-settings">
+              <span class="nav-icon">⚙️</span>
+              <span><span class="en">Settings</span><span class="zh hidden">设置</span></span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- Promo card -->
+        <div class="sidebar-promo mt-4" style="margin-top:12px">
+          <div class="font-semibold text-sm" style="color:#92400e"><span class="en">Give $10, Get $10</span><span class="zh hidden">推荐得$10，对方也得$10</span></div>
+          <div class="text-xs text-muted mt-1"><span class="en">Refer a friend to pureHerbHealth</span><span class="zh hidden">推荐好友</span></div>
+          <a href="#" class="text-xs text-brand font-semibold mt-2" style="display:inline-block"><span class="en">Copy share link →</span><span class="zh hidden">复制推荐链接 →</span></a>
+        </div>
+
+        <!-- Consult button -->
+        <button class="btn btn-outline w-full mt-3" style="margin-top:10px;font-size:0.82rem">
+          <span class="en">Consult Dr. Huang</span><span class="zh hidden">咨询黄医师</span>
+        </button>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <div style="min-width:0">
+
+        <!-- ════════════════════════
+             TAB 1: DASHBOARD
+        ════════════════════════ -->
+        <div class="tab-panel active" id="tab-dashboard">
+
+          <!-- Welcome banner -->
+          <div class="welcome-banner">
+            <div style="position:relative;z-index:1">
+              <div class="font-heading text-2xl text-dark"><span class="en">Good morning, Sarah!</span><span class="zh hidden">早上好，莎拉！</span></div>
+              <div class="text-muted mt-1 text-sm"><span class="en">Your Qi Deficient profile has 3 new herb recommendations today.</span><span class="zh hidden">您的气虚体质档案今天有3条新草药推荐。</span></div>
+            </div>
+          </div>
+
+          <!-- Stat cards -->
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-icon">📦</div>
+              <div class="stat-value">3</div>
+              <div class="stat-label"><span class="en">Active Orders</span><span class="zh hidden">活跃订单</span></div>
+              <div class="stat-sub"><a href="#" onclick="switchTab('orders',null);syncSidebar('orders');return false" class="text-brand text-xs"><span class="en">View All →</span><span class="zh hidden">查看全部 →</span></a></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🌿</div>
+              <div class="stat-value">248</div>
+              <div class="stat-label"><span class="en">Herb Points</span><span class="zh hidden">草药积分</span></div>
+              <div class="stat-sub text-muted text-xs"><span class="en">252 pts to Gold</span><span class="zh hidden">再252分升级</span></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">❤️</div>
+              <div class="stat-value">6</div>
+              <div class="stat-label"><span class="en">Saved Items</span><span class="zh hidden">收藏商品</span></div>
+              <div class="stat-sub"><a href="#" onclick="switchTab('wishlist',null);syncSidebar('wishlist');return false" class="text-brand text-xs"><span class="en">View Wishlist →</span><span class="zh hidden">查看收藏 →</span></a></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">☯️</div>
+              <div class="stat-value" style="font-size:1rem;margin-top:4px"><span class="en">Qi Deficient</span><span class="zh hidden">气虚</span></div>
+              <div class="stat-label"><span class="en">Constitution</span><span class="zh hidden">体质</span></div>
+              <div class="stat-sub"><a href="#" onclick="switchTab('tcm',null);syncSidebar('tcm');return false" class="text-brand text-xs"><span class="en">Retake Quiz →</span><span class="zh hidden">重新测评 →</span></a></div>
+            </div>
+          </div>
+
+          <!-- Recent orders -->
+          <div class="card p-5 mb-4">
+            <div class="section-hd">
+              <span class="section-title"><span class="en">Recent Orders</span><span class="zh hidden">最近订单</span></span>
+              <a href="#" onclick="switchTab('orders',null);syncSidebar('orders');return false" class="btn-ghost text-sm"><span class="en">View all →</span><span class="zh hidden">查看全部 →</span></a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--n100)">
+                <span class="chip badge-processing chip text-xs" style="white-space:nowrap">Processing</span>
+                <div style="flex:1;min-width:0">
+                  <div class="text-sm font-semibold">#PHH-20260311-001</div>
+                  <div class="text-xs text-muted"><span class="en">Astragalus Formula +2 more</span><span class="zh hidden">黄芪方 +2件</span></div>
+                </div>
+                <div class="text-sm font-bold">$152.76</div>
+                <div class="text-xs text-muted">Mar 11</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--n100)">
+                <span class="chip badge-delivered text-xs" style="white-space:nowrap">Delivered</span>
+                <div style="flex:1;min-width:0">
+                  <div class="text-sm font-semibold">#PHH-20260225-003</div>
+                  <div class="text-xs text-muted"><span class="en">Calm Mind Formula +1</span><span class="zh hidden">安神方 +1件</span></div>
+                </div>
+                <div class="text-sm font-bold">$73.00</div>
+                <div class="text-xs text-muted">Feb 25</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 0">
+                <span class="chip badge-delivered text-xs" style="white-space:nowrap">Delivered</span>
+                <div style="flex:1;min-width:0">
+                  <div class="text-sm font-semibold">#PHH-20260210-007</div>
+                  <div class="text-xs text-muted"><span class="en">Liu Wei Di Huang Wan</span><span class="zh hidden">六味地黄丸</span></div>
+                </div>
+                <div class="text-sm font-bold">$32.00</div>
+                <div class="text-xs text-muted">Feb 10</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TCM Profile summary -->
+          <div class="card p-5 mb-4" style="background:var(--brand-light);border:1px solid #86efac">
+            <div class="section-hd">
+              <span class="section-title text-dark font-heading text-xl"><span class="en">Your TCM Profile</span><span class="zh hidden">您的体质档案</span></span>
+              <div class="flex gap-2">
+                <a href="#" onclick="switchTab('tcm',null);syncSidebar('tcm');return false" class="btn-ghost text-sm text-brand"><span class="en">Update Profile →</span><span class="zh hidden">更新档案 →</span></a>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="chip chip-gold" style="font-size:.85rem;padding:5px 14px">🌟 <span class="en">Qi Deficient · 气虚体质</span><span class="zh hidden">气虚体质</span></span>
+            </div>
+            <div class="text-xs text-muted mb-3"><span class="en">Assessed: Feb 1, 2026 · Recheck: Aug 2026</span><span class="zh hidden">评估日期：2026年2月1日 · 复查：2026年8月</span></div>
+            <div class="flex gap-2" style="flex-wrap:wrap">
+              <span class="chip chip-gray text-xs"><span class="en">Low Energy</span><span class="zh hidden">低能量</span></span>
+              <span class="chip chip-gray text-xs"><span class="en">Cold Sensitive</span><span class="zh hidden">怕冷</span></span>
+              <span class="chip chip-gray text-xs"><span class="en">Weak Digestion</span><span class="zh hidden">消化弱</span></span>
+            </div>
+          </div>
+
+          <!-- Recent AI chats -->
+          <div class="card p-5 mb-4">
+            <div class="section-hd">
+              <span class="section-title"><span class="en">Recent AI Chats</span><span class="zh hidden">最近AI对话</span></span>
+              <button class="btn btn-primary btn-sm" onclick="showToast('Opening TCM AI...')"><span class="en">Ask TCM AI →</span><span class="zh hidden">问AI顾问 →</span></button>
+            </div>
+            <div class="chat-item">
+              <div>
+                <div class="text-sm font-medium"><span class="en">"Best time to take Astragalus?"</span><span class="zh hidden">"黄芪最佳服用时间？"</span></div>
+                <div class="text-xs text-muted"><span class="en">2 days ago</span><span class="zh hidden">2天前</span></div>
+              </div>
+              <button class="btn btn-gray btn-sm">View</button>
+            </div>
+            <div class="chat-item">
+              <div>
+                <div class="text-sm font-medium"><span class="en">"Safe to combine formulas?"</span><span class="zh hidden">"可以同时服用多个方剂吗？"</span></div>
+                <div class="text-xs text-muted"><span class="en">5 days ago</span><span class="zh hidden">5天前</span></div>
+              </div>
+              <button class="btn btn-gray btn-sm">View</button>
+            </div>
+            <div class="chat-item">
+              <div>
+                <div class="text-sm font-medium"><span class="en">"Post-quiz questions"</span><span class="zh hidden">"测评后的问题"</span></div>
+                <div class="text-xs text-muted">Feb 28</div>
+              </div>
+              <button class="btn btn-gray btn-sm">View</button>
+            </div>
+          </div>
+
+          <!-- Recommendations -->
+          <div class="card p-5">
+            <div class="section-hd">
+              <span class="section-title"><span class="en">For Qi Deficient · 气虚体质</span><span class="zh hidden">气虚体质推荐</span></span>
+            </div>
+            <div class="product-grid">
+              <div class="product-card">
+                <div class="product-thumb bg-gold">🌾</div>
+                <div class="product-body">
+                  <div class="product-name"><span class="en">Astragalus Immune Formula</span><span class="zh hidden">黄芪免疫方</span></div>
+                  <div class="product-name-zh"><span class="en">黄芪免疫方</span><span class="zh hidden"></span></div>
+                  <div class="product-price">$42</div>
+                  <button class="btn btn-primary btn-sm w-full mt-2" onclick="addToCart(this)"><span class="en">Add to Cart</span><span class="zh hidden">加入购物车</span></button>
+                </div>
+              </div>
+              <div class="product-card">
+                <div class="product-thumb bg-green">🍃</div>
+                <div class="product-body">
+                  <div class="product-name"><span class="en">Qi Boost Tea Blend</span><span class="zh hidden">补气茶方</span></div>
+                  <div class="product-name-zh"><span class="en">补气茶方</span><span class="zh hidden"></span></div>
+                  <div class="product-price">$28</div>
+                  <button class="btn btn-primary btn-sm w-full mt-2" onclick="addToCart(this)"><span class="en">Add to Cart</span><span class="zh hidden">加入购物车</span></button>
+                </div>
+              </div>
+              <div class="product-card">
+                <div class="product-thumb bg-blue">🏮</div>
+                <div class="product-body">
+                  <div class="product-name"><span class="en">Four Gentlemen Formula</span><span class="zh hidden">四君子汤</span></div>
+                  <div class="product-name-zh"><span class="en">四君子汤</span><span class="zh hidden"></span></div>
+                  <div class="product-price">$36</div>
+                  <button class="btn btn-primary btn-sm w-full mt-2" onclick="addToCart(this)"><span class="en">Add to Cart</span><span class="zh hidden">加入购物车</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /tab-dashboard -->
+
+        <!-- ════════════════════════
+             TAB 2: ORDERS
+        ════════════════════════ -->
+        <div class="tab-panel" id="tab-orders">
+          <div class="card p-5">
+            <div class="section-hd mb-4">
+              <span class="font-heading text-2xl text-dark"><span class="en">My Orders</span><span class="zh hidden">我的订单</span></span>
+            </div>
+
+            <!-- Filter tabs -->
+            <div class="filter-tabs">
+              <button class="filter-tab active" onclick="setFilter(this)"><span class="en">All</span><span class="zh hidden">全部</span></button>
+              <button class="filter-tab" onclick="setFilter(this)"><span class="en">Processing</span><span class="zh hidden">处理中</span></button>
+              <button class="filter-tab" onclick="setFilter(this)"><span class="en">Shipped</span><span class="zh hidden">已发货</span></button>
+              <button class="filter-tab" onclick="setFilter(this)"><span class="en">Delivered</span><span class="zh hidden">已送达</span></button>
+              <button class="filter-tab" onclick="setFilter(this)"><span class="en">Cancelled</span><span class="zh hidden">已取消</span></button>
+            </div>
+
+            <!-- Search row -->
+            <div class="flex gap-3 mb-4">
+              <input type="text" class="form-input" placeholder="Search order number..." style="max-width:260px">
+              <select class="form-input" style="max-width:160px">
+                <option>All Time</option>
+                <option>Last 30 days</option>
+                <option>Last 3 months</option>
+                <option>Last year</option>
+              </select>
+            </div>
+
+            <!-- Order 1: EXPANDED -->
+            <div class="order-row expanded" id="order-1">
+              <div class="order-row-hd" onclick="toggleOrder('order-1')">
+                <span class="chip badge-processing text-xs">Processing</span>
+                <div style="flex:1;min-width:0;margin-left:4px">
+                  <div class="text-sm font-semibold">#PHH-20260311-001</div>
+                  <div class="text-xs text-muted">Mar 11, 2026 · <span class="en">Astragalus Formula +2 more</span><span class="zh hidden">黄芪方 +2件</span></div>
+                </div>
+                <div class="text-sm font-bold">$152.76</div>
+                <span class="order-chevron">▼</span>
+              </div>
+              <div class="order-row-body">
+                <div class="text-xs text-muted mt-3 mb-2" style="font-style:italic"><span class="en">Fulfilled by Dr. Huang's Wellness Store</span><span class="zh hidden">由黄医师健康商店配送</span></div>
+                <div class="order-item-row">
+                  <div>
+                    <div class="text-sm font-medium"><span class="en">Astragalus Immune Formula</span><span class="zh hidden">黄芪免疫方</span> / <span style="font-family:var(--font-zh)">黄芪免疫方</span></div>
+                    <div class="text-xs text-muted">×2</div>
+                  </div>
+                  <div class="text-sm font-semibold">$84.00</div>
+                </div>
+                <div class="order-item-row">
+                  <div>
+                    <div class="text-sm font-medium"><span class="en">Calm Mind Formula</span><span class="zh hidden">安神方</span> / <span style="font-family:var(--font-zh)">安神方</span></div>
+                    <div class="text-xs text-muted">×1</div>
+                  </div>
+                  <div class="text-sm font-semibold">$38.00</div>
+                </div>
+                <div class="order-item-row">
+                  <div>
+                    <div class="text-sm font-medium"><span class="en">Digestive Harmony</span><span class="zh hidden">和胃方</span> / <span style="font-family:var(--font-zh)">和胃方</span></div>
+                    <div class="text-xs text-muted">×1</div>
+                  </div>
+                  <div class="text-sm font-semibold">$35.00</div>
+                </div>
+                <div class="order-totals">
+                  <div class="order-total-row"><span class="text-muted"><span class="en">Promo DRHUANG10</span><span class="zh hidden">优惠码 DRHUANG10</span></span><span class="text-success">−$15.70</span></div>
+                  <div class="order-total-row"><span class="text-muted"><span class="en">Shipping</span><span class="zh hidden">运费</span></span><span class="text-success">FREE</span></div>
+                  <div class="order-total-row"><span class="text-muted"><span class="en">Tax</span><span class="zh hidden">税费</span></span><span>$11.46</span></div>
+                  <div class="order-total-row grand"><span><span class="en">Total</span><span class="zh hidden">合计</span></span><span>$152.76</span></div>
+                </div>
+                <div class="text-xs text-muted mt-3">📍 <span class="en">123 Main St, New York NY 10001 · USPS First Class</span><span class="zh hidden">123 Main St, 纽约 NY 10001 · USPS普通邮件</span></div>
+                <div class="flex gap-2 mt-4" style="flex-wrap:wrap">
+                  <button class="btn btn-primary btn-sm" onclick="showToast('Opening tracking...')"><span class="en">Track Order</span><span class="zh hidden">追踪订单</span></button>
+                  <button class="btn btn-outline btn-sm" onclick="showToast('Contacting support...')"><span class="en">Contact Support</span><span class="zh hidden">联系客服</span></button>
+                  <button class="btn btn-gray btn-sm" onclick="showToast('Reordering...')"><span class="en">Reorder All</span><span class="zh hidden">全部重新订购</span></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order 2 -->
+            <div class="order-row" id="order-2">
+              <div class="order-row-hd" onclick="toggleOrder('order-2')">
+                <span class="chip badge-delivered text-xs">Delivered</span>
+                <div style="flex:1;min-width:0;margin-left:4px">
+                  <div class="text-sm font-semibold">#PHH-20260225-003</div>
+                  <div class="text-xs text-muted">Feb 25, 2026 · <span class="en">Calm Mind Formula +1</span><span class="zh hidden">安神方 +1件</span></div>
+                </div>
+                <div class="text-sm font-bold">$73.00</div>
+                <div class="flex gap-2 items-center">
+                  <button class="btn btn-gray btn-sm" onclick="event.stopPropagation();showToast('Reordering...')"><span class="en">Reorder</span><span class="zh hidden">重新购买</span></button>
+                  <span class="order-chevron">▼</span>
+                </div>
+              </div>
+              <div class="order-row-body">
+                <div class="order-item-row">
+                  <div class="text-sm font-medium"><span class="en">Calm Mind Formula</span><span class="zh hidden">安神方</span> ×1</div><div class="text-sm font-semibold">$38.00</div>
+                </div>
+                <div class="order-item-row">
+                  <div class="text-sm font-medium"><span class="en">Digestive Harmony</span><span class="zh hidden">和胃方</span> ×1</div><div class="text-sm font-semibold">$35.00</div>
+                </div>
+                <div class="order-totals">
+                  <div class="order-total-row"><span class="text-muted"><span class="en">Shipping</span><span class="zh hidden">运费</span></span><span class="text-success">FREE</span></div>
+                  <div class="order-total-row grand"><span><span class="en">Total</span><span class="zh hidden">合计</span></span><span>$73.00</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order 3 -->
+            <div class="order-row" id="order-3">
+              <div class="order-row-hd" onclick="toggleOrder('order-3')">
+                <span class="chip badge-delivered text-xs">Delivered</span>
+                <div style="flex:1;min-width:0;margin-left:4px">
+                  <div class="text-sm font-semibold">#PHH-20260210-007</div>
+                  <div class="text-xs text-muted">Feb 10, 2026 · <span class="en">Liu Wei Di Huang Wan</span><span class="zh hidden">六味地黄丸</span></div>
+                </div>
+                <div class="text-sm font-bold">$32.00</div>
+                <div class="flex gap-2 items-center">
+                  <button class="btn btn-gray btn-sm" onclick="event.stopPropagation();showToast('Reordering...')"><span class="en">Reorder</span><span class="zh hidden">重新购买</span></button>
+                  <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();showToast('Opening review form...')">⭐ <span class="en">Review</span><span class="zh hidden">评价</span></button>
+                  <span class="order-chevron">▼</span>
+                </div>
+              </div>
+              <div class="order-row-body">
+                <div class="order-item-row">
+                  <div class="text-sm font-medium"><span class="en">Liu Wei Di Huang Wan</span><span class="zh hidden">六味地黄丸</span> ×1</div><div class="text-sm font-semibold">$32.00</div>
+                </div>
+                <div class="order-totals">
+                  <div class="order-total-row"><span class="text-muted">Shipping</span><span>$5.99</span></div>
+                  <div class="order-total-row grand"><span>Total</span><span>$32.00</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order 4 (Cancelled) -->
+            <div class="order-row" id="order-4">
+              <div class="order-row-hd" onclick="toggleOrder('order-4')">
+                <span class="chip badge-cancelled text-xs">Cancelled</span>
+                <div style="flex:1;min-width:0;margin-left:4px">
+                  <div class="text-sm font-semibold">#PHH-20260128-002</div>
+                  <div class="text-xs text-muted">Jan 28, 2026 · <span class="en">Reishi Capsules · Refunded Jan 29</span><span class="zh hidden">灵芝胶囊 · 1月29日已退款</span></div>
+                </div>
+                <div class="text-sm font-bold" style="color:var(--n400)">$45.00</div>
+                <span class="order-chevron">▼</span>
+              </div>
+              <div class="order-row-body">
+                <div class="order-item-row">
+                  <div class="text-sm font-medium"><span class="en">Reishi Mushroom Capsules</span><span class="zh hidden">灵芝胶囊</span> ×1</div><div class="text-sm">$45.00</div>
+                </div>
+                <div class="text-xs mt-3" style="color:var(--success)">✓ <span class="en">Refund processed Jan 29, 2026</span><span class="zh hidden">2026年1月29日已退款</span></div>
+              </div>
+            </div>
+
+            <!-- Order 5 -->
+            <div class="order-row" id="order-5">
+              <div class="order-row-hd" onclick="toggleOrder('order-5')">
+                <span class="chip badge-delivered text-xs">Delivered</span>
+                <div style="flex:1;min-width:0;margin-left:4px">
+                  <div class="text-sm font-semibold">#PHH-20260105-009</div>
+                  <div class="text-xs text-muted">Jan 5, 2026 · <span class="en">Jade Screen +2</span><span class="zh hidden">玉屏风 +2件</span></div>
+                </div>
+                <div class="text-sm font-bold">$67.00</div>
+                <div class="flex gap-2 items-center">
+                  <button class="btn btn-gray btn-sm" onclick="event.stopPropagation();showToast('Reordering...')"><span class="en">Reorder</span><span class="zh hidden">重新购买</span></button>
+                  <span class="order-chevron">▼</span>
+                </div>
+              </div>
+              <div class="order-row-body">
+                <div class="order-item-row">
+                  <div class="text-sm font-medium"><span class="en">Jade Screen Formula</span><span class="zh hidden">玉屏风散</span> ×3</div><div class="text-sm font-semibold">$67.00</div>
+                </div>
+                <div class="order-totals">
+                  <div class="order-total-row grand"><span>Total</span><span>$67.00</span></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /tab-orders -->
+
+        <!-- ════════════════════════
+             TAB 3: TCM PROFILE
+        ════════════════════════ -->
+        <div class="tab-panel" id="tab-tcm">
+
+          <!-- Constitution card -->
+          <div class="accent-card p-5 mb-4" style="border:1.5px solid var(--accent)">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <div class="font-heading text-2xl" style="color:#78350f"><span class="en">Qi Deficient Constitution</span><span class="zh hidden">气虚体质</span></div>
+                <div class="font-heading text-xl text-muted" style="font-style:italic">气虚体质</div>
+              </div>
+              <span class="chip chip-gold" style="font-size:.82rem;padding:5px 12px">68% <span class="en">Match</span><span class="zh hidden">匹配度</span></span>
+            </div>
+            <div class="text-xs text-muted mb-4"><span class="en">Primary match: 68% · Assessed Feb 1, 2026 · Recheck Aug 2026</span><span class="zh hidden">主要匹配：68% · 评估日期：2026年2月1日 · 复查：2026年8月</span></div>
+
+            <!-- Constitution bars -->
+            <div id="const-bars">
+              <div class="const-bar-wrap">
+                <div class="const-bar-label"><span class="en">Qi Deficient</span><span class="zh hidden">气虚</span></div>
+                <div class="const-bar-track"><div class="const-bar-fill cb-qidef" data-pct="68"></div></div>
+                <div class="const-bar-pct">68%</div>
+              </div>
+              <div class="const-bar-wrap">
+                <div class="const-bar-label"><span class="en">Phlegm-Damp</span><span class="zh hidden">痰湿</span></div>
+                <div class="const-bar-track"><div class="const-bar-fill cb-phlegm" data-pct="42"></div></div>
+                <div class="const-bar-pct">42%</div>
+              </div>
+              <div class="const-bar-wrap">
+                <div class="const-bar-label"><span class="en">Yang Deficient</span><span class="zh hidden">阳虚</span></div>
+                <div class="const-bar-track"><div class="const-bar-fill cb-yangdef" data-pct="35"></div></div>
+                <div class="const-bar-pct">35%</div>
+              </div>
+              <div class="const-bar-wrap">
+                <div class="const-bar-label"><span class="en">Balanced</span><span class="zh hidden">平和</span></div>
+                <div class="const-bar-track"><div class="const-bar-fill cb-balanced" data-pct="30"></div></div>
+                <div class="const-bar-pct">30%</div>
+              </div>
+              <div class="const-bar-wrap">
+                <div class="const-bar-label"><span class="en">Damp-Heat</span><span class="zh hidden">湿热</span></div>
+                <div class="const-bar-track"><div class="const-bar-fill cb-dampheat" data-pct="22"></div></div>
+                <div class="const-bar-pct">22%</div>
+              </div>
+              <div class="const-bar-wrap">
+                <div class="const-bar-label"><span class="en">Qi Stagnant</span><span class="zh hidden">气郁</span></div>
+                <div class="const-bar-track"><div class="const-bar-fill cb-qistag" data-pct="18"></div></div>
+                <div class="const-bar-pct">18%</div>
+              </div>
+              <div class="const-bar-wrap">
+                <div class="const-bar-label"><span class="en">Yin Deficient</span><span class="zh hidden">阴虚</span></div>
+                <div class="const-bar-track"><div class="const-bar-fill cb-yindef" data-pct="14"></div></div>
+                <div class="const-bar-pct">14%</div>
+              </div>
+              <div class="const-bar-wrap">
+                <div class="const-bar-label"><span class="en">Blood Stasis</span><span class="zh hidden">血瘀</span></div>
+                <div class="const-bar-track"><div class="const-bar-fill cb-bloodstasis" data-pct="10"></div></div>
+                <div class="const-bar-pct">10%</div>
+              </div>
+              <div class="const-bar-wrap">
+                <div class="const-bar-label"><span class="en">Special</span><span class="zh hidden">特禀</span></div>
+                <div class="const-bar-track"><div class="const-bar-fill cb-yin" data-pct="7"></div></div>
+                <div class="const-bar-pct">7%</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary mt-4" onclick="showToast('Opening Constitution Quiz...')"><span class="en">Retake Constitution Quiz</span><span class="zh hidden">重新进行体质测评</span></button>
+          </div>
+
+          <!-- Characteristics -->
+          <div class="card p-5 mb-4">
+            <div class="section-title mb-3"><span class="en">Your Characteristics</span><span class="zh hidden">您的体质特征</span></div>
+            <div class="form-grid-3" style="gap:10px">
+              <div class="brand-callout text-sm">🔋 <span class="en">Low energy</span><span class="zh hidden">精力不足</span></div>
+              <div class="brand-callout text-sm">💨 <span class="en">Shortness of breath</span><span class="zh hidden">气短</span></div>
+              <div class="brand-callout text-sm">🌡️ <span class="en">Cold sensitive</span><span class="zh hidden">怕冷</span></div>
+              <div class="brand-callout text-sm">😴 <span class="en">Poor sleep</span><span class="zh hidden">睡眠差</span></div>
+              <div class="brand-callout text-sm">🍽️ <span class="en">Weak appetite</span><span class="zh hidden">食欲不振</span></div>
+              <div class="brand-callout text-sm">🗣️ <span class="en">Soft voice</span><span class="zh hidden">声音低弱</span></div>
+            </div>
+          </div>
+
+          <!-- Herb Protocol -->
+          <div class="practitioner-note mb-4">
+            <div class="section-hd mb-3">
+              <span class="section-title font-heading text-lg"><span class="en">Your Herb Protocol</span><span class="zh hidden">您的草药方案</span></span>
+            </div>
+            <div class="flex items-center gap-3 mb-4 p-3" style="background:var(--n50);border-radius:var(--r-md)">
+              <div class="avatar" style="width:38px;height:38px;font-size:.8rem;background:var(--brand-dark)">EH</div>
+              <div>
+                <div class="text-sm font-semibold"><span class="en">Recommended by Dr. Emily Huang, L.Ac., DACM</span><span class="zh hidden">推荐医师：黄美琳博士，L.Ac., DACM</span></div>
+                <div class="text-xs text-muted"><span class="en">Board-certified TCM practitioner</span><span class="zh hidden">认证中医执照医师</span></div>
+              </div>
+            </div>
+
+            <div class="protocol-row">
+              <div class="protocol-dot">🌾</div>
+              <div class="protocol-info">
+                <div class="text-sm font-semibold"><span class="en">Astragalus Immune Formula</span><span class="zh hidden">黄芪免疫方</span></div>
+                <div class="text-xs text-muted"><span class="en">Morning, 3 capsules</span><span class="zh hidden">早晨，3粒</span></div>
+                <div class="protocol-progress-wrap">
+                  <div class="progress-bar-wrap" style="flex:1;height:5px">
+                    <div class="progress-bar-fill" style="width:12.2%"></div>
+                  </div>
+                  <span class="text-xs text-muted"><span class="en">Day 11 / 90</span><span class="zh hidden">第11天/90天</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="protocol-row">
+              <div class="protocol-dot">🍃</div>
+              <div class="protocol-info">
+                <div class="flex items-center gap-2">
+                  <div class="text-sm font-semibold"><span class="en">Digestive Harmony</span><span class="zh hidden">和胃方</span></div>
+                  <span class="chip chip-orange text-xs"><span class="en">Refill soon</span><span class="zh hidden">即将用完</span></span>
+                </div>
+                <div class="text-xs text-muted"><span class="en">Before meals, 2 capsules · Ongoing</span><span class="zh hidden">餐前，2粒 · 持续服用</span></div>
+              </div>
+            </div>
+            <div class="protocol-row">
+              <div class="protocol-dot">🍵</div>
+              <div class="protocol-info">
+                <div class="text-sm font-semibold"><span class="en">Astragalus &amp; Codonopsis Tea</span><span class="zh hidden">黄芪党参茶</span></div>
+                <div class="text-xs text-muted"><span class="en">Evening · Ongoing</span><span class="zh hidden">晚间 · 持续服用</span></div>
+              </div>
+            </div>
+
+            <a href="#" class="text-sm text-brand mt-3" style="display:inline-block" onclick="showToast('Opening message to Dr. Huang...');return false"><span class="en">Message Dr. Huang about this protocol →</span><span class="zh hidden">就此方案咨询黄医师 →</span></a>
+          </div>
+
+          <!-- Symptom Tracker -->
+          <div class="card p-5 mb-4">
+            <div class="section-hd mb-3">
+              <span class="section-title"><span class="en">Symptom Tracker</span><span class="zh hidden">症状追踪</span></span>
+              <button class="btn btn-outline btn-sm" onclick="showToast('Opening symptom log...')">+ <span class="en">Log today</span><span class="zh hidden">记录今天</span></button>
+            </div>
+
+            <div class="symptom-log" id="slog-1">
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-semibold">Mar 10</span>
+                <span class="text-xs text-muted font-medium"><span class="en">Energy</span><span class="zh hidden">精力</span> 6/10 · <span class="en">Sleep</span><span class="zh hidden">睡眠</span> 7/10 · <span class="en">Digestion</span><span class="zh hidden">消化</span> 5/10</span>
+              </div>
+              <div class="score-dots mt-2" id="dots-1"></div>
+              <div class="text-xs text-muted mt-1 font-medium" style="font-style:italic">"<span class="en">Tired by 3pm</span><span class="zh hidden">下午3点感到疲惫</span>"</div>
+            </div>
+            <div class="symptom-log">
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-semibold">Mar 5</span>
+                <span class="text-xs text-muted font-medium"><span class="en">Energy</span><span class="zh hidden">精力</span> 5/10 · <span class="en">Sleep</span><span class="zh hidden">睡眠</span> 6/10 · <span class="en">Digestion</span><span class="zh hidden">消化</span> 6/10</span>
+              </div>
+              <div class="score-dots mt-2" id="dots-2"></div>
+            </div>
+            <div class="symptom-log">
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-semibold">Feb 28</span>
+                <span class="text-xs text-muted font-medium"><span class="en">Energy</span><span class="zh hidden">精力</span> 4/10 · <span class="en">Sleep</span><span class="zh hidden">睡眠</span> 5/10 · <span class="en">Digestion</span><span class="zh hidden">消化</span> 4/10</span>
+              </div>
+              <div class="score-dots mt-2" id="dots-3"></div>
+            </div>
+            <div class="text-sm mt-3 text-success font-semibold">↑ <span class="en">Energy improving: +2 pts over 2 weeks</span><span class="zh hidden">精力提升：2周内+2分</span></div>
+          </div>
+
+          <!-- AI Chat History -->
+          <div class="card p-5 mb-4">
+            <div class="section-hd mb-2">
+              <span class="section-title"><span class="en">AI Chat History</span><span class="zh hidden">AI对话历史</span></span>
+              <button class="btn btn-primary btn-sm" onclick="showToast('Starting new conversation...')"><span class="en">Start new →</span><span class="zh hidden">开始新对话 →</span></button>
+            </div>
+            <div class="chat-item">
+              <div><div class="text-sm font-medium"><span class="en">Astragalus dosage timing</span><span class="zh hidden">黄芪服用时间</span></div><div class="text-xs text-muted">Mar 9 · <span class="en">4 messages</span><span class="zh hidden">4条消息</span></div></div>
+              <button class="btn btn-gray btn-sm">View</button>
+            </div>
+            <div class="chat-item">
+              <div><div class="text-sm font-medium"><span class="en">Combining formulas safely</span><span class="zh hidden">安全合并方剂</span></div><div class="text-xs text-muted">Mar 5 · <span class="en">7 messages</span><span class="zh hidden">7条消息</span></div></div>
+              <button class="btn btn-gray btn-sm">View</button>
+            </div>
+            <div class="chat-item">
+              <div><div class="text-sm font-medium"><span class="en">Post-quiz constitution questions</span><span class="zh hidden">测评后体质问题</span></div><div class="text-xs text-muted">Feb 28 · <span class="en">12 messages</span><span class="zh hidden">12条消息</span></div></div>
+              <button class="btn btn-gray btn-sm">View</button>
+            </div>
+            <div class="chat-item">
+              <div><div class="text-sm font-medium"><span class="en">Diet for Qi Deficiency</span><span class="zh hidden">气虚饮食建议</span></div><div class="text-xs text-muted">Feb 20 · <span class="en">6 messages</span><span class="zh hidden">6条消息</span></div></div>
+              <button class="btn btn-gray btn-sm">View</button>
+            </div>
+            <div class="chat-item">
+              <div><div class="text-sm font-medium"><span class="en">Wei Qi and immunity</span><span class="zh hidden">卫气与免疫力</span></div><div class="text-xs text-muted">Feb 15 · <span class="en">8 messages</span><span class="zh hidden">8条消息</span></div></div>
+              <button class="btn btn-gray btn-sm">View</button>
+            </div>
+          </div>
+
+          <!-- FDA disclaimer -->
+          <div style="border-top:1px solid var(--n200);padding-top:12px;margin-bottom:24px">
+            <p class="fda-note"><span class="en">Herb protocols are personalized wellness support, not medical prescriptions. Consult your licensed practitioner before beginning any herbal protocol. These statements have not been evaluated by the Food and Drug Administration.</span><span class="zh hidden">草药方案是个性化健康支持，不是医疗处方。开始任何草药疗程前请咨询您的执照医师。本声明未经美国食品药品监督管理局评估。</span></p>
+          </div>
+
+        </div><!-- /tab-tcm -->
+
+        <!-- ════════════════════════
+             TAB 4: WISHLIST
+        ════════════════════════ -->
+        <div class="tab-panel" id="tab-wishlist">
+          <div class="card p-5">
+            <div class="section-hd mb-4">
+              <div>
+                <div class="font-heading text-2xl text-dark"><span class="en">Wishlist</span><span class="zh hidden">收藏夹</span></div>
+                <div class="text-sm text-muted mt-1"><span class="en">6 saved products · 6个收藏</span><span class="zh hidden">6个收藏商品</span></div>
+              </div>
+              <div class="flex gap-2">
+                <a href="#" class="text-sm text-brand" onclick="showToast('Share link copied!');return false"><span class="en">Share wishlist</span><span class="zh hidden">分享收藏</span></a>
+                <button class="btn btn-primary btn-sm" onclick="addAllToCart()"><span class="en">Add all to cart</span><span class="zh hidden">全部加入购物车</span></button>
+              </div>
+            </div>
+
+            <div class="product-grid" id="wishlist-grid">
+              <!-- Card 1 -->
+              <div class="product-card" id="wl-1">
+                <button class="product-remove" onclick="removeWishlist('wl-1')">✕</button>
+                <div class="product-thumb bg-blue">🏮</div>
+                <div class="product-body">
+                  <div class="product-name"><span class="en">Emperor's Teapills</span><span class="zh hidden">天王补心丹</span></div>
+                  <div class="product-name-zh"><span class="en">天王补心丹</span><span class="zh hidden"></span></div>
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="product-price">$42</div>
+                    <span class="chip chip-green text-xs"><span class="en">In stock</span><span class="zh hidden">有货</span></span>
+                  </div>
+                  <button class="btn btn-primary btn-sm w-full mt-2" onclick="addToCart(this)"><span class="en">Add to Cart</span><span class="zh hidden">加入购物车</span></button>
+                </div>
+              </div>
+              <!-- Card 2 -->
+              <div class="product-card" id="wl-2">
+                <button class="product-remove" onclick="removeWishlist('wl-2')">✕</button>
+                <div class="product-thumb bg-green">🍄</div>
+                <div class="product-body">
+                  <div class="product-name"><span class="en">Reishi Mushroom Caps</span><span class="zh hidden">灵芝胶囊</span></div>
+                  <div class="product-name-zh"><span class="en">灵芝胶囊</span><span class="zh hidden"></span></div>
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="product-price">$45</div>
+                    <span class="chip chip-red text-xs"><span class="en">Low Stock</span><span class="zh hidden">库存少</span></span>
+                  </div>
+                  <button class="btn btn-primary btn-sm w-full mt-2" onclick="addToCart(this)"><span class="en">Add to Cart</span><span class="zh hidden">加入购物车</span></button>
+                </div>
+              </div>
+              <!-- Card 3 -->
+              <div class="product-card" id="wl-3">
+                <button class="product-remove" onclick="removeWishlist('wl-3')">✕</button>
+                <div class="product-thumb bg-gold">🍵</div>
+                <div class="product-body">
+                  <div class="product-name"><span class="en">Five Element Tea Sampler</span><span class="zh hidden">五行茶礼盒</span></div>
+                  <div class="product-name-zh"><span class="en">五行茶礼盒</span><span class="zh hidden"></span></div>
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="product-price">$65</div>
+                    <span class="chip chip-green text-xs"><span class="en">Back in Stock</span><span class="zh hidden">已补货</span></span>
+                  </div>
+                  <button class="btn btn-primary btn-sm w-full mt-2" onclick="addToCart(this)"><span class="en">Add to Cart</span><span class="zh hidden">加入购物车</span></button>
+                </div>
+              </div>
+              <!-- Card 4 -->
+              <div class="product-card" id="wl-4">
+                <button class="product-remove" onclick="removeWishlist('wl-4')">✕</button>
+                <div class="product-thumb bg-green">🌾</div>
+                <div class="product-body">
+                  <div class="product-name"><span class="en">Liu Wei Di Huang Wan</span><span class="zh hidden">六味地黄丸</span></div>
+                  <div class="product-name-zh"><span class="en">六味地黄丸</span><span class="zh hidden"></span></div>
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="product-price">$32</div>
+                    <span class="text-xs text-muted"><span class="en">Added Feb 28</span><span class="zh hidden">2月28日已收藏</span></span>
+                  </div>
+                  <button class="btn btn-primary btn-sm w-full mt-2" onclick="addToCart(this)"><span class="en">Add to Cart</span><span class="zh hidden">加入购物车</span></button>
+                </div>
+              </div>
+              <!-- Card 5 -->
+              <div class="product-card" id="wl-5">
+                <button class="product-remove" onclick="removeWishlist('wl-5')">✕</button>
+                <div class="product-thumb bg-blue">📚</div>
+                <div class="product-body">
+                  <div class="product-name"><span class="en">Herb Encyclopedia EN/ZH</span><span class="zh hidden">中草药百科 中英文版</span></div>
+                  <div class="product-name-zh"><span class="en">中草药百科</span><span class="zh hidden"></span></div>
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="product-price">$48</div>
+                    <span class="chip chip-gray text-xs"><span class="en">Ships 5–7d</span><span class="zh hidden">5-7天发货</span></span>
+                  </div>
+                  <button class="btn btn-primary btn-sm w-full mt-2" onclick="addToCart(this)"><span class="en">Add to Cart</span><span class="zh hidden">加入购物车</span></button>
+                </div>
+              </div>
+              <!-- Card 6 -->
+              <div class="product-card" id="wl-6">
+                <button class="product-remove" onclick="removeWishlist('wl-6')">✕</button>
+                <div class="product-thumb bg-purple">📖</div>
+                <div class="product-body">
+                  <div class="product-name"><span class="en">TCM Pulse Diagnosis Guide</span><span class="zh hidden">中医把脉指南</span></div>
+                  <div class="product-name-zh"><span class="en">中医把脉指南</span><span class="zh hidden"></span></div>
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="product-price">$35</div>
+                    <span class="chip chip-blue text-xs"><span class="en">Pre-order</span><span class="zh hidden">预订</span></span>
+                  </div>
+                  <button class="btn btn-outline btn-sm w-full mt-2" onclick="addToCart(this)"><span class="en">Pre-order</span><span class="zh hidden">预订</span></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-center mt-4">
+              <button class="btn btn-outline" onclick="addAllToCart()"><span class="en">Move all to cart</span><span class="zh hidden">全部移至购物车</span></button>
+            </div>
+          </div>
+        </div><!-- /tab-wishlist -->
+
+        <!-- ════════════════════════
+             TAB 5: SETTINGS
+        ════════════════════════ -->
+        <div class="tab-panel" id="tab-settings">
+          <div class="card p-5">
+            <div class="font-heading text-2xl text-dark mb-4"><span class="en">Account Settings</span><span class="zh hidden">账户设置</span></div>
+
+            <!-- Settings sub-nav -->
+            <div class="settings-subnav">
+              <button class="settings-tab active" onclick="setSettingsTab(this,'stab-profile')"><span class="en">Profile</span><span class="zh hidden">个人资料</span></button>
+              <button class="settings-tab" onclick="setSettingsTab(this,'stab-security')"><span class="en">Security</span><span class="zh hidden">安全</span></button>
+              <button class="settings-tab" onclick="setSettingsTab(this,'stab-addresses')"><span class="en">Addresses</span><span class="zh hidden">地址</span></button>
+              <button class="settings-tab" onclick="setSettingsTab(this,'stab-notifications')"><span class="en">Notifications</span><span class="zh hidden">通知</span></button>
+              <button class="settings-tab" onclick="setSettingsTab(this,'stab-language')"><span class="en">Language &amp; Region</span><span class="zh hidden">语言与地区</span></button>
+            </div>
+
+            <!-- Profile sub-panel -->
+            <div id="stab-profile" class="stab active">
+              <div class="flex items-center gap-4 mb-5">
+                <div class="avatar" style="width:64px;height:64px;font-size:1.3rem">SL</div>
+                <div>
+                  <button class="btn btn-gray btn-sm" onclick="showToast('Photo upload coming soon...')"><span class="en">Upload photo</span><span class="zh hidden">上传头像</span></button>
+                  <div class="text-xs text-muted mt-2"><span class="en">JPG, PNG, max 2MB</span><span class="zh hidden">JPG、PNG，最大2MB</span></div>
+                </div>
+              </div>
+              <div class="form-grid-2 mb-4">
+                <div class="form-group">
+                  <label class="form-label"><span class="en">First Name</span><span class="zh hidden">名</span></label>
+                  <input type="text" class="form-input" value="Sarah">
+                </div>
+                <div class="form-group">
+                  <label class="form-label"><span class="en">Last Name</span><span class="zh hidden">姓</span></label>
+                  <input type="text" class="form-input" value="Liu">
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label"><span class="en">Email</span><span class="zh hidden">邮箱</span></label>
+                <div class="flex gap-2 items-center">
+                  <input type="email" class="form-input" value="sarah@example.com" style="flex:1">
+                  <span class="chip chip-green text-xs">✓ <span class="en">Verified</span><span class="zh hidden">已验证</span></span>
+                </div>
+              </div>
+              <div class="form-grid-2 mb-4">
+                <div class="form-group">
+                  <label class="form-label"><span class="en">Phone</span><span class="zh hidden">手机</span></label>
+                  <input type="tel" class="form-input" value="+1 (212) 555-0147">
+                </div>
+                <div class="form-group">
+                  <label class="form-label"><span class="en">Birthday</span><span class="zh hidden">生日</span></label>
+                  <input type="date" class="form-input" value="1990-03-15">
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="showToast('Profile saved ✓')"><span class="en">Save Profile</span><span class="zh hidden">保存资料</span></button>
+            </div>
+
+            <!-- Security sub-panel -->
+            <div id="stab-security" class="stab hidden">
+              <div class="form-group mb-4">
+                <label class="form-label"><span class="en">Current Password</span><span class="zh hidden">当前密码</span></label>
+                <input type="password" class="form-input" placeholder="••••••••">
+              </div>
+              <div class="form-grid-2 mb-4">
+                <div class="form-group">
+                  <label class="form-label"><span class="en">New Password</span><span class="zh hidden">新密码</span></label>
+                  <input type="password" class="form-input" placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                  <label class="form-label"><span class="en">Confirm Password</span><span class="zh hidden">确认密码</span></label>
+                  <input type="password" class="form-input" placeholder="••••••••">
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="showToast('Password updated ✓')"><span class="en">Update Password</span><span class="zh hidden">更新密码</span></button>
+              <div class="divider mt-5"></div>
+              <div class="text-sm font-semibold mb-2"><span class="en">Two-Factor Authentication</span><span class="zh hidden">双重认证</span></div>
+              <div class="toggle-row">
+                <span class="text-sm"><span class="en">Enable SMS 2FA</span><span class="zh hidden">启用短信双重认证</span></span>
+                <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+              </div>
+            </div>
+
+            <!-- Addresses sub-panel -->
+            <div id="stab-addresses" class="stab hidden">
+              <div class="card-border p-4 mb-3">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="text-sm font-semibold"><span class="en">Default Address</span><span class="zh hidden">默认地址</span></div>
+                    <div class="text-sm text-muted mt-1">Sarah Liu<br>123 Main St<br>New York, NY 10001<br>United States</div>
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <span class="chip chip-green text-xs">Default</span>
+                    <button class="btn-ghost text-xs" onclick="showToast('Editing address...')"><span class="en">Edit</span><span class="zh hidden">编辑</span></button>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="showToast('Adding new address...')">+ <span class="en">Add new address</span><span class="zh hidden">添加新地址</span></button>
+            </div>
+
+            <!-- Notifications sub-panel -->
+            <div id="stab-notifications" class="stab hidden">
+              <div class="text-sm font-semibold mb-3 text-muted uppercase" style="letter-spacing:.05em;font-size:.72rem"><span class="en">Email Notifications</span><span class="zh hidden">邮件通知</span></div>
+              <div class="toggle-row">
+                <div><div class="text-sm font-medium"><span class="en">Order updates</span><span class="zh hidden">订单更新</span></div><div class="text-xs text-muted"><span class="en">Shipping and delivery confirmations</span><span class="zh hidden">发货和送达确认</span></div></div>
+                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div><div class="text-sm font-medium"><span class="en">New products</span><span class="zh hidden">新品上架</span></div><div class="text-xs text-muted"><span class="en">Formulas matching your constitution</span><span class="zh hidden">适合您体质的新方剂</span></div></div>
+                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div><div class="text-sm font-medium"><span class="en">AI responses</span><span class="zh hidden">AI回复</span></div><div class="text-xs text-muted"><span class="en">When your TCM AI replies</span><span class="zh hidden">TCM AI回复时通知</span></div></div>
+                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div><div class="text-sm font-medium"><span class="en">Herb restock</span><span class="zh hidden">补货通知</span></div><div class="text-xs text-muted"><span class="en">Wishlisted items back in stock</span><span class="zh hidden">收藏商品补货提醒</span></div></div>
+                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div><div class="text-sm font-medium"><span class="en">Newsletter</span><span class="zh hidden">新闻通讯</span></div><div class="text-xs text-muted"><span class="en">Monthly TCM wellness digest</span><span class="zh hidden">每月TCM健康摘要</span></div></div>
+                <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+              </div>
+              <div class="toggle-row" style="background:var(--brand-light);padding:10px 12px;border-radius:var(--r-md);margin-top:4px;border-bottom:none">
+                <div><div class="text-sm font-medium text-brand">🌿 <span class="en">Dr. Huang updates</span><span class="zh hidden">黄医师动态</span></div><div class="text-xs text-muted"><span class="en">Protocol changes &amp; new recommendations</span><span class="zh hidden">方案变更和新推荐</span></div></div>
+                <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+              </div>
+              <button class="btn btn-primary mt-4" onclick="showToast('Notification preferences saved ✓')"><span class="en">Save Preferences</span><span class="zh hidden">保存偏好</span></button>
+            </div>
+
+            <!-- Language sub-panel -->
+            <div id="stab-language" class="stab hidden">
+              <div class="form-grid-2 mb-4" style="gap:20px">
+                <div>
+                  <div class="form-label mb-2"><span class="en">Language</span><span class="zh hidden">语言</span></div>
+                  <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="lang-pref" checked> English</label>
+                    <label class="radio-option"><input type="radio" name="lang-pref"> 中文 (Chinese)</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-label mb-2"><span class="en">TCM Terms Display</span><span class="zh hidden">TCM术语显示</span></div>
+                  <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="tcm-terms" checked> <span class="en">Show Pinyin alongside Chinese</span><span class="zh hidden">中文附拼音</span></label>
+                    <label class="radio-option"><input type="radio" name="tcm-terms"> <span class="en">Chinese only</span><span class="zh hidden">仅中文</span></label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-grid-3 mb-4">
+                <div class="form-group">
+                  <label class="form-label"><span class="en">Region</span><span class="zh hidden">地区</span></label>
+                  <select class="form-input">
+                    <option selected>United States</option>
+                    <option>Canada</option>
+                    <option>China</option>
+                    <option>Hong Kong</option>
+                    <option>Taiwan</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label"><span class="en">Currency</span><span class="zh hidden">货币</span></label>
+                  <select class="form-input">
+                    <option selected>USD</option>
+                    <option>CAD</option>
+                    <option>CNY</option>
+                    <option>HKD</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label"><span class="en">Timezone</span><span class="zh hidden">时区</span></label>
+                  <select class="form-input">
+                    <option selected>America/New_York</option>
+                    <option>America/Los_Angeles</option>
+                    <option>Asia/Shanghai</option>
+                    <option>Asia/Hong_Kong</option>
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="showToast('Preferences saved ✓')"><span class="en">Save Preferences</span><span class="zh hidden">保存偏好</span></button>
+
+              <div class="divider mt-5"></div>
+              <div class="brand-callout mt-4">
+                <div class="text-sm font-semibold mb-1">🔒 <span class="en">Your Privacy</span><span class="zh hidden">您的隐私</span></div>
+                <div class="text-sm text-muted"><span class="en">Your TCM constitution data is used only for personalization. It is never sold to third parties.</span><span class="zh hidden">您的TCM体质数据仅用于个性化服务，绝不向第三方出售。</span></div>
+                <div class="flex gap-3 mt-3 flex-wrap items-center">
+                  <a href="#" class="text-xs text-brand font-medium"><span class="en">Privacy Policy →</span><span class="zh hidden">隐私政策 →</span></a>
+                  <button class="btn btn-gray btn-sm" onclick="showToast('Preparing data download...')"><span class="en">Download my data</span><span class="zh hidden">下载我的数据</span></button>
+                  <button class="btn-danger" onclick="showToast('Account deletion — contact support')"><span class="en">Delete account</span><span class="zh hidden">删除账户</span></button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /tab-settings -->
+
+      </div><!-- /main content -->
+    </div><!-- /account-layout -->
+  </div><!-- /container -->
+</main>
+
+<!-- ═══════════════════════════════════
+     SHARED FOOTER
+════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">🌿 pureHerbHealth</div>
+        <div class="footer-tagline"><span class="en">Premium TCM formulas, crafted with authentic herbs and traditional wisdom.</span><span class="zh hidden">优质中医方剂，以正宗草药和传统智慧精心制作。</span></div>
+      </div>
+      <div class="footer-col">
+        <h4><span class="en">Shop</span><span class="zh hidden">商城</span></h4>
+        <ul>
+          <li><a href="#"><span class="en">All Formulas</span><span class="zh hidden">全部方剂</span></a></li>
+          <li><a href="#"><span class="en">By Element</span><span class="zh hidden">按五行</span></a></li>
+          <li><a href="#"><span class="en">Best Sellers</span><span class="zh hidden">畅销品</span></a></li>
+          <li><a href="#"><span class="en">Dr. Picks</span><span class="zh hidden">医师推荐</span></a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4><span class="en">Learn</span><span class="zh hidden">学习</span></h4>
+        <ul>
+          <li><a href="#"><span class="en">TCM Basics</span><span class="zh hidden">中医基础</span></a></li>
+          <li><a href="#"><span class="en">Herb Profiles</span><span class="zh hidden">草药档案</span></a></li>
+          <li><a href="#"><span class="en">Five Elements</span><span class="zh hidden">五行</span></a></li>
+          <li><a href="#"><span class="en">AI Advisor</span><span class="zh hidden">AI顾问</span></a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4><span class="en">Account</span><span class="zh hidden">账户</span></h4>
+        <ul>
+          <li><a href="#"><span class="en">My Orders</span><span class="zh hidden">我的订单</span></a></li>
+          <li><a href="#"><span class="en">TCM Profile</span><span class="zh hidden">体质档案</span></a></li>
+          <li><a href="#"><span class="en">Practitioner Portal</span><span class="zh hidden">医师门户</span></a></li>
+          <li><a href="#"><span class="en">Sign In</span><span class="zh hidden">登录</span></a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4><span class="en">Help</span><span class="zh hidden">帮助</span></h4>
+        <ul>
+          <li><a href="#"><span class="en">FAQ</span><span class="zh hidden">常见问题</span></a></li>
+          <li><a href="#"><span class="en">Shipping Policy</span><span class="zh hidden">运输政策</span></a></li>
+          <li><a href="#"><span class="en">Returns</span><span class="zh hidden">退货</span></a></li>
+          <li><a href="#"><span class="en">Contact Us</span><span class="zh hidden">联系我们</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div style="margin-bottom:8px;font-size:.7rem;opacity:.7">
+        <span class="en">These statements have not been evaluated by the FDA. Products are not intended to diagnose, treat, cure, or prevent any disease.</span>
+        <span class="zh hidden">本产品声明未经FDA评估，不用于诊断、治疗、治愈或预防任何疾病。</span>
+      </div>
+      <div>© 2026 pureHerbHealth. <span class="en">All rights reserved.</span><span class="zh hidden">版权所有。</span></div>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /page-wrap -->
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+  /* ── Tab switching ── */
+  const TAB_MAP = {dashboard:'tab-dashboard',orders:'tab-orders',tcm:'tab-tcm',wishlist:'tab-wishlist',settings:'tab-settings'};
+  const SNAV_MAP = {dashboard:'snav-dashboard',orders:'snav-orders',tcm:'snav-tcm',wishlist:'snav-wishlist',settings:'snav-settings'};
+
+  function switchTab(id, btnEl) {
+    // Hide all panels
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    // Proto bar tabs
+    document.querySelectorAll('.proto-tab').forEach(b => b.classList.remove('active'));
+    if (btnEl) btnEl.classList.add('active');
+    else {
+      document.querySelectorAll('.proto-tab').forEach(b => {
+        if (b.textContent.trim().toLowerCase().startsWith(id === 'tcm' ? 'tcm' : id)) b.classList.add('active');
+      });
+    }
+    syncSidebar(id);
+    // Animate constitution bars when TCM tab opens
+    if (id === 'tcm') animateConstBars();
+    if (id === 'tcm') animateSymptomDots();
+    window.scrollTo({top:108,behavior:'smooth'});
+  }
+
+  function syncSidebar(id) {
+    document.querySelectorAll('.sidebar-nav-item').forEach(el => el.classList.remove('active'));
+    const el = document.getElementById('snav-' + id);
+    if (el) el.classList.add('active');
+  }
+
+  /* ── Order accordion ── */
+  function toggleOrder(id) {
+    const row = document.getElementById(id);
+    row.classList.toggle('expanded');
+  }
+
+  /* ── Filter tabs ── */
+  function setFilter(el) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  /* ── Settings sub-tabs ── */
+  function setSettingsTab(btnEl, panelId) {
+    document.querySelectorAll('.settings-tab').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+    document.querySelectorAll('.stab').forEach(p => p.classList.add('hidden'));
+    document.getElementById(panelId).classList.remove('hidden');
+  }
+  // Alias for stab active class
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.stab').forEach(el => {
+      if (!el.classList.contains('active') && !el.classList.contains('hidden')) el.classList.add('hidden');
+    });
+    document.querySelector('.stab.active')?.classList.remove('hidden');
+  });
+
+  /* ── Cart ── */
+  let cartCount = 2;
+  function addToCart(btn) {
+    cartCount++;
+    document.getElementById('cart-count').textContent = cartCount;
+    showToast('Added to cart ✓');
+  }
+  function addAllToCart() {
+    cartCount += 6;
+    document.getElementById('cart-count').textContent = cartCount;
+    showToast('All items added to cart ✓');
+  }
+
+  /* ── Wishlist remove ── */
+  function removeWishlist(id) {
+    const card = document.getElementById(id);
+    if (!card) return;
+    card.classList.add('removing');
+    setTimeout(() => { card.remove(); }, 320);
+  }
+
+  /* ── Toast ── */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  /* ── Language toggle ── */
+  function setLang(lang) {
+    document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+    document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+    document.querySelectorAll('.en').forEach(el => el.classList.toggle('hidden', lang === 'zh'));
+    document.querySelectorAll('.zh').forEach(el => el.classList.toggle('hidden', lang === 'en'));
+  }
+
+  /* ── Constitution bars animation ── */
+  function animateConstBars() {
+    document.querySelectorAll('.const-bar-fill').forEach(bar => {
+      bar.style.width = '0';
+      setTimeout(() => {
+        bar.style.width = bar.dataset.pct + '%';
+      }, 80);
+    });
+  }
+
+  /* ── Symptom dots ── */
+  const SYMPTOM_SCORES = {
+    'dots-1': 6,
+    'dots-2': 5,
+    'dots-3': 4
+  };
+  function animateSymptomDots() {
+    Object.entries(SYMPTOM_SCORES).forEach(([id, score]) => {
+      const container = document.getElementById(id);
+      if (!container || container.childElementCount > 0) return;
+      for (let i = 1; i <= 10; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'score-dot';
+        container.appendChild(dot);
+        if (i <= score) {
+          setTimeout(() => dot.classList.add('filled'), i * 60);
+        }
+      }
+    });
+  }
+
+  /* ── Proto tab click sync — handle TCM label ── */
+  document.querySelectorAll('.proto-tab').forEach((btn, idx) => {
+    const ids = ['dashboard','orders','tcm','wishlist','settings'];
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.proto-tab').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const id = ids[idx];
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + id).classList.add('active');
+      syncSidebar(id);
+      if (id === 'tcm') { animateConstBars(); animateSymptomDots(); }
+      window.scrollTo({top:108,behavior:'smooth'});
+    });
+  });
+
+  /* ── Init ── */
+  document.addEventListener('DOMContentLoaded', () => {
+    // Ensure EN spans visible, ZH hidden on load
+    document.querySelectorAll('.zh').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.en').forEach(el => el.classList.remove('hidden'));
+    // Settings: hide non-active stabs
+    document.querySelectorAll('.stab:not(.active)').forEach(el => el.classList.add('hidden'));
+  });
+</script>
+</body>
+</html>

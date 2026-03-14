@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<!-- Theme sourced from theme.json — keep in sync -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Herb Encyclopedia — pureHerbHealth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       DESIGN SYSTEM — pureHerbHealth v1.0
+       Theme sourced from theme.json — keep in sync
+    ============================================================ */
+    :root {
+      --brand: #2D8C54; --brand-dark: #166534; --brand-light: #f0fdf4;
+      --accent: #D4A843; --accent-dark: #b45309;
+      --n50:#fafafa; --n100:#f5f5f5; --n200:#e5e5e5; --n400:#a3a3a3; --n600:#525252; --n800:#262626;
+      --wood-badge:#4CAF50; --wood-bg:#f0fdf4; --wood-text:#166534; --wood-border:#86efac;
+      --fire-badge:#E53E3E; --fire-bg:#fff5f5; --fire-text:#c53030; --fire-border:#feb2b2;
+      --earth-badge:#D4A843; --earth-bg:#fffbeb; --earth-text:#92400e; --earth-border:#fde68a;
+      --metal-badge:#A0AEC0; --metal-bg:#f9fafb; --metal-text:#374151; --metal-border:#e5e7eb;
+      --water-badge:#3182CE; --water-bg:#eff6ff; --water-text:#1e40af; --water-border:#bfdbfe;
+      --font-heading:'DM Serif Display',Georgia,serif;
+      --font-body:'Inter',sans-serif;
+      --font-zh:'Noto Sans SC',sans-serif;
+      --shadow-sm:0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+      --shadow-lg:0 8px 24px rgba(0,0,0,0.10),0 4px 8px rgba(0,0,0,0.04);
+      --r-sm:4px; --r-md:8px; --r-lg:12px; --r-full:9999px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--font-body);background:var(--n100);color:var(--n800);line-height:1.6;font-size:15px;}
+    body.zh{font-family:var(--font-zh),var(--font-body);}
+    h1,h2,h3,h4{font-family:var(--font-heading);line-height:1.25;}
+    .zh h1,.zh h2,.zh h3{font-family:var(--font-zh);}
+    a{color:inherit;text-decoration:none;}
+    button{cursor:pointer;font-family:var(--font-body);}
+
+    /* ---- LANG VISIBILITY ---- */
+    body:not(.zh) .zh{display:none!important;}
+    body.zh .en{display:none!important;}
+
+    /* ---- PROTOTYPE BAR ---- */
+    #proto-bar{
+      position:fixed;top:0;left:0;right:0;z-index:9999;
+      background:#1a1a1a;color:#ccc;font-size:12px;font-family:var(--font-body);
+      display:flex;align-items:center;gap:0;height:36px;padding:0 16px;
+    }
+    #proto-bar .pb-title{color:#fff;font-weight:600;margin-right:16px;white-space:nowrap;}
+    #proto-bar .pb-tabs{display:flex;gap:2px;flex:1;}
+    .pb-tab{
+      padding:4px 12px;border-radius:var(--r-sm);border:none;
+      background:transparent;color:#aaa;font-size:12px;transition:background 150ms;
+    }
+    .pb-tab:hover{background:#333;color:#fff;}
+    .pb-tab.active{background:var(--brand);color:#fff;}
+    #proto-bar .pb-right{display:flex;align-items:center;gap:12px;margin-left:auto;}
+    .lang-toggle{display:flex;gap:2px;}
+    .lang-btn{
+      padding:3px 8px;border-radius:var(--r-sm);border:none;
+      background:transparent;color:#aaa;font-size:11px;font-weight:600;
+    }
+    .lang-btn.active{background:var(--brand-dark);color:#fff;}
+    .pb-version{color:#666;font-size:11px;}
+
+    /* ---- TOPBAR ---- */
+    .topbar{
+      background:var(--brand-dark);color:#fff;font-size:12px;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 24px;height:32px;
+    }
+
+    /* ---- HEADER ---- */
+    .site-header{
+      background:#fff;border-bottom:1px solid var(--n200);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 24px;height:64px;gap:16px;
+      position:sticky;top:36px;z-index:200;
+      box-shadow:var(--shadow-sm);
+    }
+    .logo{font-family:var(--font-heading);font-size:22px;color:var(--brand);display:flex;align-items:center;gap:6px;}
+    .site-nav{display:flex;gap:24px;list-style:none;}
+    .site-nav a{font-size:14px;font-weight:500;color:var(--n600);padding:4px 0;}
+    .site-nav a:hover{color:var(--brand);}
+    .header-actions{display:flex;align-items:center;gap:12px;}
+    .icon-btn{
+      width:36px;height:36px;border-radius:var(--r-full);border:none;
+      background:var(--n100);display:flex;align-items:center;justify-content:center;
+      font-size:16px;position:relative;transition:background 150ms;
+    }
+    .icon-btn:hover{background:var(--n200);}
+    .cart-badge{
+      position:absolute;top:-4px;right:-4px;background:var(--brand);color:#fff;
+      font-size:10px;font-weight:700;width:18px;height:18px;border-radius:var(--r-full);
+      display:flex;align-items:center;justify-content:center;font-family:var(--font-body);
+    }
+    .header-search{
+      flex:1;max-width:280px;display:flex;align-items:center;
+      border:1px solid var(--n200);border-radius:var(--r-full);
+      padding:0 12px;gap:6px;background:var(--n50);
+    }
+    .header-search input{border:none;background:transparent;font-size:13px;outline:none;width:100%;color:var(--n800);}
+
+    /* ---- PAGE CONTAINERS ---- */
+    .page{display:none;padding-top:68px;}
+    .page.active{display:block;}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px;}
+
+    /* ---- BUTTONS ---- */
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:6px;
+      padding:8px 16px;border-radius:var(--r-md);border:none;font-size:14px;font-weight:500;
+      transition:all 150ms;cursor:pointer;
+    }
+    .btn-primary{background:var(--brand);color:#fff;}
+    .btn-primary:hover{background:var(--brand-dark);}
+    .btn-accent{background:var(--accent);color:#fff;}
+    .btn-accent:hover{background:var(--accent-dark);}
+    .btn-outline{background:transparent;border:1px solid currentColor;}
+    .btn-sm{padding:6px 12px;font-size:13px;}
+    .btn-lg{padding:12px 24px;font-size:15px;}
+
+    /* ---- BADGES & CHIPS ---- */
+    .badge{
+      display:inline-flex;align-items:center;padding:2px 8px;border-radius:var(--r-full);
+      font-size:11px;font-weight:600;line-height:1.4;
+    }
+    .chip{
+      display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--r-full);
+      font-size:12px;font-weight:500;border:1px solid transparent;
+    }
+    .badge-wood{background:var(--wood-bg);color:var(--wood-text);border:1px solid var(--wood-border);}
+    .badge-fire{background:var(--fire-bg);color:var(--fire-text);border:1px solid var(--fire-border);}
+    .badge-earth{background:var(--earth-bg);color:var(--earth-text);border:1px solid var(--earth-border);}
+    .badge-metal{background:var(--metal-bg);color:var(--metal-text);border:1px solid var(--metal-border);}
+    .badge-water{background:var(--water-bg);color:var(--water-text);border:1px solid var(--water-border);}
+
+    /* ---- CARDS ---- */
+    .card{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden;}
+    .card-body{padding:20px;}
+
+    /* =======================================
+       PAGE 1: HERB LISTING
+    ======================================= */
+
+    /* Hero */
+    .listing-hero{
+      background:var(--brand-light);border-bottom:1px solid #bbf7d0;
+      padding:48px 0 40px;text-align:center;
+    }
+    .listing-hero h1{font-size:2.5rem;color:var(--brand-dark);margin-bottom:4px;}
+    .listing-hero h1 .zh{font-family:var(--font-zh);font-size:1.8rem;}
+    .listing-hero .subtitle{color:var(--n600);max-width:560px;margin:10px auto 20px;font-size:15px;}
+    .hero-search{
+      display:flex;align-items:center;max-width:480px;margin:0 auto 20px;
+      border:1px solid var(--n200);border-radius:var(--r-full);background:#fff;
+      box-shadow:var(--shadow-sm);overflow:hidden;
+    }
+    .hero-search input{
+      flex:1;border:none;padding:12px 16px;font-size:14px;outline:none;background:transparent;
+    }
+    .hero-search button{
+      padding:10px 20px;background:var(--brand);color:#fff;border:none;font-size:14px;font-weight:500;
+    }
+    .hero-stats{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;}
+    .hero-stat{color:var(--n600);font-size:13px;}
+    .hero-stat strong{color:var(--brand-dark);font-weight:700;}
+
+    /* Filter Bar */
+    .filter-bar{
+      background:#fff;border-bottom:1px solid var(--n200);
+      padding:12px 0;position:sticky;top:100px;z-index:100;box-shadow:var(--shadow-sm);
+    }
+    .filter-inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+    .filter-label{font-size:12px;font-weight:600;color:var(--n600);white-space:nowrap;}
+    .element-pills{display:flex;gap:6px;flex-wrap:wrap;}
+    .el-pill{
+      padding:5px 14px;border-radius:var(--r-full);font-size:12px;font-weight:600;
+      border:2px solid transparent;cursor:pointer;transition:all 150ms;
+    }
+    .el-pill-wood{background:var(--wood-bg);color:var(--wood-text);border-color:var(--wood-border);}
+    .el-pill-fire{background:var(--fire-bg);color:var(--fire-text);border-color:var(--fire-border);}
+    .el-pill-earth{background:var(--earth-bg);color:var(--earth-text);border-color:var(--earth-border);}
+    .el-pill-metal{background:var(--metal-bg);color:var(--metal-text);border-color:var(--metal-border);}
+    .el-pill-water{background:var(--water-bg);color:var(--water-text);border-color:var(--water-border);}
+    .el-pill.active,.el-pill:hover{box-shadow:0 0 0 2px currentColor;}
+    .filter-select{
+      padding:6px 12px;border:1px solid var(--n200);border-radius:var(--r-md);
+      font-size:13px;background:#fff;color:var(--n800);outline:none;cursor:pointer;
+    }
+
+    /* Herb Grid */
+    .herb-grid-section{padding:32px 0 48px;}
+    .herb-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;
+    }
+
+    /* Herb Card */
+    .herb-card{
+      background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);
+      overflow:hidden;transition:box-shadow 150ms,transform 150ms;
+      border-top:4px solid var(--card-element-color,var(--brand));
+      position:relative;
+    }
+    .herb-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+    .herb-card.ring-active{box-shadow:0 0 0 3px var(--card-element-color,var(--brand)),var(--shadow-md);}
+    .herb-card-badge{position:absolute;top:10px;right:10px;}
+    .herb-card-img{
+      height:100px;display:flex;align-items:center;justify-content:center;
+      font-size:44px;background:var(--card-element-bg,var(--brand-light));
+    }
+    .herb-card-body{padding:14px;}
+    .herb-name-en{font-size:15px;font-weight:700;color:var(--n800);margin-bottom:2px;}
+    .herb-name-zh{font-size:12px;color:var(--n600);font-family:var(--font-zh);}
+    .herb-name-latin{font-size:11px;color:var(--n400);font-style:italic;margin-bottom:10px;}
+    .herb-chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+    .nature-chip{
+      padding:2px 8px;border-radius:var(--r-full);font-size:11px;font-weight:600;color:#fff;
+    }
+    .action-chip{
+      padding:2px 8px;border-radius:var(--r-full);font-size:11px;
+      background:var(--n100);color:var(--n600);border:1px solid var(--n200);
+    }
+    .herb-card-footer{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 14px;border-top:1px solid var(--n100);
+    }
+    .formula-chip{font-size:11px;color:var(--n400);}
+    .view-profile-btn{
+      font-size:12px;font-weight:600;padding:5px 10px;border-radius:var(--r-sm);
+      background:transparent;border:1px solid var(--card-element-color,var(--brand));
+      color:var(--card-element-color,var(--brand));transition:all 150ms;
+    }
+    .view-profile-btn:hover{background:var(--card-element-color,var(--brand));color:#fff;}
+
+    /* =======================================
+       PROFILE PAGES (shared template)
+    ======================================= */
+
+    /* Profile Header Band */
+    .profile-band{
+      padding:28px 0;border-bottom:1px solid rgba(0,0,0,0.08);
+    }
+    .profile-band-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+    .profile-band-left{}
+    .profile-name-en{font-size:2rem;color:#fff;margin-bottom:4px;}
+    .profile-name-zh{font-size:1.2rem;color:rgba(255,255,255,0.9);font-family:var(--font-zh);margin-bottom:4px;}
+    .profile-name-latin{font-style:italic;font-size:14px;color:rgba(255,255,255,0.75);}
+    .profile-band-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+    .profile-band-badge{
+      padding:4px 10px;border-radius:var(--r-full);font-size:12px;font-weight:600;
+      background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.35);
+    }
+    .profile-band-badge.gmp{background:rgba(255,255,255,0.9);color:var(--n800);}
+
+    /* Quick Properties Bar */
+    .quick-props{
+      background:#fff;border-bottom:1px solid var(--n200);
+      padding:12px 0;overflow-x:auto;
+    }
+    .quick-props-inner{display:flex;gap:8px;flex-wrap:nowrap;}
+    .qp-item{
+      display:flex;align-items:center;gap:6px;padding:6px 14px;
+      background:var(--n50);border:1px solid var(--n200);border-radius:var(--r-full);
+      font-size:13px;white-space:nowrap;
+    }
+    .qp-label{font-weight:600;color:var(--n600);}
+    .qp-value{color:var(--n800);}
+
+    /* Profile Layout */
+    .profile-layout{
+      display:grid;grid-template-columns:1fr 340px;gap:24px;
+      padding:28px 0 48px;align-items:start;
+    }
+
+    /* Profile Sections */
+    .section-card{
+      background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);
+      margin-bottom:20px;overflow:hidden;
+    }
+    .section-card-header{
+      padding:16px 20px;border-bottom:1px solid var(--n100);
+      display:flex;align-items:center;gap:8px;
+    }
+    .section-card-header h3{font-size:16px;font-weight:700;color:var(--n800);}
+    .section-card-header .zh{font-family:var(--font-zh);font-weight:500;font-size:13px;color:var(--n400);}
+    .section-card-body{padding:20px;}
+
+    /* TCM Properties table */
+    .prop-grid{width:100%;border-collapse:collapse;}
+    .prop-grid tr{border-bottom:1px solid var(--n100);}
+    .prop-grid tr:last-child{border-bottom:none;}
+    .prop-grid td{padding:10px 12px;font-size:14px;vertical-align:top;}
+    .prop-grid td:first-child{
+      font-weight:600;color:var(--n600);width:45%;font-size:13px;
+      border-right:1px solid var(--n100);background:var(--n50);
+    }
+    .prop-grid td:first-child .zh{font-family:var(--font-zh);font-size:12px;color:var(--n400);}
+    .prop-grid td:last-child{color:var(--n800);}
+    .prop-grid td .zh{font-family:var(--font-zh);color:var(--n600);font-size:12px;}
+
+    /* TCM callout card */
+    .tcm-card{
+      background:var(--brand-light);border:1px solid #bbf7d0;border-radius:var(--r-lg);
+      padding:0;margin-bottom:20px;overflow:hidden;
+    }
+    .tcm-card-header{
+      background:var(--brand-light);border-bottom:1px solid #bbf7d0;
+      padding:14px 20px;display:flex;align-items:center;gap:8px;
+    }
+    .tcm-card-header h3{font-size:16px;font-weight:700;color:var(--brand-dark);}
+    .tcm-card-header .zh{font-family:var(--font-zh);font-size:13px;color:var(--brand);}
+
+    /* History prose */
+    .prose p{font-size:15px;line-height:1.7;color:var(--n800);margin-bottom:12px;}
+    .prose p.zh{font-family:var(--font-zh);font-size:14px;color:var(--n600);}
+    .prose p:last-child{margin-bottom:0;}
+
+    /* Research bullets */
+    .research-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+    .research-list li{
+      font-size:14px;color:var(--n800);padding-left:20px;position:relative;line-height:1.6;
+    }
+    .research-list li::before{
+      content:'•';position:absolute;left:0;color:var(--brand);font-weight:700;font-size:16px;
+    }
+    .fda-note{
+      margin-top:14px;font-size:12px;color:var(--n400);font-style:italic;
+      padding:10px 14px;background:var(--n50);border-radius:var(--r-md);border:1px solid var(--n200);
+    }
+
+    /* Dosage grid */
+    .dosage-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .dosage-item{
+      padding:12px;background:var(--n50);border-radius:var(--r-md);
+      border:1px solid var(--n200);font-size:13px;
+    }
+    .dosage-item .d-label{font-weight:600;color:var(--n600);font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+    .dosage-item .d-value{color:var(--n800);}
+
+    /* Accordion */
+    .accordion{border:1px solid var(--n200);border-radius:var(--r-md);overflow:hidden;}
+    .acc-item{border-bottom:1px solid var(--n200);}
+    .acc-item:last-child{border-bottom:none;}
+    .acc-trigger{
+      width:100%;display:flex;align-items:center;justify-content:space-between;
+      padding:13px 16px;background:#fff;border:none;font-size:14px;font-weight:500;
+      color:var(--n800);text-align:left;cursor:pointer;transition:background 150ms;
+    }
+    .acc-trigger:hover{background:var(--n50);}
+    .acc-trigger.open{background:var(--brand-light);color:var(--brand-dark);}
+    .acc-arrow{font-size:12px;transition:transform 150ms;}
+    .acc-trigger.open .acc-arrow{transform:rotate(180deg);}
+    .acc-panel{display:none;padding:14px 16px;background:var(--n50);font-size:14px;color:var(--n600);border-top:1px solid var(--n200);}
+    .acc-panel.open{display:block;}
+
+    /* Combined Herb Cards (small) */
+    .combo-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+    .combo-card{
+      border-radius:var(--r-md);overflow:hidden;border:1px solid var(--n200);
+    }
+    .combo-card-head{padding:8px 12px;font-size:12px;font-weight:700;color:#fff;}
+    .combo-card-body{padding:10px 12px;background:#fff;}
+    .combo-card-name{font-size:14px;font-weight:600;color:var(--n800);}
+    .combo-card-zh{font-size:12px;color:var(--n400);font-family:var(--font-zh);}
+    .combo-card-actions{font-size:12px;color:var(--n600);margin-top:4px;}
+
+    /* Related Conditions */
+    .conditions-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .cond-chip{
+      padding:5px 12px;background:var(--n100);border:1px solid var(--n200);
+      border-radius:var(--r-full);font-size:13px;color:var(--n600);
+    }
+
+    /* ---- SIDEBAR ---- */
+    .sidebar-card{
+      background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-sm);
+      margin-bottom:16px;overflow:hidden;
+    }
+    .sidebar-card-header{
+      padding:14px 16px;border-bottom:1px solid var(--n100);
+      font-size:14px;font-weight:700;color:var(--n800);display:flex;align-items:center;gap:6px;
+    }
+    .sidebar-card-body{padding:14px 16px;}
+
+    /* Formula items */
+    .formula-item{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 0;border-bottom:1px solid var(--n100);
+    }
+    .formula-item:last-child{border-bottom:none;}
+    .formula-item-name{font-size:14px;font-weight:500;color:var(--n800);}
+    .formula-item-zh{font-size:12px;color:var(--n400);font-family:var(--font-zh);}
+    .formula-price{font-size:15px;font-weight:700;color:var(--brand-dark);}
+    .formula-add-btn{
+      font-size:12px;font-weight:600;padding:4px 10px;border-radius:var(--r-sm);
+      background:var(--brand);color:#fff;border:none;margin-top:4px;transition:background 150ms;
+    }
+    .formula-add-btn:hover{background:var(--brand-dark);}
+
+    /* Buy Single Herb */
+    .buy-herb-options{display:flex;gap:8px;margin:10px 0;}
+    .size-option{
+      flex:1;padding:8px;border:2px solid var(--n200);border-radius:var(--r-md);
+      text-align:center;cursor:pointer;transition:border-color 150ms;
+    }
+    .size-option.selected{border-color:var(--brand);background:var(--brand-light);}
+    .size-option .size-label{font-size:12px;font-weight:600;color:var(--n800);}
+    .size-option .size-price{font-size:14px;font-weight:700;color:var(--brand-dark);}
+    .buy-meta{font-size:12px;color:var(--n600);margin:8px 0;}
+
+    /* Quick Facts */
+    .facts-list{display:flex;flex-direction:column;gap:8px;}
+    .fact-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--n600);}
+    .fact-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+    .fact-text strong{color:var(--n800);}
+
+    /* Ask AI card */
+    .ai-card{background:var(--brand-dark);border-radius:var(--r-lg);padding:20px;margin-bottom:16px;text-align:center;}
+    .ai-card h4{font-family:var(--font-heading);font-size:16px;color:#fff;margin-bottom:8px;}
+    .ai-card p{font-size:13px;color:rgba(255,255,255,0.75);margin-bottom:14px;}
+    .ai-card .btn-accent{box-shadow:0 4px 14px rgba(212,168,67,0.35);}
+
+    /* ---- TOAST ---- */
+    #toast{
+      position:fixed;bottom:24px;right:24px;z-index:9999;
+      background:var(--brand-dark);color:#fff;padding:12px 20px;
+      border-radius:var(--r-md);font-size:14px;box-shadow:var(--shadow-lg);
+      transform:translateY(80px);opacity:0;transition:all 300ms;pointer-events:none;
+    }
+    #toast.show{transform:translateY(0);opacity:1;}
+
+    /* ---- FOOTER ---- */
+    .site-footer{
+      background:var(--n800);color:var(--n400);padding:32px 24px;text-align:center;font-size:13px;
+    }
+    .site-footer a{color:var(--n400);}
+
+    /* Responsive */
+    @media(max-width:900px){
+      .profile-layout{grid-template-columns:1fr;}
+      .herb-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));}
+    }
+    @media(max-width:600px){
+      .site-nav{display:none;}
+      .filter-inner{gap:8px;}
+      .dosage-grid{grid-template-columns:1fr;}
+      .combo-cards{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ====================== PROTOTYPE BAR ====================== -->
+<div id="proto-bar">
+  <span class="pb-title">HERB ENCYCLOPEDIA — pureHerbHealth</span>
+  <div class="pb-tabs">
+    <button class="pb-tab active" onclick="showPage('listing',this)">
+      <span class="en">Herb Listing</span><span class="zh">草药列表</span>
+    </button>
+    <button class="pb-tab" onclick="showPage('astragalus',this)">
+      <span class="en">Astragalus Profile</span><span class="zh">黄芪档案</span>
+    </button>
+    <button class="pb-tab" onclick="showPage('reishi',this)">
+      <span class="en">Reishi Profile</span><span class="zh">灵芝档案</span>
+    </button>
+  </div>
+  <div class="pb-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('zh',this)">ZH</button>
+    </div>
+    <span class="pb-version">theme.json v1.0</span>
+  </div>
+</div>
+
+<!-- ====================== SHARED TOPBAR ====================== -->
+<div id="shared-topbar" class="topbar">
+  <span class="en">Free shipping on orders over $75</span>
+  <span class="zh">订单满$75免邮</span>
+  <span>📞 1-800-HERB-TCM</span>
+</div>
+
+<!-- ====================== SHARED HEADER ====================== -->
+<header class="site-header" id="shared-header">
+  <div class="logo">🌿 pureHerbHealth</div>
+  <nav>
+    <ul class="site-nav">
+      <li><a href="#" class="en">Shop</a><a href="#" class="zh">购物</a></li>
+      <li><a href="#" class="en">Learn</a><a href="#" class="zh">学习</a></li>
+      <li><a href="#" onclick="showPage('listing',null);return false;" class="en">Encyclopedia</a><a href="#" onclick="showPage('listing',null);return false;" class="zh">百科</a></li>
+      <li><a href="#" class="en">AI Advisor</a><a href="#" class="zh">AI顾问</a></li>
+    </ul>
+  </nav>
+  <div class="header-search">
+    <span>🔍</span>
+    <input class="en" type="text" placeholder="Search herbs..." />
+    <input class="zh" type="text" placeholder="搜索草药..." />
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn">🌐</button>
+    <button class="icon-btn" id="cart-btn" title="Cart">
+      🛒<span class="cart-badge" id="cart-count">2</span>
+    </button>
+  </div>
+</header>
+
+<!-- ================================================================
+     PAGE 1: HERB LISTING
+================================================================ -->
+<div class="page active" id="page-listing">
+
+  <!-- Hero -->
+  <section class="listing-hero">
+    <div class="container">
+      <h1><span class="en">Herb Encyclopedia</span><span class="zh">草药百科全书</span></h1>
+      <p class="subtitle en">Explore 80+ herbs with full TCM property profiles and Five Elements correspondence.</p>
+      <p class="subtitle zh">探索80多种草药，包含完整的中医性质档案和五行对应关系。</p>
+      <div class="hero-search">
+        <input class="en" type="text" placeholder="Search herbs, Pinyin, or action..." />
+        <input class="zh" type="text" placeholder="搜索草药、拼音或功效..." />
+        <button class="en">Search</button>
+        <button class="zh">搜索</button>
+      </div>
+      <div class="hero-stats">
+        <span class="hero-stat"><strong>80+</strong> <span class="en">Herbs</span><span class="zh">草药</span></span>
+        <span style="color:var(--n200)">·</span>
+        <span class="hero-stat"><strong>5</strong> <span class="en">Element Groups</span><span class="zh">五行组</span></span>
+        <span style="color:var(--n200)">·</span>
+        <span class="hero-stat"><strong>3,000</strong> <span class="en">Years of Knowledge</span><span class="zh">年知识</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="container">
+      <div class="filter-inner">
+        <span class="filter-label en">Filter:</span>
+        <span class="filter-label zh">筛选：</span>
+        <div class="element-pills">
+          <button class="el-pill el-pill-wood" onclick="filterElement('wood',this)">
+            <span class="en">🌳 Wood</span><span class="zh">🌳 木</span>
+          </button>
+          <button class="el-pill el-pill-fire" onclick="filterElement('fire',this)">
+            <span class="en">🔥 Fire</span><span class="zh">🔥 火</span>
+          </button>
+          <button class="el-pill el-pill-earth" onclick="filterElement('earth',this)">
+            <span class="en">🌍 Earth</span><span class="zh">🌍 土</span>
+          </button>
+          <button class="el-pill el-pill-metal" onclick="filterElement('metal',this)">
+            <span class="en">⚪ Metal</span><span class="zh">⚪ 金</span>
+          </button>
+          <button class="el-pill el-pill-water" onclick="filterElement('water',this)">
+            <span class="en">💧 Water</span><span class="zh">💧 水</span>
+          </button>
+        </div>
+        <select class="filter-select" title="Action">
+          <option class="en">All Actions</option>
+          <option>Tonify Qi</option>
+          <option>Nourish Blood</option>
+          <option>Calm Shen</option>
+          <option>Clear Heat</option>
+          <option>Transform Phlegm</option>
+        </select>
+        <select class="filter-select" title="Nature">
+          <option class="en">All Natures</option>
+          <option>Hot</option>
+          <option>Warm</option>
+          <option>Neutral</option>
+          <option>Cool</option>
+          <option>Cold</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Herb Grid -->
+  <section class="herb-grid-section">
+    <div class="container">
+      <div class="herb-grid" id="herb-grid">
+
+        <!-- EARTH group -->
+        <div class="herb-card" data-element="earth" data-profile="astragalus"
+             style="--card-element-color:var(--earth-badge);--card-element-bg:var(--earth-bg);">
+          <div class="herb-card-badge"><span class="badge badge-earth en">Earth 土</span><span class="badge badge-earth zh">土</span></div>
+          <div class="herb-card-img">🌾</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Astragalus Root</div>
+            <div class="herb-name-zh">黄芪 (Huáng Qí)</div>
+            <div class="herb-name-latin">Astragalus membranaceus</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#ea580c;">Warm</span>
+              <span class="action-chip en">Tonify Qi</span>
+              <span class="action-chip zh">补气</span>
+              <span class="action-chip en">Strengthen Wei</span>
+              <span class="action-chip zh">固表</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 12 formulas</span>
+            <span class="formula-chip zh">12个方剂</span>
+            <button class="view-profile-btn" onclick="showPage('astragalus',null)">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="earth"
+             style="--card-element-color:var(--earth-badge);--card-element-bg:var(--earth-bg);">
+          <div class="herb-card-badge"><span class="badge badge-earth en">Earth 土</span><span class="badge badge-earth zh">土</span></div>
+          <div class="herb-card-img">🫚</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Codonopsis Root</div>
+            <div class="herb-name-zh">党参 (Dǎng Shēn)</div>
+            <div class="herb-name-latin">Codonopsis pilosula</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#6b7280;">Neutral</span>
+              <span class="action-chip en">Tonify Qi</span>
+              <span class="action-chip zh">补气</span>
+              <span class="action-chip en">Strengthen Spleen</span>
+              <span class="action-chip zh">健脾</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 9 formulas</span>
+            <span class="formula-chip zh">9个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="earth"
+             style="--card-element-color:var(--earth-badge);--card-element-bg:var(--earth-bg);">
+          <div class="herb-card-badge"><span class="badge badge-earth en">Earth 土</span><span class="badge badge-earth zh">土</span></div>
+          <div class="herb-card-img">🍀</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">White Atractylodes</div>
+            <div class="herb-name-zh">白术 (Bái Zhú)</div>
+            <div class="herb-name-latin">Atractylodes macrocephala</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#ea580c;">Warm</span>
+              <span class="action-chip en">Tonify Spleen</span>
+              <span class="action-chip zh">健脾</span>
+              <span class="action-chip en">Dry Dampness</span>
+              <span class="action-chip zh">燥湿</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 11 formulas</span>
+            <span class="formula-chip zh">11个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="earth"
+             style="--card-element-color:var(--earth-badge);--card-element-bg:var(--earth-bg);">
+          <div class="herb-card-badge"><span class="badge badge-earth en">Earth 土</span><span class="badge badge-earth zh">土</span></div>
+          <div class="herb-card-img">🥔</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Chinese Yam</div>
+            <div class="herb-name-zh">山药 (Shān Yào)</div>
+            <div class="herb-name-latin">Dioscorea opposita</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#6b7280;">Neutral</span>
+              <span class="action-chip en">Tonify Qi</span>
+              <span class="action-chip zh">补气</span>
+              <span class="action-chip en">Nourish Yin</span>
+              <span class="action-chip zh">滋阴</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 7 formulas</span>
+            <span class="formula-chip zh">7个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- WOOD group -->
+        <div class="herb-card" data-element="wood"
+             style="--card-element-color:var(--wood-badge);--card-element-bg:var(--wood-bg);">
+          <div class="herb-card-badge"><span class="badge badge-wood en">Wood 木</span><span class="badge badge-wood zh">木</span></div>
+          <div class="herb-card-img">🌿</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Bupleurum</div>
+            <div class="herb-name-zh">柴胡 (Chái Hú)</div>
+            <div class="herb-name-latin">Bupleurum chinense</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#6b7280;">Neutral</span>
+              <span class="action-chip en">Spread Qi</span>
+              <span class="action-chip zh">疏气</span>
+              <span class="action-chip en">Clear Heat</span>
+              <span class="action-chip zh">清热</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 8 formulas</span>
+            <span class="formula-chip zh">8个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="wood"
+             style="--card-element-color:var(--wood-badge);--card-element-bg:var(--wood-bg);">
+          <div class="herb-card-badge"><span class="badge badge-wood en">Wood 木</span><span class="badge badge-wood zh">木</span></div>
+          <div class="herb-card-img">🌸</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">White Peony Root</div>
+            <div class="herb-name-zh">白芍 (Bái Sháo)</div>
+            <div class="herb-name-latin">Paeonia lactiflora</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#0284c7;">Cool</span>
+              <span class="action-chip en">Nourish Blood</span>
+              <span class="action-chip zh">养血</span>
+              <span class="action-chip en">Calm Liver</span>
+              <span class="action-chip zh">柔肝</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 10 formulas</span>
+            <span class="formula-chip zh">10个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="wood"
+             style="--card-element-color:var(--wood-badge);--card-element-bg:var(--wood-bg);">
+          <div class="herb-card-badge"><span class="badge badge-wood en">Wood 木</span><span class="badge badge-wood zh">木</span></div>
+          <div class="herb-card-img">🌼</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Chrysanthemum Flower</div>
+            <div class="herb-name-zh">菊花 (Jú Huā)</div>
+            <div class="herb-name-latin">Chrysanthemum morifolium</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#0284c7;">Cool</span>
+              <span class="action-chip en">Clear Heat</span>
+              <span class="action-chip zh">清热</span>
+              <span class="action-chip en">Calm Liver</span>
+              <span class="action-chip zh">平肝</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 6 formulas</span>
+            <span class="formula-chip zh">6个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="wood"
+             style="--card-element-color:var(--wood-badge);--card-element-bg:var(--wood-bg);">
+          <div class="herb-card-badge"><span class="badge badge-wood en">Wood 木</span><span class="badge badge-wood zh">木</span></div>
+          <div class="herb-card-img">🌺</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Dan Shen</div>
+            <div class="herb-name-zh">丹参 (Dān Shēn)</div>
+            <div class="herb-name-latin">Salvia miltiorrhiza</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#0284c7;">Cool</span>
+              <span class="action-chip en">Move Blood</span>
+              <span class="action-chip zh">活血</span>
+              <span class="action-chip en">Calm Shen</span>
+              <span class="action-chip zh">宁神</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 5 formulas</span>
+            <span class="formula-chip zh">5个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- WATER group -->
+        <div class="herb-card" data-element="water"
+             style="--card-element-color:var(--water-badge);--card-element-bg:var(--water-bg);">
+          <div class="herb-card-badge"><span class="badge badge-water en">Water 水</span><span class="badge badge-water zh">水</span></div>
+          <div class="herb-card-img">💊</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Liu Wei Di Huang</div>
+            <div class="herb-name-zh">六味地黄 (Liù Wèi Dì Huáng)</div>
+            <div class="herb-name-latin">Formula: Rehmannia Six</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#0284c7;">Cool</span>
+              <span class="action-chip en">Nourish Yin</span>
+              <span class="action-chip zh">滋阴</span>
+              <span class="action-chip en">Tonify Kidney</span>
+              <span class="action-chip zh">补肾</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 4 formulas</span>
+            <span class="formula-chip zh">4个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="water"
+             style="--card-element-color:var(--water-badge);--card-element-bg:var(--water-bg);">
+          <div class="herb-card-badge"><span class="badge badge-water en">Water 水</span><span class="badge badge-water zh">水</span></div>
+          <div class="herb-card-img">🪨</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">He Shou Wu</div>
+            <div class="herb-name-zh">何首乌 (Hé Shǒu Wū)</div>
+            <div class="herb-name-latin">Polygonum multiflorum</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#ea580c;">Warm</span>
+              <span class="action-chip en">Tonify Essence</span>
+              <span class="action-chip zh">补精</span>
+              <span class="action-chip en">Nourish Hair</span>
+              <span class="action-chip zh">乌发</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 6 formulas</span>
+            <span class="formula-chip zh">6个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="water"
+             style="--card-element-color:var(--water-badge);--card-element-bg:var(--water-bg);">
+          <div class="herb-card-badge"><span class="badge badge-water en">Water 水</span><span class="badge badge-water zh">水</span></div>
+          <div class="herb-card-img">🌲</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Eucommia Bark</div>
+            <div class="herb-name-zh">杜仲 (Dù Zhòng)</div>
+            <div class="herb-name-latin">Eucommia ulmoides</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#ea580c;">Warm</span>
+              <span class="action-chip en">Tonify Yang</span>
+              <span class="action-chip zh">补阳</span>
+              <span class="action-chip en">Strengthen Bones</span>
+              <span class="action-chip zh">强骨</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 5 formulas</span>
+            <span class="formula-chip zh">5个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- FIRE group -->
+        <div class="herb-card" data-element="fire"
+             style="--card-element-color:var(--fire-badge);--card-element-bg:var(--fire-bg);">
+          <div class="herb-card-badge"><span class="badge badge-fire en">Fire 火</span><span class="badge badge-fire zh">火</span></div>
+          <div class="herb-card-img">🌰</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Ziziphus Seed</div>
+            <div class="herb-name-zh">酸枣仁 (Suān Zǎo Rén)</div>
+            <div class="herb-name-latin">Ziziphus jujuba var. spinosa</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#6b7280;">Neutral</span>
+              <span class="action-chip en">Calm Shen</span>
+              <span class="action-chip zh">宁神</span>
+              <span class="action-chip en">Nourish Heart</span>
+              <span class="action-chip zh">养心</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 7 formulas</span>
+            <span class="formula-chip zh">7个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="fire"
+             style="--card-element-color:var(--fire-badge);--card-element-bg:var(--fire-bg);">
+          <div class="herb-card-badge"><span class="badge badge-fire en">Fire 火</span><span class="badge badge-fire zh">火</span></div>
+          <div class="herb-card-img">🫐</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Longan Fruit</div>
+            <div class="herb-name-zh">龙眼肉 (Lóng Yǎn Ròu)</div>
+            <div class="herb-name-latin">Dimocarpus longan</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#ea580c;">Warm</span>
+              <span class="action-chip en">Nourish Heart</span>
+              <span class="action-chip zh">养心</span>
+              <span class="action-chip en">Calm Shen</span>
+              <span class="action-chip zh">宁神</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 5 formulas</span>
+            <span class="formula-chip zh">5个方剂</span>
+            <button class="view-profile-btn">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="herb-card" data-element="fire" data-profile="reishi"
+             style="--card-element-color:var(--fire-badge);--card-element-bg:var(--fire-bg);">
+          <div class="herb-card-badge"><span class="badge badge-fire en">Fire 火</span><span class="badge badge-fire zh">火</span></div>
+          <div class="herb-card-img">🍄</div>
+          <div class="herb-card-body">
+            <div class="herb-name-en">Reishi Mushroom</div>
+            <div class="herb-name-zh">灵芝 (Líng Zhī)</div>
+            <div class="herb-name-latin">Ganoderma lucidum</div>
+            <div class="herb-chips">
+              <span class="nature-chip" style="background:#6b7280;">Neutral</span>
+              <span class="action-chip en">Calm Shen</span>
+              <span class="action-chip zh">宁神</span>
+              <span class="action-chip en">Tonify Qi</span>
+              <span class="action-chip zh">补气</span>
+            </div>
+          </div>
+          <div class="herb-card-footer">
+            <span class="formula-chip en">In 8 formulas</span>
+            <span class="formula-chip zh">8个方剂</span>
+            <button class="view-profile-btn" onclick="showPage('reishi',null)">
+              <span class="en">View Profile →</span><span class="zh">查看档案 →</span>
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /herb-grid -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>© 2026 pureHerbHealth · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · <a href="#">FDA Disclaimer</a></p>
+    <p style="margin-top:6px;font-size:12px;color:#555;">These statements have not been evaluated by the FDA. Products not intended to diagnose, treat, cure, or prevent any disease.</p>
+  </footer>
+</div><!-- /page-listing -->
+
+
+<!-- ================================================================
+     PAGE 2: ASTRAGALUS PROFILE
+================================================================ -->
+<div class="page" id="page-astragalus">
+
+  <!-- Profile Header Band — Earth gold -->
+  <div class="profile-band" style="background:linear-gradient(135deg,#92400e,#D4A843);">
+    <div class="container">
+      <div class="profile-band-inner">
+        <div class="profile-band-left">
+          <h1 class="profile-name-en en">Astragalus Root</h1>
+          <h1 class="profile-name-en zh" style="font-family:var(--font-zh);">黄芪根</h1>
+          <div class="profile-name-zh">黄芪 (Huáng Qí)</div>
+          <div class="profile-name-latin">Astragalus membranaceus</div>
+          <div class="profile-band-badges">
+            <span class="profile-band-badge badge-earth en" style="background:rgba(255,255,255,0.2);color:#fff;border-color:rgba(255,255,255,0.4);">Earth 土</span>
+            <span class="profile-band-badge badge-metal en" style="background:rgba(255,255,255,0.2);color:#fff;border-color:rgba(255,255,255,0.4);">Metal 金</span>
+            <span class="profile-band-badge badge-earth zh" style="background:rgba(255,255,255,0.2);color:#fff;border-color:rgba(255,255,255,0.4);">土</span>
+            <span class="profile-band-badge badge-metal zh" style="background:rgba(255,255,255,0.2);color:#fff;border-color:rgba(255,255,255,0.4);">金</span>
+            <span class="profile-band-badge gmp">✅ Premium Grade · GMP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Properties Bar -->
+  <div class="quick-props">
+    <div class="container">
+      <div class="quick-props-inner">
+        <div class="qp-item"><span class="qp-label en">Nature</span><span class="qp-label zh">性味</span><span class="qp-value">🌡️ <span class="en">Warm / 温</span><span class="zh">温</span></span></div>
+        <div class="qp-item"><span class="qp-label en">Flavor</span><span class="qp-label zh">味道</span><span class="qp-value"><span class="en">Sweet</span><span class="zh">甘</span></span></div>
+        <div class="qp-item"><span class="qp-label en">Meridians</span><span class="qp-label zh">归经</span><span class="qp-value"><span class="en">Lung · Spleen</span><span class="zh">肺 · 脾</span></span></div>
+        <div class="qp-item"><span class="qp-label en">Element</span><span class="qp-label zh">五行</span><span class="qp-value"><span class="en">Metal / Earth</span><span class="zh">金 / 土</span></span></div>
+        <div class="qp-item"><span class="qp-label en">Actions</span><span class="qp-label zh">功效</span><span class="qp-value"><span class="en">Tonify Qi · Strengthen Wei</span><span class="zh">补气 · 固表</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Layout -->
+  <div class="container">
+    <div class="profile-layout">
+
+      <!-- LEFT MAIN -->
+      <div class="profile-main">
+
+        <!-- TCM Properties -->
+        <div class="tcm-card">
+          <div class="tcm-card-header">
+            <span>🏮</span>
+            <h3><span class="en">Traditional Properties</span><span class="zh">传统性质</span></h3>
+          </div>
+          <div style="padding:0;">
+            <table class="prop-grid">
+              <tr>
+                <td><span class="en">Nature</span><span class="zh">性味</span><br><span class="zh">性味</span></td>
+                <td><span class="en">Warm / 温</span><span class="zh">温</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Flavor / 味道</span><span class="zh">味道</span></td>
+                <td><span class="en">Sweet / 甘</span><span class="zh">甘</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Meridians / 归经</span><span class="zh">归经</span></td>
+                <td><span class="en">Lung (肺), Spleen (脾)</span><span class="zh">肺、脾</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Five Element / 五行</span><span class="zh">五行</span></td>
+                <td><span class="en">Metal (金), Earth (土)</span><span class="zh">金、土</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Primary Actions / 功效</span><span class="zh">功效</span></td>
+                <td><span class="en">Tonify Qi (补气) · Strengthen Wei (固表) · Lift Yang (升阳)</span><span class="zh">补气 · 固表 · 升阳</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Contraindications / 禁忌</span><span class="zh">禁忌</span></td>
+                <td><span class="en">Avoid in excess/heat patterns, Yin stagnation</span><span class="zh">实热证、阴滞者慎用</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Traditional Form / 剂型</span><span class="zh">剂型</span></td>
+                <td><span class="en">Decoction, capsule, tincture, dried slice</span><span class="zh">煎剂、胶囊、酊剂、饮片</span></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- History & Use -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>📜 <span class="en">History &amp; Use</span><span class="zh">历史与应用</span></h3>
+          </div>
+          <div class="section-card-body prose">
+            <p class="en">Astragalus (Huang Qi) has been used in TCM for over 2,000 years, documented in Shen Nong's Classic of Materia Medica (神农本草经). Classified as a superior herb (上品), it may be used long-term without adverse effect. It is one of the most widely used tonifying herbs in Chinese medicine, prized for strengthening the body's defensive Qi (卫气, wèi qí) and supporting overall vitality.</p>
+            <p class="en">In classical formulas, Huang Qi is frequently combined with Codonopsis (党参) to enhance Qi tonification, and with White Atractylodes (白术) to form the basis of Jade Screen Formula (玉屏风散), a classic preparation for supporting immune defense. Its sweet flavor and warm nature make it well-suited for deficiency patterns involving fatigue, shortness of breath, and spontaneous sweating.</p>
+            <p class="zh">黄芪是中医最常用的补气药之一，被列为《神农本草经》上品，可长期服用而无副作用。历代医家皆推崇黄芪补中益气、固表止汗之功效，其与党参同用可增强补气效果，与白术配伍则构成经典名方玉屏风散的基础，广泛用于体虚易感、自汗短气等症。</p>
+          </div>
+        </div>
+
+        <!-- Modern Research -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>🔬 <span class="en">Modern Research</span><span class="zh">现代研究</span></h3>
+          </div>
+          <div class="section-card-body">
+            <ul class="research-list">
+              <li class="en">Astragalosides I–IV are the primary bioactive compounds under investigation for their potential structure-function roles in supporting cellular health.</li>
+              <li class="en">Polysaccharides in Astragalus have been studied for their role in supporting normal immune system function as part of a balanced diet.</li>
+              <li class="en">Traditional use in supporting respiratory function and physical endurance is consistent with its classical role as a Wei Qi tonic in TCM practice.</li>
+              <li class="zh">黄芪苷I–IV是目前研究中的主要生物活性化合物，研究其在支持细胞健康方面的潜在功能。</li>
+              <li class="zh">黄芪多糖已被研究用于支持正常免疫系统功能的作用。</li>
+              <li class="zh">传统用于支持呼吸功能和体力耐力，与其在中医实践中作为卫气补益药的经典作用一致。</li>
+            </ul>
+            <div class="fda-note en">
+              ℹ️ These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease. Consult your healthcare practitioner before use.
+            </div>
+            <div class="fda-note zh">
+              ℹ️ 本产品声明未经美国食品和药物管理局（FDA）评估。本产品不用于诊断、治疗、治愈或预防任何疾病。使用前请咨询您的医疗保健从业者。
+            </div>
+          </div>
+        </div>
+
+        <!-- Dosage & Usage -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>💊 <span class="en">Dosage &amp; Usage</span><span class="zh">剂量与用法</span></h3>
+          </div>
+          <div class="section-card-body">
+            <div class="dosage-grid">
+              <div class="dosage-item">
+                <div class="d-label en">Dried Root (Decoction)</div>
+                <div class="d-label zh">煎剂（饮片）</div>
+                <div class="d-value en">9–30g per dose</div>
+                <div class="d-value zh">每次9–30克</div>
+              </div>
+              <div class="dosage-item">
+                <div class="d-label en">Capsule</div>
+                <div class="d-label zh">胶囊</div>
+                <div class="d-value en">Per product label</div>
+                <div class="d-value zh">按产品说明</div>
+              </div>
+              <div class="dosage-item">
+                <div class="d-label en">Course Duration</div>
+                <div class="d-label zh">疗程</div>
+                <div class="d-value en">2–3 months for tonification</div>
+                <div class="d-value zh">补益疗程2–3个月</div>
+              </div>
+              <div class="dosage-item">
+                <div class="d-label en">Best Taken</div>
+                <div class="d-label zh">最佳服用时间</div>
+                <div class="d-value en">Morning, before meals</div>
+                <div class="d-value zh">早晨饭前</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;padding:10px 14px;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--r-md);font-size:13px;color:#92400e;">
+              ⚠️ <span class="en">Consult your TCM practitioner before use, especially if pregnant, nursing, or taking medications.</span>
+              <span class="zh">使用前请咨询中医师，尤其是孕妇、哺乳期妇女或正在服药者。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Traditional Combinations Accordion -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>🧪 <span class="en">Traditional Combinations</span><span class="zh">传统配伍</span></h3>
+          </div>
+          <div class="section-card-body" style="padding:0;">
+            <div class="accordion">
+              <div class="acc-item">
+                <button class="acc-trigger open" onclick="toggleAcc(this)">
+                  <span class="en">With Codonopsis (党参): Enhanced Qi Tonic</span>
+                  <span class="zh">配党参：增强补气效果</span>
+                  <span class="acc-arrow">▼</span>
+                </button>
+                <div class="acc-panel open">
+                  <p class="en">Combining Astragalus with Codonopsis creates a synergistic Qi tonic effect. Astragalus tonifies Wei Qi and lifts Yang, while Codonopsis nourishes the Middle Jiao and strengthens Spleen Qi. Together they address fatigue, poor appetite, and Qi deficiency with shortness of breath.</p>
+                  <p class="zh">黄芪与党参配伍，协同增强补气效果。黄芪固卫气、升阳，党参养中焦、健脾气，二者合用可改善乏力、食欲不振及气虚短气等症状。</p>
+                </div>
+              </div>
+              <div class="acc-item">
+                <button class="acc-trigger" onclick="toggleAcc(this)">
+                  <span class="en">With White Atractylodes (白术): Jade Screen Base</span>
+                  <span class="zh">配白术：玉屏风散基础</span>
+                  <span class="acc-arrow">▼</span>
+                </button>
+                <div class="acc-panel">
+                  <p class="en">This pairing forms the core of Jade Screen Formula (玉屏风散), one of the most celebrated classical formulas for supporting immune defense. Atractylodes strengthens Spleen Qi and dries dampness while Astragalus consolidates the Exterior. Often combined with Siler root (防风, Fáng Fēng) for the complete formula.</p>
+                  <p class="zh">此配伍构成玉屏风散的核心，是扶正固表的经典名方。白术健脾燥湿，黄芪固表止汗，常与防风同用构成完整方剂。</p>
+                </div>
+              </div>
+              <div class="acc-item">
+                <button class="acc-trigger" onclick="toggleAcc(this)">
+                  <span class="en">With Dong Quai (当归): Qi and Blood Support</span>
+                  <span class="zh">配当归：气血双补</span>
+                  <span class="acc-arrow">▼</span>
+                </button>
+                <div class="acc-panel">
+                  <p class="en">A classical Qi and Blood tonic combination. Astragalus provides the Qi foundation (气为血之帅, Qi leads Blood) while Dong Quai nourishes and invigorates Blood. This ratio is the basis for Dang Gui Bu Xue Tang (当归补血汤) — typically 5:1 Huang Qi to Dang Gui.</p>
+                  <p class="zh">经典气血双补配伍，体现"气为血之帅"理论。黄芪补气以统血，当归养血和血，二者以5:1比例构成当归补血汤。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Often Combined With -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>🌿 <span class="en">Often Combined With</span><span class="zh">常用配伍</span></h3>
+          </div>
+          <div class="section-card-body">
+            <div class="combo-cards">
+              <div class="combo-card">
+                <div class="combo-card-head" style="background:var(--earth-badge);">
+                  <span class="en">Earth 土</span><span class="zh">土</span>
+                </div>
+                <div class="combo-card-body">
+                  <div class="combo-card-name">Codonopsis</div>
+                  <div class="combo-card-zh">党参 (Dǎng Shēn)</div>
+                  <div class="combo-card-actions en">Tonify Qi · Strengthen Spleen</div>
+                  <div class="combo-card-actions zh">补气 · 健脾</div>
+                </div>
+              </div>
+              <div class="combo-card">
+                <div class="combo-card-head" style="background:var(--earth-badge);">
+                  <span class="en">Earth 土</span><span class="zh">土</span>
+                </div>
+                <div class="combo-card-body">
+                  <div class="combo-card-name">White Atractylodes</div>
+                  <div class="combo-card-zh">白术 (Bái Zhú)</div>
+                  <div class="combo-card-actions en">Tonify Spleen · Dry Dampness</div>
+                  <div class="combo-card-actions zh">健脾 · 燥湿</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related Conditions -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>📋 <span class="en">Related Conditions</span><span class="zh">相关症状</span></h3>
+          </div>
+          <div class="section-card-body">
+            <p style="font-size:13px;color:var(--n600);margin-bottom:8px;">
+              <span class="en">Referenced in guides for:</span>
+              <span class="zh">相关指南：</span>
+            </p>
+            <div class="conditions-chips">
+              <span class="cond-chip en">Fatigue</span>
+              <span class="cond-chip zh">疲劳</span>
+              <span class="cond-chip en">Immune Support</span>
+              <span class="cond-chip zh">免疫支持</span>
+              <span class="cond-chip en">Frequent Colds</span>
+              <span class="cond-chip zh">反复感冒</span>
+              <span class="cond-chip en">Shortness of Breath</span>
+              <span class="cond-chip zh">气短</span>
+              <span class="cond-chip en">Spontaneous Sweating</span>
+              <span class="cond-chip zh">自汗</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /profile-main -->
+
+      <!-- RIGHT SIDEBAR -->
+      <div class="profile-sidebar">
+
+        <!-- Formulas with Astragalus -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">
+            🧾 <span class="en">Formulas with Astragalus</span><span class="zh">含黄芪方剂</span>
+          </div>
+          <div class="sidebar-card-body">
+            <div class="formula-item">
+              <div>
+                <div class="formula-item-name en">Astragalus Immune Formula</div>
+                <div class="formula-item-name zh">黄芪免疫方</div>
+                <div class="formula-item-zh en">黄芪免疫方</div>
+                <div class="formula-price">$42.00</div>
+              </div>
+              <div style="text-align:right;">
+                <button class="formula-add-btn" onclick="addToCart(this,'Astragalus Immune Formula')">
+                  <span class="en">+ Cart</span><span class="zh">加购</span>
+                </button>
+              </div>
+            </div>
+            <div class="formula-item">
+              <div>
+                <div class="formula-item-name en">Jade Screen Formula</div>
+                <div class="formula-item-name zh">玉屏风散</div>
+                <div class="formula-item-zh en">玉屏风散</div>
+                <div class="formula-price">$35.00</div>
+              </div>
+              <div style="text-align:right;">
+                <button class="formula-add-btn" onclick="addToCart(this,'Jade Screen Formula')">
+                  <span class="en">+ Cart</span><span class="zh">加购</span>
+                </button>
+              </div>
+            </div>
+            <div class="formula-item">
+              <div>
+                <div class="formula-item-name en">Astragalus &amp; Codonopsis Blend</div>
+                <div class="formula-item-name zh">参芪方</div>
+                <div class="formula-item-zh en">参芪方</div>
+                <div class="formula-price">$38.00</div>
+              </div>
+              <div style="text-align:right;">
+                <button class="formula-add-btn" onclick="addToCart(this,'Astragalus & Codonopsis Blend')">
+                  <span class="en">+ Cart</span><span class="zh">加购</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buy Single Herb -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">
+            🛒 <span class="en">Buy Single Herb</span><span class="zh">购买单味药</span>
+          </div>
+          <div class="sidebar-card-body">
+            <div style="font-size:14px;font-weight:600;color:var(--n800);margin-bottom:4px;">
+              <span class="en">Astragalus Root Slices</span><span class="zh">黄芪片</span>
+            </div>
+            <div style="font-size:12px;color:var(--n400);font-family:var(--font-zh);margin-bottom:10px;">黄芪片</div>
+            <div class="buy-herb-options">
+              <div class="size-option selected" onclick="selectSize(this)">
+                <div class="size-label">100g</div>
+                <div class="size-price">$18</div>
+              </div>
+              <div class="size-option" onclick="selectSize(this)">
+                <div class="size-label">250g</div>
+                <div class="size-price">$38</div>
+              </div>
+            </div>
+            <div class="buy-meta">
+              🇨🇳 <span class="en">Origin: Inner Mongolia</span><span class="zh">产地：内蒙古</span>
+              &nbsp;·&nbsp;
+              <span class="en">Grade: Premium A</span><span class="zh">等级：特级A</span>
+            </div>
+            <button class="btn btn-primary" style="width:100%;" onclick="addToCart(this,'Astragalus Root Slices')">
+              <span class="en">Add to Cart</span><span class="zh">加入购物车</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Facts -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">
+            ℹ️ <span class="en">Quick Facts</span><span class="zh">快速参考</span>
+          </div>
+          <div class="sidebar-card-body">
+            <div class="facts-list">
+              <div class="fact-item">
+                <span class="fact-icon">🌍</span>
+                <span class="fact-text"><strong class="en">Origin:</strong><strong class="zh">产地：</strong>
+                  <span class="en"> China (Inner Mongolia, Shanxi)</span><span class="zh">中国（内蒙古、山西）</span>
+                </span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">🔬</span>
+                <span class="fact-text"><strong class="en">Key Compounds:</strong><strong class="zh">主要成分：</strong>
+                  <span class="en"> Astragalosides, Polysaccharides</span><span class="zh">黄芪苷、多糖</span>
+                </span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">✅</span>
+                <span class="fact-text">
+                  <span class="en">GMP Certified · Non-GMO · Heavy Metal Tested</span>
+                  <span class="zh">GMP认证 · 非转基因 · 重金属检测</span>
+                </span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">📦</span>
+                <span class="fact-text"><strong class="en">Forms:</strong><strong class="zh">剂型：</strong>
+                  <span class="en"> Dried · Powder · Capsule · Tincture</span>
+                  <span class="zh">饮片 · 粉末 · 胶囊 · 酊剂</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ask AI -->
+        <div class="ai-card">
+          <h4 class="en">Questions about Astragalus for your constitution?</h4>
+          <h4 class="zh">关于黄芪与您体质的问题？</h4>
+          <p class="en">Our TCM AI can help match herbs to your unique pattern.</p>
+          <p class="zh">我们的中医AI可帮助您根据个人体质匹配草药。</p>
+          <button class="btn btn-accent btn-lg" style="width:100%;">
+            <span class="en">Ask TCM AI →</span><span class="zh">咨询中医AI →</span>
+          </button>
+        </div>
+
+      </div><!-- /profile-sidebar -->
+    </div><!-- /profile-layout -->
+  </div><!-- /container -->
+
+  <footer class="site-footer">
+    <p>© 2026 pureHerbHealth · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · <a href="#">FDA Disclaimer</a></p>
+    <p style="margin-top:6px;font-size:12px;color:#555;">These statements have not been evaluated by the FDA. Products not intended to diagnose, treat, cure, or prevent any disease.</p>
+  </footer>
+</div><!-- /page-astragalus -->
+
+
+<!-- ================================================================
+     PAGE 3: REISHI PROFILE
+================================================================ -->
+<div class="page" id="page-reishi">
+
+  <!-- Profile Header Band — Fire/Earth -->
+  <div class="profile-band" style="background:linear-gradient(135deg,#7c2d12,#E53E3E);">
+    <div class="container">
+      <div class="profile-band-inner">
+        <div class="profile-band-left">
+          <h1 class="profile-name-en en">Reishi Mushroom</h1>
+          <h1 class="profile-name-en zh" style="font-family:var(--font-zh);">灵芝蘑菇</h1>
+          <div class="profile-name-zh">灵芝 (Líng Zhī)</div>
+          <div class="profile-name-latin">Ganoderma lucidum</div>
+          <div class="profile-band-badges">
+            <span class="profile-band-badge" style="background:rgba(255,255,255,0.2);color:#fff;border-color:rgba(255,255,255,0.4);">
+              <span class="en">Earth 土</span><span class="zh">土</span>
+            </span>
+            <span class="profile-band-badge" style="background:rgba(255,255,255,0.2);color:#fff;border-color:rgba(255,255,255,0.4);">
+              <span class="en">Fire 火</span><span class="zh">火</span>
+            </span>
+            <span class="profile-band-badge gmp">✅ Premium Grade · GMP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Properties Bar -->
+  <div class="quick-props">
+    <div class="container">
+      <div class="quick-props-inner">
+        <div class="qp-item"><span class="qp-label en">Nature</span><span class="qp-label zh">性味</span><span class="qp-value"><span class="en">Neutral / 平</span><span class="zh">平</span></span></div>
+        <div class="qp-item"><span class="qp-label en">Flavor</span><span class="qp-label zh">味道</span><span class="qp-value"><span class="en">Sweet, Bitter</span><span class="zh">甘、苦</span></span></div>
+        <div class="qp-item"><span class="qp-label en">Meridians</span><span class="qp-label zh">归经</span><span class="qp-value"><span class="en">Heart · Liver · Lung · Kidney</span><span class="zh">心 · 肝 · 肺 · 肾</span></span></div>
+        <div class="qp-item"><span class="qp-label en">Element</span><span class="qp-label zh">五行</span><span class="qp-value"><span class="en">Earth / Fire</span><span class="zh">土 / 火</span></span></div>
+        <div class="qp-item"><span class="qp-label en">Actions</span><span class="qp-label zh">功效</span><span class="qp-value"><span class="en">Calm Shen · Tonify Qi · Nourish Yin</span><span class="zh">宁神 · 补气 · 滋阴</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Layout -->
+  <div class="container">
+    <div class="profile-layout">
+
+      <!-- LEFT MAIN -->
+      <div class="profile-main">
+
+        <!-- TCM Properties -->
+        <div class="tcm-card">
+          <div class="tcm-card-header">
+            <span>🏮</span>
+            <h3><span class="en">Traditional Properties</span><span class="zh">传统性质</span></h3>
+          </div>
+          <div>
+            <table class="prop-grid">
+              <tr>
+                <td><span class="en">Nature / 性味</span><span class="zh">性味</span></td>
+                <td><span class="en">Neutral / 平</span><span class="zh">平</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Flavor / 味道</span><span class="zh">味道</span></td>
+                <td><span class="en">Sweet (甘), Bitter (苦)</span><span class="zh">甘、苦</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Meridians / 归经</span><span class="zh">归经</span></td>
+                <td><span class="en">Heart (心), Liver (肝), Lung (肺), Kidney (肾)</span><span class="zh">心、肝、肺、肾</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Five Element / 五行</span><span class="zh">五行</span></td>
+                <td><span class="en">Earth (土), Fire (火)</span><span class="zh">土、火</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Primary Actions / 功效</span><span class="zh">功效</span></td>
+                <td><span class="en">Calm Shen (宁神) · Tonify Qi (补气) · Nourish Yin (滋阴) · Support Heart (养心)</span><span class="zh">宁神 · 补气 · 滋阴 · 养心</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Contraindications / 禁忌</span><span class="zh">禁忌</span></td>
+                <td><span class="en">Use cautiously with anticoagulant medications; avoid excess doses</span><span class="zh">使用抗凝药物者慎用；避免过量</span></td>
+              </tr>
+              <tr>
+                <td><span class="en">Traditional Form / 剂型</span><span class="zh">剂型</span></td>
+                <td><span class="en">Decoction, capsule, powder, dual-extract tincture</span><span class="zh">煎剂、胶囊、粉末、双提取酊剂</span></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- History & Use -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>📜 <span class="en">History &amp; Use</span><span class="zh">历史与应用</span></h3>
+          </div>
+          <div class="section-card-body prose">
+            <p class="en">Reishi (Ling Zhi) has been revered in Chinese culture for over 4,000 years as the "Mushroom of Immortality" (仙草, xiāncǎo), documented prominently in Li Shizhen's Compendium of Materia Medica (本草纲目, Běncǎo Gāngmù, 1596). Classified as a superior herb (上品) in Shen Nong's Classic, it is described as tonifying the Heart Qi and Liver Blood while calming the Shen (神), the spirit or mental-emotional aspect of the body.</p>
+            <p class="en">Historically reserved for emperors and the elite due to its rarity, Reishi was known as "the herb of spiritual potency" (灵). Modern cultivation has made it widely accessible. In TCM, it is particularly indicated for patterns of Heart and Spleen Qi deficiency presenting with insomnia, palpitations, poor memory, and excessive dreaming — hallmarks of Shen disturbance.</p>
+            <p class="zh">灵芝在中国文化中被尊为"仙草"，拥有4000余年的药用历史，在李时珍的《本草纲目》中有详细记载。灵芝被列为上品，具有补心气、养肝血、宁心安神之功效。历史上因其稀少而被视为帝王专用之品，现代栽培技术使其得以广泛应用。中医临床常用于心脾两虚所致失眠、心悸、健忘、多梦等神志不安诸症。</p>
+          </div>
+        </div>
+
+        <!-- Modern Research -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>🔬 <span class="en">Modern Research</span><span class="zh">现代研究</span></h3>
+          </div>
+          <div class="section-card-body">
+            <ul class="research-list">
+              <li class="en">Triterpenoids (ganoderic acids) and beta-glucan polysaccharides are the primary bioactive compounds in Reishi under ongoing scientific investigation.</li>
+              <li class="en">Beta-glucan polysaccharides from Ganoderma have been studied extensively for their role in supporting healthy immune system modulation as part of a balanced lifestyle.</li>
+              <li class="en">Traditional use in supporting sleep quality, cardiovascular wellness, and adaptation to daily stress is consistent with classical Shen-calming and Qi-tonifying indications.</li>
+              <li class="zh">灵芝三萜（灵芝酸）和β-葡聚糖多糖是正在研究的主要生物活性化合物。</li>
+              <li class="zh">灵芝β-葡聚糖多糖已被广泛研究，用于支持健康的免疫系统调节。</li>
+              <li class="zh">传统用于支持睡眠质量、心血管健康及适应日常压力，与其经典的宁神补气功效一致。</li>
+            </ul>
+            <div class="fda-note en">
+              ℹ️ These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease. Consult your healthcare practitioner before use.
+            </div>
+            <div class="fda-note zh">
+              ℹ️ 本产品声明未经美国食品和药物管理局（FDA）评估。本产品不用于诊断、治疗、治愈或预防任何疾病。使用前请咨询您的医疗保健从业者。
+            </div>
+          </div>
+        </div>
+
+        <!-- Dosage & Usage -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>💊 <span class="en">Dosage &amp; Usage</span><span class="zh">剂量与用法</span></h3>
+          </div>
+          <div class="section-card-body">
+            <div class="dosage-grid">
+              <div class="dosage-item">
+                <div class="d-label en">Dried Mushroom (Decoction)</div>
+                <div class="d-label zh">煎剂（饮片）</div>
+                <div class="d-value en">6–15g per dose</div>
+                <div class="d-value zh">每次6–15克</div>
+              </div>
+              <div class="dosage-item">
+                <div class="d-label en">Capsule / Extract</div>
+                <div class="d-label zh">胶囊/提取物</div>
+                <div class="d-value en">Per product label</div>
+                <div class="d-value zh">按产品说明</div>
+              </div>
+              <div class="dosage-item">
+                <div class="d-label en">Course Duration</div>
+                <div class="d-label zh">疗程</div>
+                <div class="d-value en">3+ months for longevity support</div>
+                <div class="d-value zh">养生保健3个月以上</div>
+              </div>
+              <div class="dosage-item">
+                <div class="d-label en">Best Taken</div>
+                <div class="d-label zh">最佳服用时间</div>
+                <div class="d-value en">Evening, before sleep</div>
+                <div class="d-value zh">晚间睡前服用</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;padding:10px 14px;background:#fff5f5;border:1px solid #feb2b2;border-radius:var(--r-md);font-size:13px;color:#c53030;">
+              ⚠️ <span class="en">May interact with anticoagulant medications. Consult your TCM practitioner before use.</span>
+              <span class="zh">可能与抗凝血药物相互作用。使用前请咨询中医师。</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Traditional Combinations Accordion -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>🧪 <span class="en">Traditional Combinations</span><span class="zh">传统配伍</span></h3>
+          </div>
+          <div class="section-card-body" style="padding:0;">
+            <div class="accordion">
+              <div class="acc-item">
+                <button class="acc-trigger open" onclick="toggleAcc(this)">
+                  <span class="en">With Ziziphus Seed (酸枣仁): Shen Calming Formula</span>
+                  <span class="zh">配酸枣仁：宁心安神</span>
+                  <span class="acc-arrow">▼</span>
+                </button>
+                <div class="acc-panel open">
+                  <p class="en">A classical pairing for Heart Shen disturbance. Reishi calms the Shen and tonifies Heart Qi while Ziziphus Seed nourishes Heart Blood and quiets restlessness. Together they address insomnia, anxiety, palpitations, and excessive dreaming from a dual Qi and Blood deficiency pattern.</p>
+                  <p class="zh">经典的宁心安神配伍，用于心神不宁。灵芝宁神补心气，酸枣仁养心血除烦，合用可改善失眠、焦虑、心悸及多梦等心血两虚症状。</p>
+                </div>
+              </div>
+              <div class="acc-item">
+                <button class="acc-trigger" onclick="toggleAcc(this)">
+                  <span class="en">With Longan Fruit (龙眼肉): Heart Blood Nourishment</span>
+                  <span class="zh">配龙眼肉：养心血</span>
+                  <span class="acc-arrow">▼</span>
+                </button>
+                <div class="acc-panel">
+                  <p class="en">Longan (Gui Yuan) is a classical Heart and Spleen tonic that nourishes Blood and calms the Shen. Combined with Reishi's Qi-tonifying and Shen-calming properties, this pairing is excellent for forgetfulness, fatigue, and emotional instability arising from Heart Blood and Spleen Qi deficiency.</p>
+                  <p class="zh">龙眼肉为经典的养心健脾、补血安神之品，与灵芝配伍，共奏补气血、宁心神之效，适用于心脾两虚所致健忘、疲乏、情志不稳等症。</p>
+                </div>
+              </div>
+              <div class="acc-item">
+                <button class="acc-trigger" onclick="toggleAcc(this)">
+                  <span class="en">With Astragalus (黄芪): Qi and Shen Tonification</span>
+                  <span class="zh">配黄芪：补气宁神</span>
+                  <span class="acc-arrow">▼</span>
+                </button>
+                <div class="acc-panel">
+                  <p class="en">Astragalus provides robust Spleen and Lung Qi tonification while Reishi adds Shen-calming and multi-organ nourishment. This combination supports both physical energy and mental-emotional equilibrium, making it well-suited for sustained stress, fatigue with anxiety, and immune support in deficiency patterns.</p>
+                  <p class="zh">黄芪大补脾肺之气，灵芝宁神兼滋多脏，二者合用气神双补，适用于长期压力、疲劳伴焦虑及气虚体质的免疫支持。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Often Combined With -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>🌿 <span class="en">Often Combined With</span><span class="zh">常用配伍</span></h3>
+          </div>
+          <div class="section-card-body">
+            <div class="combo-cards">
+              <div class="combo-card">
+                <div class="combo-card-head" style="background:var(--fire-badge);">
+                  <span class="en">Fire 火</span><span class="zh">火</span>
+                </div>
+                <div class="combo-card-body">
+                  <div class="combo-card-name">Ziziphus Seed</div>
+                  <div class="combo-card-zh">酸枣仁 (Suān Zǎo Rén)</div>
+                  <div class="combo-card-actions en">Calm Shen · Nourish Heart Blood</div>
+                  <div class="combo-card-actions zh">宁神 · 养心血</div>
+                </div>
+              </div>
+              <div class="combo-card">
+                <div class="combo-card-head" style="background:var(--fire-badge);">
+                  <span class="en">Fire 火</span><span class="zh">火</span>
+                </div>
+                <div class="combo-card-body">
+                  <div class="combo-card-name">Longan Fruit</div>
+                  <div class="combo-card-zh">龙眼肉 (Lóng Yǎn Ròu)</div>
+                  <div class="combo-card-actions en">Nourish Heart · Calm Mind</div>
+                  <div class="combo-card-actions zh">养心 · 安神</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related Conditions -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>📋 <span class="en">Related Conditions</span><span class="zh">相关症状</span></h3>
+          </div>
+          <div class="section-card-body">
+            <p style="font-size:13px;color:var(--n600);margin-bottom:8px;">
+              <span class="en">Referenced in guides for:</span>
+              <span class="zh">相关指南：</span>
+            </p>
+            <div class="conditions-chips">
+              <span class="cond-chip en">Insomnia</span>
+              <span class="cond-chip zh">失眠</span>
+              <span class="cond-chip en">Anxiety</span>
+              <span class="cond-chip zh">焦虑</span>
+              <span class="cond-chip en">Immune Support</span>
+              <span class="cond-chip zh">免疫支持</span>
+              <span class="cond-chip en">Fatigue</span>
+              <span class="cond-chip zh">疲劳</span>
+              <span class="cond-chip en">Longevity Support</span>
+              <span class="cond-chip zh">养生长寿</span>
+              <span class="cond-chip en">Palpitations</span>
+              <span class="cond-chip zh">心悸</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /profile-main -->
+
+      <!-- RIGHT SIDEBAR -->
+      <div class="profile-sidebar">
+
+        <!-- Formulas with Reishi -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">
+            🧾 <span class="en">Formulas with Reishi</span><span class="zh">含灵芝方剂</span>
+          </div>
+          <div class="sidebar-card-body">
+            <div class="formula-item">
+              <div>
+                <div class="formula-item-name en">Reishi &amp; Jujube Formula</div>
+                <div class="formula-item-name zh">灵芝枣仁方</div>
+                <div class="formula-price">$46.00</div>
+              </div>
+              <div style="text-align:right;">
+                <button class="formula-add-btn" onclick="addToCart(this,'Reishi & Jujube Formula')">
+                  <span class="en">+ Cart</span><span class="zh">加购</span>
+                </button>
+              </div>
+            </div>
+            <div class="formula-item">
+              <div>
+                <div class="formula-item-name en">Calm Spirit Blend</div>
+                <div class="formula-item-name zh">宁神安心方</div>
+                <div class="formula-price">$39.00</div>
+              </div>
+              <div style="text-align:right;">
+                <button class="formula-add-btn" onclick="addToCart(this,'Calm Spirit Blend')">
+                  <span class="en">+ Cart</span><span class="zh">加购</span>
+                </button>
+              </div>
+            </div>
+            <div class="formula-item">
+              <div>
+                <div class="formula-item-name en">Daily Longevity Tea</div>
+                <div class="formula-item-name zh">每日养生茶</div>
+                <div class="formula-price">$28.00</div>
+              </div>
+              <div style="text-align:right;">
+                <button class="formula-add-btn" onclick="addToCart(this,'Daily Longevity Tea')">
+                  <span class="en">+ Cart</span><span class="zh">加购</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buy Single Herb -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">
+            🛒 <span class="en">Buy Single Herb</span><span class="zh">购买单味药</span>
+          </div>
+          <div class="sidebar-card-body">
+            <div style="font-size:14px;font-weight:600;color:var(--n800);margin-bottom:4px;">
+              <span class="en">Reishi Capsules</span><span class="zh">灵芝胶囊</span>
+            </div>
+            <div style="font-size:12px;color:var(--n400);font-family:var(--font-zh);margin-bottom:10px;">灵芝胶囊 — 10:1 Extract</div>
+            <div class="buy-herb-options">
+              <div class="size-option selected" onclick="selectSize(this)">
+                <div class="size-label">60ct</div>
+                <div class="size-price">$32</div>
+              </div>
+              <div class="size-option" onclick="selectSize(this)">
+                <div class="size-label">120ct</div>
+                <div class="size-price">$58</div>
+              </div>
+            </div>
+            <div class="buy-meta">
+              🇨🇳 <span class="en">Origin: Zhejiang, China</span><span class="zh">产地：中国浙江</span>
+              &nbsp;·&nbsp;
+              <span class="en">Grade: Premium</span><span class="zh">等级：特级</span>
+            </div>
+            <button class="btn btn-primary" style="width:100%;" onclick="addToCart(this,'Reishi Capsules')">
+              <span class="en">Add to Cart</span><span class="zh">加入购物车</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Facts -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">
+            ℹ️ <span class="en">Quick Facts</span><span class="zh">快速参考</span>
+          </div>
+          <div class="sidebar-card-body">
+            <div class="facts-list">
+              <div class="fact-item">
+                <span class="fact-icon">🌍</span>
+                <span class="fact-text"><strong class="en">Origin:</strong><strong class="zh">产地：</strong>
+                  <span class="en"> China (Zhejiang, Fujian)</span><span class="zh">中国（浙江、福建）</span>
+                </span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">🔬</span>
+                <span class="fact-text"><strong class="en">Key Compounds:</strong><strong class="zh">主要成分：</strong>
+                  <span class="en"> Triterpenoids, Beta-Glucans</span><span class="zh">三萜类、β-葡聚糖</span>
+                </span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">✅</span>
+                <span class="fact-text">
+                  <span class="en">GMP Certified · Dual Extract · Heavy Metal Tested</span>
+                  <span class="zh">GMP认证 · 双重提取 · 重金属检测</span>
+                </span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">📦</span>
+                <span class="fact-text"><strong class="en">Forms:</strong><strong class="zh">剂型：</strong>
+                  <span class="en"> Capsule · Powder · Tincture · Tea</span>
+                  <span class="zh">胶囊 · 粉末 · 酊剂 · 茶</span>
+                </span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-icon">🍄</span>
+                <span class="fact-text">
+                  <span class="en">Fruiting body (not mycelium) for full-spectrum potency</span>
+                  <span class="zh">子实体提取（非菌丝体），全谱效力</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ask AI -->
+        <div class="ai-card">
+          <h4 class="en">Questions about Reishi for your constitution?</h4>
+          <h4 class="zh">关于灵芝与您体质的问题？</h4>
+          <p class="en">Our TCM AI can help match herbs to your unique pattern.</p>
+          <p class="zh">我们的中医AI可帮助您根据个人体质匹配草药。</p>
+          <button class="btn btn-accent btn-lg" style="width:100%;">
+            <span class="en">Ask TCM AI →</span><span class="zh">咨询中医AI →</span>
+          </button>
+        </div>
+
+      </div><!-- /profile-sidebar -->
+    </div><!-- /profile-layout -->
+  </div><!-- /container -->
+
+  <footer class="site-footer">
+    <p>© 2026 pureHerbHealth · <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · <a href="#">FDA Disclaimer</a></p>
+    <p style="margin-top:6px;font-size:12px;color:#555;">These statements have not been evaluated by the FDA. Products not intended to diagnose, treat, cure, or prevent any disease.</p>
+  </footer>
+</div><!-- /page-reishi -->
+
+<!-- ====================== TOAST ====================== -->
+<div id="toast"></div>
+
+<!-- ====================== JAVASCRIPT ====================== -->
+<script>
+  // ---- Page navigation ----
+  function showPage(pageId, tabBtn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    document.querySelectorAll('.pb-tab').forEach(t => t.classList.remove('active'));
+    if (tabBtn) {
+      tabBtn.classList.add('active');
+    } else {
+      const tabMap = { listing: 0, astragalus: 1, reishi: 2 };
+      const tabs = document.querySelectorAll('.pb-tab');
+      if (tabs[tabMap[pageId]]) tabs[tabMap[pageId]].classList.add('active');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ---- Language toggle ----
+  function setLang(lang, btn) {
+    document.body.classList.toggle('zh', lang === 'zh');
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // ---- Element filter ----
+  let activeFilter = null;
+  function filterElement(element, btn) {
+    const pills = document.querySelectorAll('.el-pill');
+    const cards = document.querySelectorAll('.herb-card');
+    if (activeFilter === element) {
+      // Deselect
+      activeFilter = null;
+      pills.forEach(p => p.classList.remove('active'));
+      cards.forEach(c => c.classList.remove('ring-active'));
+    } else {
+      activeFilter = element;
+      pills.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      cards.forEach(c => {
+        if (c.dataset.element === element) {
+          c.classList.add('ring-active');
+        } else {
+          c.classList.remove('ring-active');
+        }
+      });
+    }
+  }
+
+  // ---- Accordion ----
+  function toggleAcc(trigger) {
+    const panel = trigger.nextElementSibling;
+    const isOpen = trigger.classList.contains('open');
+    trigger.classList.toggle('open', !isOpen);
+    panel.classList.toggle('open', !isOpen);
+  }
+
+  // ---- Size selector ----
+  function selectSize(el) {
+    const parent = el.closest('.buy-herb-options');
+    parent.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // ---- Add to Cart ----
+  let cartCount = 2;
+  function addToCart(btn, name) {
+    cartCount++;
+    document.getElementById('cart-count').textContent = cartCount;
+    showToast('Added: ' + name);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = '🛒 ' + msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+</script>
+
+</body>
+</html>

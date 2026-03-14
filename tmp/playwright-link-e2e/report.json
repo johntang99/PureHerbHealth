@@ -1,0 +1,81 @@
+{
+  "verdict": "NO",
+  "basis": {
+    "attempt1_has_link_phrase": false,
+    "attempt1_has_save_info_phrase": false,
+    "attempt2_has_link_phrase": true,
+    "attempt2_has_save_info_phrase": false,
+    "attempt2_any_prefilled_sensitive_field": false
+  },
+  "evidence": {
+    "attempt1_sample_inputs": [],
+    "attempt1_after_pay_sample_inputs": [],
+    "attempt2_sample_inputs": [
+      {
+        "type": "text",
+        "name": "number",
+        "placeholder": "1234 1234 1234 1234",
+        "autocomplete": "cc-number",
+        "value": ""
+      },
+      {
+        "type": "text",
+        "name": "expiry",
+        "placeholder": "MM / YY",
+        "autocomplete": "cc-exp",
+        "value": ""
+      },
+      {
+        "type": "text",
+        "name": "cvc",
+        "placeholder": "CVC",
+        "autocomplete": "cc-csc",
+        "value": ""
+      },
+      {
+        "type": "text",
+        "name": "postalCode",
+        "placeholder": "12345",
+        "autocomplete": "billing postal-code",
+        "value": ""
+      },
+      {
+        "type": "text",
+        "name": "",
+        "placeholder": "",
+        "autocomplete": "",
+        "value": ""
+      },
+      {
+        "type": "text",
+        "name": "",
+        "placeholder": "",
+        "autocomplete": "",
+        "value": ""
+      },
+      {
+        "type": "text",
+        "name": "",
+        "placeholder": "",
+        "autocomplete": "",
+        "value": ""
+      },
+      {
+        "type": "text",
+        "name": "",
+        "placeholder": "",
+        "autocomplete": "",
+        "value": ""
+      },
+      {
+        "type": "text",
+        "name": "",
+        "placeholder": "",
+        "autocomplete": "",
+        "value": ""
+      }
+    ]
+  },
+  "artifacts_dir": "/Users/johntang/Desktop/clients/medical-clinic/stores/pureherbhealth/tmp/playwright-link-e2e",
+  "note": "No pre-filled Link/card-related input values observed on second attempt."
+}

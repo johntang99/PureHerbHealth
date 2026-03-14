@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pureHerbHealth — Visual Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================
+       DESIGN SYSTEM — pureHerbHealth v1.0
+       Source: ECOM_TCM_STAGE_A.md Section 5
+    ============================================ */
+    :root {
+      /* Brand — Jade Green */
+      --brand-100: #E8F5EE;
+      --brand-200: #A3D1B7;
+      --brand-300: #76BA93;
+      --brand-400: #4AA370;
+      --brand-500: #2D8C54;
+      --brand-600: #247043;
+      --brand-700: #1B5432;
+      --brand-800: #123822;
+      --brand-900: #091C11;
+      /* Accent — Warm Gold */
+      --accent-100: #FFF8E7;
+      --accent-300: #FFD666;
+      --accent-500: #D4A843;
+      --accent-700: #8B6F2A;
+      /* Neutrals */
+      --neutral-50:  #FAFAF9;
+      --neutral-100: #F5F5F4;
+      --neutral-200: #E7E5E4;
+      --neutral-300: #D6D3D1;
+      --neutral-400: #A8A29E;
+      --neutral-500: #78716C;
+      --neutral-700: #44403C;
+      --neutral-900: #1C1917;
+      /* Semantic */
+      --success: #16A34A;
+      --warning: #EAB308;
+      --error:   #DC2626;
+      --info:    #2563EB;
+      /* Five Elements */
+      --wood:   #4AA370;
+      --fire:   #DC4A3F;
+      --earth:  #D4A843;
+      --metal:  #A0A0A0;
+      --water:  #2563EB;
+      /* Typography */
+      --font-heading: 'DM Serif Display', Georgia, serif;
+      --font-body:    'Inter', -apple-system, sans-serif;
+      --font-chinese: 'Noto Sans SC', 'PingFang SC', sans-serif;
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.04);
+      /* Radius */
+      --radius-sm:   4px;
+      --radius-md:   8px;
+      --radius-lg:   12px;
+      --radius-xl:   16px;
+      --radius-full: 9999px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--neutral-50);
+      color: var(--neutral-700);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* Chinese mode overrides */
+    body.zh { font-family: var(--font-chinese), var(--font-body); }
+    body.zh h1, body.zh h2, body.zh h3, body.zh h4 {
+      font-family: var(--font-chinese), var(--font-heading);
+      font-weight: 500;
+    }
+    h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--neutral-900); line-height: 1.2; }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+    /* ---- PROTOTYPE BADGE ---- */
+    .proto-badge {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      background: var(--accent-500); color: white;
+      text-align: center; font-size: 12px; font-weight: 600;
+      padding: 6px; letter-spacing: 0.05em;
+      font-family: var(--font-body);
+    }
+    .proto-badge a { color: white; text-decoration: underline; cursor: pointer; }
+
+    /* ---- LANG SWITCHER ---- */
+    .lang-switcher {
+      display: flex; gap: 2px; align-items: center;
+      background: var(--neutral-100); border-radius: var(--radius-full);
+      padding: 3px; border: 1px solid var(--neutral-200);
+    }
+    .lang-btn {
+      padding: 4px 12px; border-radius: var(--radius-full);
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      border: none; background: transparent; color: var(--neutral-500);
+      transition: all 0.15s;
+    }
+    .lang-btn.active { background: white; color: var(--brand-600); box-shadow: var(--shadow-sm); }
+    .lang-btn:hover:not(.active) { color: var(--neutral-700); }
+
+    /* ---- TOP BAR ---- */
+    .topbar {
+      background: var(--brand-800); color: var(--brand-200);
+      font-size: 13px; text-align: center; padding: 8px 32px;
+      margin-top: 28px;
+    }
+    .topbar span { color: var(--accent-300); font-weight: 600; }
+
+    /* ---- HEADER ---- */
+    header {
+      background: white; border-bottom: 1px solid var(--neutral-200);
+      position: sticky; top: 28px; z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+    .header-inner {
+      display: flex; align-items: center; gap: 24px;
+      padding: 16px 32px; max-width: 1280px; margin: 0 auto;
+    }
+    .logo {
+      font-family: var(--font-heading); font-size: 22px;
+      color: var(--brand-600); text-decoration: none; white-space: nowrap;
+    }
+    .logo span { color: var(--accent-500); }
+    .logo-zh { font-family: var(--font-chinese); font-size: 18px; color: var(--neutral-500); margin-left: 4px; }
+    .nav { display: flex; gap: 4px; flex: 1; }
+    .nav a {
+      padding: 8px 14px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 500; color: var(--neutral-700);
+      text-decoration: none; transition: all 0.15s; white-space: nowrap;
+    }
+    .nav a:hover { background: var(--neutral-100); color: var(--brand-600); }
+    .nav a.active { color: var(--brand-600); background: var(--brand-100); }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .search-box {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--neutral-100); border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-full); padding: 8px 16px;
+      font-size: 14px; color: var(--neutral-500); min-width: 220px;
+    }
+    .search-box svg { flex-shrink: 0; }
+    .cart-btn {
+      position: relative; background: var(--brand-500); color: white;
+      border: none; border-radius: var(--radius-md); padding: 8px 18px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+    }
+    .cart-btn:hover { background: var(--brand-600); }
+    .cart-count {
+      background: var(--accent-500); color: white;
+      border-radius: var(--radius-full); font-size: 11px; font-weight: 700;
+      padding: 1px 6px;
+    }
+    .icon-btn {
+      width: 38px; height: 38px; border-radius: var(--radius-md);
+      border: 1px solid var(--neutral-200); background: white;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--neutral-500); transition: all 0.15s;
+    }
+    .icon-btn:hover { border-color: var(--brand-300); color: var(--brand-500); }
+
+    /* ---- TRUST BAR ---- */
+    .trust-bar {
+      background: var(--brand-100); border-bottom: 1px solid var(--brand-200);
+      padding: 10px 32px;
+    }
+    .trust-bar-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+    }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--brand-700); font-weight: 500; }
+    .trust-item svg { color: var(--brand-500); }
+
+    /* ---- HERO ---- */
+    .hero {
+      background: linear-gradient(135deg, var(--brand-800) 0%, var(--brand-600) 50%, var(--brand-700) 100%);
+      padding: 80px 32px; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -50%; right: -10%;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,168,67,0.12) 0%, transparent 70%);
+    }
+    .hero::after {
+      content: '草'; position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+      font-size: 280px; color: rgba(255,255,255,0.04);
+      font-family: var(--font-chinese); font-weight: 300; pointer-events: none;
+    }
+    .hero-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(212,168,67,0.2); border: 1px solid rgba(212,168,67,0.4);
+      border-radius: var(--radius-full); padding: 6px 14px;
+      font-size: 12px; font-weight: 600; color: var(--accent-300); letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 52px; line-height: 1.1; color: white; margin-bottom: 20px;
+    }
+    .hero h1 em { color: var(--accent-300); font-style: normal; }
+    .hero-zh { font-size: 20px; color: var(--brand-300); margin-bottom: 24px; font-family: var(--font-chinese); font-weight: 300; }
+    .hero p { font-size: 17px; color: var(--brand-200); line-height: 1.7; margin-bottom: 32px; max-width: 480px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent-500); color: white; border: none;
+      padding: 14px 28px; border-radius: var(--radius-md);
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--accent-700); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+    .btn-outline {
+      background: transparent; color: white;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 14px 28px; border-radius: var(--radius-md);
+      font-size: 15px; font-weight: 500; cursor: pointer;
+      transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.7); }
+    .hero-stats { display: flex; gap: 32px; margin-top: 40px; }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-size: 28px; font-weight: 700; color: white; font-family: var(--font-heading); }
+    .hero-stat .lbl { font-size: 12px; color: var(--brand-300); margin-top: 2px; }
+    .hero-visual { position: relative; z-index: 1; }
+    .hero-card {
+      background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-xl);
+      padding: 28px; color: white;
+    }
+    .hero-card-title { font-size: 14px; color: var(--brand-300); margin-bottom: 16px; font-weight: 500; }
+    .ai-chat-preview {
+      background: rgba(255,255,255,0.07); border-radius: var(--radius-lg);
+      padding: 16px; margin-bottom: 16px;
+    }
+    .chat-msg { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
+    .chat-msg:last-child { margin-bottom: 0; }
+    .chat-avatar {
+      width: 32px; height: 32px; border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .chat-avatar.ai { background: var(--brand-500); }
+    .chat-avatar.user { background: var(--accent-500); }
+    .chat-bubble {
+      background: rgba(255,255,255,0.1); border-radius: var(--radius-md);
+      padding: 10px 14px; font-size: 13px; line-height: 1.5;
+    }
+    .chat-bubble.user { background: var(--brand-600); }
+    .chat-product-rec {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius-md); padding: 12px; display: flex; gap: 10px; align-items: center;
+      margin-top: 8px; cursor: pointer; transition: all 0.15s;
+    }
+    .chat-product-rec:hover { background: rgba(255,255,255,0.2); }
+    .chat-product-img {
+      width: 44px; height: 44px; border-radius: var(--radius-sm);
+      background: var(--brand-600); display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .chat-product-info { flex: 1; }
+    .chat-product-name { font-size: 13px; font-weight: 600; }
+    .chat-product-price { font-size: 12px; color: var(--accent-300); }
+    .quiz-widget {
+      background: rgba(212,168,67,0.15); border: 1px solid rgba(212,168,67,0.3);
+      border-radius: var(--radius-md); padding: 14px;
+      display: flex; gap: 12px; align-items: center; cursor: pointer;
+    }
+    .quiz-icon { font-size: 24px; }
+    .quiz-text strong { display: block; font-size: 13px; color: var(--accent-300); }
+    .quiz-text span { font-size: 12px; color: var(--brand-300); }
+
+    /* ---- SECTION HEADERS ---- */
+    .section { padding: 64px 32px; }
+    .section-header { text-align: center; margin-bottom: 40px; }
+    .section-eyebrow {
+      display: inline-block; font-size: 12px; font-weight: 600;
+      color: var(--brand-500); letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section-header h2 { font-size: 36px; color: var(--neutral-900); margin-bottom: 12px; }
+    .section-header p { font-size: 17px; color: var(--neutral-500); max-width: 560px; margin: 0 auto; }
+
+    /* ---- CATEGORY NAV ---- */
+    .category-section { background: white; padding: 48px 32px; border-bottom: 1px solid var(--neutral-200); }
+    .category-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; max-width: 1280px; margin: 0 auto; }
+    .category-card {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      padding: 20px 12px; border-radius: var(--radius-lg);
+      border: 1px solid var(--neutral-200); background: var(--neutral-50);
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+    }
+    .category-card:hover { border-color: var(--brand-300); background: var(--brand-100); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .category-card.active { border-color: var(--brand-500); background: var(--brand-100); }
+    .cat-icon { font-size: 32px; }
+    .cat-name { font-size: 13px; font-weight: 600; color: var(--neutral-900); text-align: center; }
+    .cat-name-zh { font-size: 12px; color: var(--neutral-500); font-family: var(--font-chinese); }
+    .cat-count { font-size: 11px; color: var(--neutral-400); }
+
+    /* ---- PRODUCT GRID ---- */
+    .product-section { background: var(--neutral-50); }
+    .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1280px; margin: 0 auto; }
+    .product-card {
+      background: white; border-radius: var(--radius-lg);
+      border: 1px solid var(--neutral-200); overflow: hidden;
+      transition: all 0.2s; cursor: pointer; position: relative;
+    }
+    .product-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--brand-200); }
+    .product-img {
+      width: 100%; aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 64px; position: relative;
+    }
+    .product-badges {
+      position: absolute; top: 10px; left: 10px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: var(--radius-full);
+      font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+    .badge-bestseller { background: var(--accent-500); color: white; }
+    .badge-new { background: var(--info); color: white; }
+    .badge-practitioner { background: var(--brand-500); color: white; }
+    .badge-sale { background: var(--error); color: white; }
+    .wishlist-btn {
+      position: absolute; top: 10px; right: 10px;
+      width: 32px; height: 32px; border-radius: var(--radius-full);
+      background: white; border: 1px solid var(--neutral-200);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--neutral-400); font-size: 16px;
+      transition: all 0.15s; box-shadow: var(--shadow-sm);
+    }
+    .wishlist-btn:hover { color: var(--error); border-color: var(--error); }
+    .product-info { padding: 16px; }
+    .product-category { font-size: 11px; color: var(--brand-500); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .product-name { font-size: 15px; font-weight: 600; color: var(--neutral-900); margin-bottom: 2px; line-height: 1.3; }
+    .product-name-zh { font-size: 13px; color: var(--neutral-500); font-family: var(--font-chinese); margin-bottom: 8px; }
+    .tcm-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+    .tcm-tag {
+      padding: 2px 8px; border-radius: var(--radius-full);
+      font-size: 11px; font-weight: 500; border: 1px solid;
+    }
+    .tcm-tag-wood { color: var(--wood); border-color: var(--wood); background: rgba(74,163,112,0.08); }
+    .tcm-tag-fire { color: var(--fire); border-color: var(--fire); background: rgba(220,74,63,0.08); }
+    .tcm-tag-earth { color: var(--earth); border-color: var(--earth); background: rgba(212,168,67,0.08); }
+    .tcm-tag-water { color: var(--water); border-color: var(--water); background: rgba(37,99,235,0.08); }
+    .star-row { display: flex; align-items: center; gap: 4px; margin-bottom: 10px; }
+    .stars { color: var(--accent-500); font-size: 13px; }
+    .star-count { font-size: 12px; color: var(--neutral-400); }
+    .price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+    .price { font-size: 20px; font-weight: 700; color: var(--neutral-900); }
+    .price-original { font-size: 14px; color: var(--neutral-400); text-decoration: line-through; }
+    .price-save { font-size: 12px; color: var(--error); font-weight: 600; }
+    .stock-indicator { display: flex; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 12px; }
+    .stock-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .stock-dot.in { background: var(--success); }
+    .stock-dot.low { background: var(--warning); }
+    .add-to-cart {
+      width: 100%; padding: 10px; background: var(--brand-500); color: white;
+      border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .add-to-cart:hover { background: var(--brand-600); }
+
+    /* ---- FIVE ELEMENTS ---- */
+    .five-elements-section { background: var(--brand-900); padding: 64px 32px; }
+    .five-elements-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .five-el-content { color: white; }
+    .five-el-content .section-eyebrow { color: var(--accent-300); }
+    .five-el-content h2 { color: white; margin-bottom: 16px; }
+    .five-el-content p { color: var(--brand-200); margin-bottom: 32px; line-height: 1.7; }
+    .pentagon-container { display: flex; justify-content: center; align-items: center; }
+    .pentagon-svg { width: 320px; height: 320px; }
+    .element-node {
+      cursor: pointer; transition: all 0.2s;
+    }
+    .element-node:hover circle { r: 36; }
+    .el-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+    .el-pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px; border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+      transition: all 0.2s;
+    }
+    .el-pill:hover { background: rgba(255,255,255,0.08); }
+    .el-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .el-pill-info strong { display: block; font-size: 13px; color: white; }
+    .el-pill-info span { font-size: 12px; color: var(--neutral-400); }
+
+    /* ---- CONTENT / BLOG ---- */
+    .blog-section { background: white; }
+    .article-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1280px; margin: 0 auto; }
+    .article-card {
+      border-radius: var(--radius-lg); border: 1px solid var(--neutral-200);
+      overflow: hidden; transition: all 0.2s; cursor: pointer;
+    }
+    .article-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .article-img { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 60px; }
+    .article-body { padding: 20px; }
+    .article-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .article-tag { font-size: 11px; font-weight: 600; color: var(--brand-500); text-transform: uppercase; letter-spacing: 0.05em; }
+    .article-date { font-size: 11px; color: var(--neutral-400); }
+    .article-title { font-size: 17px; color: var(--neutral-900); margin-bottom: 8px; line-height: 1.4; font-family: var(--font-heading); }
+    .article-excerpt { font-size: 14px; color: var(--neutral-500); line-height: 1.6; margin-bottom: 14px; }
+    .article-footer { display: flex; align-items: center; justify-content: space-between; }
+    .author { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--neutral-700); font-weight: 500; }
+    .author-avatar { width: 28px; height: 28px; border-radius: var(--radius-full); background: var(--brand-200); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .read-more { font-size: 13px; color: var(--brand-500); font-weight: 600; }
+    .embedded-product-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--brand-100); border: 1px solid var(--brand-200);
+      border-radius: var(--radius-full); padding: 4px 10px;
+      font-size: 12px; color: var(--brand-700); font-weight: 500;
+    }
+
+    /* ---- TRUST SECTION ---- */
+    .trust-section { background: var(--neutral-100); padding: 64px 32px; border-top: 1px solid var(--neutral-200); }
+    .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1280px; margin: 0 auto; }
+    .trust-card {
+      background: white; padding: 28px 24px; border-radius: var(--radius-lg);
+      border: 1px solid var(--neutral-200); text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .trust-icon { font-size: 36px; margin-bottom: 12px; }
+    .trust-card h4 { font-size: 16px; color: var(--neutral-900); margin-bottom: 6px; font-family: var(--font-body); font-weight: 600; }
+    .trust-card p { font-size: 13px; color: var(--neutral-500); line-height: 1.5; }
+    .ssl-badges { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 32px; max-width: 1280px; margin-left: auto; margin-right: auto; }
+    .ssl-badge {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px; background: white; border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-md); font-size: 13px; color: var(--neutral-700); font-weight: 500;
+      box-shadow: var(--shadow-sm);
+    }
+    .ssl-badge svg { color: var(--success); }
+
+    /* ---- NEWSLETTER ---- */
+    .newsletter-section {
+      background: linear-gradient(135deg, var(--brand-700) 0%, var(--brand-500) 100%);
+      padding: 64px 32px; text-align: center;
+    }
+    .newsletter-section h2 { color: white; margin-bottom: 10px; }
+    .newsletter-section p { color: var(--brand-200); margin-bottom: 28px; font-size: 16px; }
+    .newsletter-form { display: flex; gap: 10px; max-width: 440px; margin: 0 auto; }
+    .newsletter-input {
+      flex: 1; padding: 13px 18px; border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15);
+      color: white; font-size: 15px; outline: none;
+    }
+    .newsletter-input::placeholder { color: rgba(255,255,255,0.5); }
+    .newsletter-input:focus { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.2); }
+    .newsletter-disclaimer { font-size: 12px; color: var(--brand-300); margin-top: 12px; }
+
+    /* ---- FOOTER ---- */
+    footer { background: var(--neutral-900); color: var(--neutral-400); padding: 56px 32px 32px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 40px; }
+    .footer-brand .logo { font-size: 20px; display: block; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; line-height: 1.7; max-width: 260px; }
+    .footer-brand .fda { font-size: 11px; color: var(--neutral-500); margin-top: 12px; line-height: 1.6; }
+    .footer-col h5 { font-size: 13px; font-weight: 600; color: white; margin-bottom: 14px; font-family: var(--font-body); }
+    .footer-col a { display: block; font-size: 13px; color: var(--neutral-500); text-decoration: none; margin-bottom: 8px; transition: color 0.15s; }
+    .footer-col a:hover { color: var(--neutral-300); }
+    .footer-bottom { border-top: 1px solid var(--neutral-800); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; gap: 12px; }
+    .footer-bottom-left { font-size: 12px; }
+    .payment-icons { display: flex; gap: 8px; align-items: center; }
+    .payment-icon { background: white; border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: 700; color: var(--neutral-900); }
+
+    /* ---- AI CHAT WIDGET ---- */
+    .chat-widget {
+      position: fixed; bottom: 28px; right: 28px; z-index: 200;
+    }
+    .chat-fab {
+      width: 58px; height: 58px; border-radius: var(--radius-full);
+      background: var(--brand-500); color: white; border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: var(--shadow-xl);
+      font-size: 26px; transition: all 0.2s;
+      position: relative;
+    }
+    .chat-fab:hover { background: var(--brand-600); transform: scale(1.05); }
+    .chat-fab-badge {
+      position: absolute; top: -2px; right: -2px;
+      width: 18px; height: 18px; background: var(--accent-500);
+      border-radius: var(--radius-full); border: 2px solid white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
+    }
+    .chat-panel {
+      position: absolute; bottom: 70px; right: 0;
+      width: 340px; background: white; border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl); border: 1px solid var(--neutral-200);
+      overflow: hidden; display: none;
+    }
+    .chat-panel.open { display: flex; flex-direction: column; }
+    .chat-header {
+      background: var(--brand-500); padding: 16px 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .chat-header-avatar {
+      width: 40px; height: 40px; border-radius: var(--radius-full);
+      background: var(--brand-400); display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .chat-header-info { flex: 1; }
+    .chat-header-info strong { display: block; font-size: 14px; color: white; font-family: var(--font-body); }
+    .chat-header-info span { font-size: 12px; color: var(--brand-200); }
+    .online-dot { width: 8px; height: 8px; background: var(--accent-300); border-radius: 50%; display: inline-block; margin-right: 4px; }
+    .chat-messages { padding: 16px; flex: 1; max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+    .msg-row { display: flex; gap: 8px; align-items: flex-start; }
+    .msg-row.user { flex-direction: row-reverse; }
+    .msg-avatar { width: 30px; height: 30px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .msg-avatar.ai-av { background: var(--brand-500); }
+    .msg-avatar.user-av { background: var(--neutral-200); }
+    .msg-bubble { max-width: 220px; padding: 10px 14px; border-radius: var(--radius-md); font-size: 13px; line-height: 1.5; }
+    .msg-bubble.ai-bubble { background: var(--neutral-100); color: var(--neutral-700); border-radius: 2px var(--radius-md) var(--radius-md) var(--radius-md); }
+    .msg-bubble.user-bubble { background: var(--brand-500); color: white; border-radius: var(--radius-md) 2px var(--radius-md) var(--radius-md); }
+    .msg-product {
+      background: white; border: 1px solid var(--brand-200); border-radius: var(--radius-md);
+      padding: 10px; display: flex; gap: 8px; align-items: center; margin-top: 6px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .msg-product:hover { background: var(--brand-100); }
+    .msg-product-img { width: 36px; height: 36px; background: var(--brand-100); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .msg-product-name { font-size: 12px; font-weight: 600; color: var(--neutral-900); }
+    .msg-product-price { font-size: 12px; color: var(--brand-500); font-weight: 600; }
+    .disclaimer { font-size: 10px; color: var(--neutral-400); padding: 0 12px 8px; line-height: 1.5; }
+    .chat-input-row { padding: 12px; border-top: 1px solid var(--neutral-200); display: flex; gap: 8px; }
+    .chat-input {
+      flex: 1; padding: 10px 14px; border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-full); font-size: 13px; outline: none;
+      font-family: var(--font-body);
+    }
+    .chat-input:focus { border-color: var(--brand-300); }
+    .chat-send {
+      width: 36px; height: 36px; background: var(--brand-500); color: white;
+      border: none; border-radius: var(--radius-full); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+
+    /* ---- I18N HIDDEN/SHOWN ---- */
+    .en { display: block; }
+    .zh-content { display: none; }
+    body.zh .en { display: none; }
+    body.zh .zh-content { display: block; }
+    .en-inline { display: inline; }
+    .zh-inline { display: none; }
+    body.zh .en-inline { display: none; }
+    body.zh .zh-inline { display: inline; }
+
+    /* ---- UTILITY ---- */
+    .text-center { text-align: center; }
+    .mt-8 { margin-top: 32px; }
+    .divider { height: 1px; background: var(--neutral-200); margin: 0; }
+    .show-all {
+      display: flex; align-items: center; justify-content: center; margin-top: 32px;
+    }
+    .btn-secondary {
+      border: 1px solid var(--brand-500); color: var(--brand-500); background: transparent;
+      padding: 12px 28px; border-radius: var(--radius-md); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { background: var(--brand-100); }
+  </style>
+</head>
+<body>
+
+<!-- PROTOTYPE BADGE -->
+<div class="proto-badge">
+  🎨 VISUAL PROTOTYPE — pureHerbHealth.com &nbsp;|&nbsp; This is a static design preview. No backend. &nbsp;|&nbsp;
+  <a onclick="toggleProto()">Toggle Language Test</a> &nbsp;|&nbsp; Version 1.0 — March 2026
+</div>
+
+<!-- TOP ANNOUNCEMENT BAR -->
+<div class="topbar">
+  <span class="en-inline">🌿 Free shipping on orders over $75</span>
+  <span class="zh-inline">🌿 满$75免运费</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="en-inline">Practitioner-curated herbal products</span>
+  <span class="zh-inline">中医专家精选草药产品</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <span class="en-inline"><span>Use code WELCOME15 for 15% off your first order</span></span>
+  <span class="zh-inline"><span>首单优惠码：WELCOME15，享85折</span></span>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      pure<span>Herb</span>Health
+      <span class="logo-zh en-inline" style="display:none"></span>
+      <span class="logo-zh zh-inline">纯草健康</span>
+    </a>
+
+    <nav class="nav">
+      <a href="#" class="active">
+        <span class="en-inline">Shop</span><span class="zh-inline">商店</span>
+      </a>
+      <a href="#">
+        <span class="en-inline">Herbal Formulas</span><span class="zh-inline">中药方剂</span>
+      </a>
+      <a href="#">
+        <span class="en-inline">Single Herbs</span><span class="zh-inline">单味草药</span>
+      </a>
+      <a href="#">
+        <span class="en-inline">Wellness Tools</span><span class="zh-inline">健康工具</span>
+      </a>
+      <a href="#">
+        <span class="en-inline">Learn</span><span class="zh-inline">学习</span>
+      </a>
+      <a href="#">
+        <span class="en-inline">About</span><span class="zh-inline">关于我们</span>
+      </a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="search-box">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span class="en-inline">Search products, herbs...</span>
+        <span class="zh-inline">搜索产品、草药...</span>
+      </div>
+
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('zh')">中文</button>
+      </div>
+
+      <button class="icon-btn" title="Account">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </button>
+
+      <button class="cart-btn">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="en-inline">Cart</span><span class="zh-inline">购物车</span>
+        <span class="cart-count">2</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span class="en-inline">SSL Secured Checkout</span>
+      <span class="zh-inline">SSL安全结账</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      <span class="en-inline">Free Returns — 30 Days</span>
+      <span class="zh-inline">30天免费退货</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span class="en-inline">Ships in 1–2 Business Days</span>
+      <span class="zh-inline">1-2个工作日发货</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span class="en-inline">Practitioner-Verified Quality</span>
+      <span class="zh-inline">中医师认证品质</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span class="en-inline">Based in New York, USA</span>
+      <span class="zh-inline">总部位于美国纽约</span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        ✦ <span class="en-inline">AI-Powered TCM Wellness Store</span>
+           <span class="zh-inline">AI驱动的中医健康商店</span>
+      </div>
+
+      <h1 class="en">
+        Ancient Wisdom.<br/><em>Modern Science.</em><br/>Personalized for You.
+      </h1>
+      <h1 class="zh-content" style="font-family: var(--font-chinese); font-weight:400; font-size:44px">
+        千年中医智慧<br/><em>现代科学验证</em><br/>专属您的健康方案
+      </h1>
+
+      <p class="en">
+        Practitioner-curated herbal products backed by AI-powered wellness guidance.
+        Ask our AI assistant about your constitution, get personalized recommendations,
+        and shop with confidence from a trusted TCM network.
+      </p>
+      <p class="zh-content">
+        中医师精选草药产品，结合AI健康咨询。询问我们的AI助手关于您的体质，
+        获取个性化推荐，从可信赖的中医网络放心购物。
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn-primary">
+          🌿 <span class="en-inline">Shop Herbal Formulas</span>
+                <span class="zh-inline">选购中药方剂</span>
+        </button>
+        <button class="btn-outline">
+          ✦ <span class="en-inline">Take Constitution Quiz</span>
+               <span class="zh-inline">测试您的体质</span>
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num">200+</div>
+          <div class="lbl"><span class="en-inline">Products</span><span class="zh-inline">产品</span></div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">4.9★</div>
+          <div class="lbl"><span class="en-inline">Avg Rating</span><span class="zh-inline">平均评分</span></div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">15K+</div>
+          <div class="lbl"><span class="en-inline">Customers</span><span class="zh-inline">客户</span></div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">3</div>
+          <div class="lbl"><span class="en-inline">TCM Clinics</span><span class="zh-inline">中医诊所</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Chat Preview Card -->
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="hero-card-title">
+          🤖 <span class="en-inline">AI Wellness Assistant — Ask anything about TCM</span>
+               <span class="zh-inline">AI健康助手 — 随时咨询中医问题</span>
+        </div>
+        <div class="ai-chat-preview">
+          <div class="chat-msg">
+            <div class="chat-avatar user">👤</div>
+            <div class="chat-bubble user">
+              <span class="en-inline">I often feel tired and have cold hands — what's causing this?</span>
+              <span class="zh-inline">我经常感到疲劳，手脚冰凉，这是什么原因？</span>
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar ai">🌿</div>
+            <div class="chat-bubble">
+              <span class="en-inline">These symptoms suggest <strong>Qi and Yang deficiency</strong> — your body's warming energy is low. I recommend starting with a warming formula to tonify Qi and support circulation...</span>
+              <span class="zh-inline">这些症状表明您可能存在<strong>气虚和阳虚</strong>——身体的温阳之气不足。建议从补气温阳的方剂开始调理，改善气血循环...</span>
+              <div class="chat-product-rec">
+                <div class="chat-product-img">🍵</div>
+                <div class="chat-product-info">
+                  <div class="chat-product-name">
+                    <span class="en-inline">Ba Zhen Wan — Eight Treasure Pills</span>
+                    <span class="zh-inline">八珍丸</span>
+                  </div>
+                  <div class="chat-product-price">$28.00 →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-widget">
+          <div class="quiz-icon">📋</div>
+          <div class="quiz-text">
+            <strong class="en-inline">Take the TCM Constitution Quiz</strong>
+            <strong class="zh-inline">测试您的中医体质</strong>
+            <span class="en-inline">15 questions · Personalized results</span>
+            <span class="zh-inline">15个问题 · 个性化结果</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORY NAVIGATION -->
+<section class="category-section">
+  <div class="section-header" style="margin-bottom:28px">
+    <span class="section-eyebrow">
+      <span class="en-inline">Browse by Category</span>
+      <span class="zh-inline">按类别浏览</span>
+    </span>
+    <h2>
+      <span class="en-inline">What are you looking for?</span>
+      <span class="zh-inline">您在寻找什么？</span>
+    </h2>
+  </div>
+  <div class="category-grid">
+    <a class="category-card active">
+      <div class="cat-icon">🧪</div>
+      <div class="cat-name"><span class="en-inline">Herbal Formulas</span><span class="zh-inline">中药方剂</span></div>
+      <div class="cat-name-zh"><span class="en-inline">中药方剂</span></div>
+      <div class="cat-count">68 <span class="en-inline">products</span><span class="zh-inline">产品</span></div>
+    </a>
+    <a class="category-card">
+      <div class="cat-icon">🌱</div>
+      <div class="cat-name"><span class="en-inline">Single Herbs</span><span class="zh-inline">单味草药</span></div>
+      <div class="cat-name-zh"><span class="en-inline">单味草药</span></div>
+      <div class="cat-count">45 <span class="en-inline">products</span><span class="zh-inline">产品</span></div>
+    </a>
+    <a class="category-card">
+      <div class="cat-icon">🍵</div>
+      <div class="cat-name"><span class="en-inline">Herbal Teas</span><span class="zh-inline">草本茶</span></div>
+      <div class="cat-name-zh"><span class="en-inline">草本茶</span></div>
+      <div class="cat-count">32 <span class="en-inline">products</span><span class="zh-inline">产品</span></div>
+    </a>
+    <a class="category-card">
+      <div class="cat-icon">🔥</div>
+      <div class="cat-name"><span class="en-inline">Moxibustion</span><span class="zh-inline">艾灸</span></div>
+      <div class="cat-name-zh"><span class="en-inline">艾灸</span></div>
+      <div class="cat-count">18 <span class="en-inline">products</span><span class="zh-inline">产品</span></div>
+    </a>
+    <a class="category-card">
+      <div class="cat-icon">💆</div>
+      <div class="cat-name"><span class="en-inline">Wellness Tools</span><span class="zh-inline">健康工具</span></div>
+      <div class="cat-name-zh"><span class="en-inline">健康工具</span></div>
+      <div class="cat-count">27 <span class="en-inline">products</span><span class="zh-inline">产品</span></div>
+    </a>
+    <a class="category-card">
+      <div class="cat-icon">📚</div>
+      <div class="cat-name"><span class="en-inline">Books & Guides</span><span class="zh-inline">书籍指南</span></div>
+      <div class="cat-name-zh"><span class="en-inline">书籍指南</span></div>
+      <div class="cat-count">12 <span class="en-inline">products</span><span class="zh-inline">产品</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section product-section">
+  <div class="section-header">
+    <span class="section-eyebrow">
+      <span class="en-inline">Featured Products</span>
+      <span class="zh-inline">精选产品</span>
+    </span>
+    <h2>
+      <span class="en-inline">Practitioner-Recommended Bestsellers</span>
+      <span class="zh-inline">中医师推荐热销产品</span>
+    </h2>
+    <p>
+      <span class="en-inline">Every product is vetted for quality and efficacy by our licensed TCM practitioners.</span>
+      <span class="zh-inline">每款产品均经过我们持牌中医师的质量和功效审核。</span>
+    </p>
+  </div>
+
+  <div class="product-grid">
+
+    <!-- Product 1 -->
+    <div class="product-card">
+      <div class="product-img" style="background: linear-gradient(135deg, #E8F5EE, #A3D1B7);">
+        🌿
+        <div class="product-badges">
+          <span class="badge badge-bestseller">★ Best Seller</span>
+          <span class="badge badge-practitioner">✓ Dr. Huang Pick</span>
+        </div>
+        <div class="wishlist-btn">♡</div>
+      </div>
+      <div class="product-info">
+        <div class="product-category"><span class="en-inline">Herbal Formulas</span><span class="zh-inline">中药方剂</span></div>
+        <div class="product-name">
+          <span class="en-inline">Astragalus Immune Formula</span>
+          <span class="zh-inline">黄芪免疫方</span>
+        </div>
+        <div class="product-name-zh">
+          <span class="en-inline">黄芪免疫方 (Huáng Qí Miǎn Yì Fāng)</span>
+        </div>
+        <div class="tcm-tags">
+          <span class="tcm-tag tcm-tag-wood">Wood</span>
+          <span class="tcm-tag tcm-tag-earth">Earth</span>
+          <span class="tcm-tag" style="color:var(--brand-500);border-color:var(--brand-300);background:var(--brand-100)">Tonify Qi</span>
+        </div>
+        <div class="star-row">
+          <span class="stars">★★★★★</span>
+          <span class="star-count">(142)</span>
+        </div>
+        <div class="price-row">
+          <span class="price">$38.00</span>
+        </div>
+        <div class="stock-indicator">
+          <span class="stock-dot in"></span>
+          <span style="color:var(--success);font-size:12px;font-weight:500"><span class="en-inline">In Stock</span><span class="zh-inline">有货</span></span>
+        </div>
+        <button class="add-to-cart">
+          + <span class="en-inline">Add to Cart</span><span class="zh-inline">加入购物车</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card">
+      <div class="product-img" style="background: linear-gradient(135deg, #FFF8E7, #FFD666);">
+        🍯
+        <div class="product-badges">
+          <span class="badge badge-sale">SALE 20% OFF</span>
+        </div>
+        <div class="wishlist-btn">♡</div>
+      </div>
+      <div class="product-info">
+        <div class="product-category"><span class="en-inline">Herbal Formulas</span><span class="zh-inline">中药方剂</span></div>
+        <div class="product-name">
+          <span class="en-inline">Reishi Sleep & Calm Formula</span>
+          <span class="zh-inline">灵芝安神方</span>
+        </div>
+        <div class="product-name-zh">
+          <span class="en-inline">灵芝安神方 (Líng Zhī Ān Shén Fāng)</span>
+        </div>
+        <div class="tcm-tags">
+          <span class="tcm-tag tcm-tag-fire">Fire</span>
+          <span class="tcm-tag tcm-tag-water">Water</span>
+          <span class="tcm-tag" style="color:var(--brand-500);border-color:var(--brand-300);background:var(--brand-100)">Calm Shen</span>
+        </div>
+        <div class="star-row">
+          <span class="stars">★★★★★</span>
+          <span class="star-count">(89)</span>
+        </div>
+        <div class="price-row">
+          <span class="price">$32.00</span>
+          <span class="price-original">$40.00</span>
+          <span class="price-save">Save $8</span>
+        </div>
+        <div class="stock-indicator">
+          <span class="stock-dot low"></span>
+          <span style="color:var(--warning);font-size:12px;font-weight:500">
+            <span class="en-inline">Only 5 left</span><span class="zh-inline">仅剩5件</span>
+          </span>
+        </div>
+        <button class="add-to-cart">
+          + <span class="en-inline">Add to Cart</span><span class="zh-inline">加入购物车</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card">
+      <div class="product-img" style="background: linear-gradient(135deg, #EEF2FF, #C7D2FE);">
+        🌸
+        <div class="product-badges">
+          <span class="badge badge-new">NEW</span>
+        </div>
+        <div class="wishlist-btn">♡</div>
+      </div>
+      <div class="product-info">
+        <div class="product-category"><span class="en-inline">Single Herbs</span><span class="zh-inline">单味草药</span></div>
+        <div class="product-name">
+          <span class="en-inline">Dong Quai (Chinese Angelica Root)</span>
+          <span class="zh-inline">当归</span>
+        </div>
+        <div class="product-name-zh">
+          <span class="en-inline">当归 (Dāng Guī)</span>
+        </div>
+        <div class="tcm-tags">
+          <span class="tcm-tag tcm-tag-wood">Wood</span>
+          <span class="tcm-tag tcm-tag-fire">Fire</span>
+          <span class="tcm-tag" style="color:var(--brand-500);border-color:var(--brand-300);background:var(--brand-100)">Nourish Blood</span>
+        </div>
+        <div class="star-row">
+          <span class="stars">★★★★☆</span>
+          <span class="star-count">(56)</span>
+        </div>
+        <div class="price-row">
+          <span class="price">$24.00</span>
+        </div>
+        <div class="stock-indicator">
+          <span class="stock-dot in"></span>
+          <span style="color:var(--success);font-size:12px;font-weight:500">
+            <span class="en-inline">In Stock</span><span class="zh-inline">有货</span>
+          </span>
+        </div>
+        <button class="add-to-cart">
+          + <span class="en-inline">Add to Cart</span><span class="zh-inline">加入购物车</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="product-card">
+      <div class="product-img" style="background: linear-gradient(135deg, #FEF3C7, #FDE68A);">
+        🔥
+        <div class="product-badges">
+          <span class="badge badge-practitioner">✓ Practitioner Pick</span>
+        </div>
+        <div class="wishlist-btn">♡</div>
+      </div>
+      <div class="product-info">
+        <div class="product-category"><span class="en-inline">Moxibustion</span><span class="zh-inline">艾灸</span></div>
+        <div class="product-name">
+          <span class="en-inline">Premium Moxa Stick Set (10 pack)</span>
+          <span class="zh-inline">优质艾条套装</span>
+        </div>
+        <div class="product-name-zh">
+          <span class="en-inline">优质艾条 (Yōu Zhì Ài Tiáo)</span>
+        </div>
+        <div class="tcm-tags">
+          <span class="tcm-tag tcm-tag-fire">Fire</span>
+          <span class="tcm-tag tcm-tag-earth">Earth</span>
+          <span class="tcm-tag" style="color:var(--brand-500);border-color:var(--brand-300);background:var(--brand-100)">Warm Yang</span>
+        </div>
+        <div class="star-row">
+          <span class="stars">★★★★★</span>
+          <span class="star-count">(203)</span>
+        </div>
+        <div class="price-row">
+          <span class="price">$45.00</span>
+        </div>
+        <div class="stock-indicator">
+          <span class="stock-dot in"></span>
+          <span style="color:var(--success);font-size:12px;font-weight:500">
+            <span class="en-inline">In Stock</span><span class="zh-inline">有货</span>
+          </span>
+        </div>
+        <button class="add-to-cart">
+          + <span class="en-inline">Add to Cart</span><span class="zh-inline">加入购物车</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="show-all">
+    <button class="btn-secondary">
+      <span class="en-inline">View All 200+ Products</span>
+      <span class="zh-inline">查看全部200+产品</span>
+      →
+    </button>
+  </div>
+</section>
+
+<!-- FIVE ELEMENTS SECTION -->
+<section class="five-elements-section">
+  <div class="five-elements-inner">
+    <div class="five-el-content">
+      <span class="section-eyebrow">
+        <span class="en-inline">TCM Foundation</span>
+        <span class="zh-inline">中医基础</span>
+      </span>
+      <h2>
+        <span class="en-inline">The Five Elements Guide Your Wellness</span>
+        <span class="zh-inline">五行指导您的健康之道</span>
+      </h2>
+      <p>
+        <span class="en-inline">Traditional Chinese Medicine is built on Five Element theory — Wood, Fire, Earth, Metal, and Water — each governing specific organs, seasons, emotions, and health patterns. Our AI matches products to your elemental constitution.</span>
+        <span class="zh-inline">中医学建立在五行理论的基础上——木、火、土、金、水——每种元素对应特定的脏腑、季节、情志和健康规律。我们的AI根据您的五行体质为您推荐产品。</span>
+      </p>
+
+      <div class="el-pills">
+        <div class="el-pill">
+          <div class="el-dot" style="background:var(--wood)"></div>
+          <div class="el-pill-info">
+            <strong><span class="en-inline">Wood — 木</span><span class="zh-inline">木</span></strong>
+            <span><span class="en-inline">Liver · Tendons · Vision</span><span class="zh-inline">肝 · 筋 · 目</span></span>
+          </div>
+        </div>
+        <div class="el-pill">
+          <div class="el-dot" style="background:var(--fire)"></div>
+          <div class="el-pill-info">
+            <strong><span class="en-inline">Fire — 火</span><span class="zh-inline">火</span></strong>
+            <span><span class="en-inline">Heart · Vessels · Joy</span><span class="zh-inline">心 · 脉 · 喜</span></span>
+          </div>
+        </div>
+        <div class="el-pill">
+          <div class="el-dot" style="background:var(--earth)"></div>
+          <div class="el-pill-info">
+            <strong><span class="en-inline">Earth — 土</span><span class="zh-inline">土</span></strong>
+            <span><span class="en-inline">Spleen · Digestion · Nourish</span><span class="zh-inline">脾 · 消化 · 思</span></span>
+          </div>
+        </div>
+        <div class="el-pill">
+          <div class="el-dot" style="background:var(--metal)"></div>
+          <div class="el-pill-info">
+            <strong><span class="en-inline">Metal — 金</span><span class="zh-inline">金</span></strong>
+            <span><span class="en-inline">Lung · Skin · Clarity</span><span class="zh-inline">肺 · 皮肤 · 悲</span></span>
+          </div>
+        </div>
+        <div class="el-pill">
+          <div class="el-dot" style="background:var(--water)"></div>
+          <div class="el-pill-info">
+            <strong><span class="en-inline">Water — 水</span><span class="zh-inline">水</span></strong>
+            <span><span class="en-inline">Kidney · Bones · Wisdom</span><span class="zh-inline">肾 · 骨 · 恐</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:28px">
+        <button class="btn-primary">
+          📋 <span class="en-inline">Discover Your Constitution</span>
+               <span class="zh-inline">发现您的体质</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pentagon SVG -->
+    <div class="pentagon-container">
+      <svg class="pentagon-svg" viewBox="0 0 320 320">
+        <!-- Connecting lines -->
+        <line x1="160" y1="30" x2="295" y2="128" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <line x1="295" y1="128" x2="245" y2="275" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <line x1="245" y1="275" x2="75" y2="275" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <line x1="75" y1="275" x2="25" y2="128" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <line x1="25" y1="128" x2="160" y2="30" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <!-- Inner lines -->
+        <line x1="160" y1="30" x2="245" y2="275" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        <line x1="295" y1="128" x2="75" y2="275" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        <line x1="245" y1="275" x2="25" y2="128" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+
+        <!-- Wood — Top -->
+        <g class="element-node">
+          <circle cx="160" cy="30" r="30" fill="rgba(74,163,112,0.25)" stroke="#4AA370" stroke-width="2"/>
+          <text x="160" y="24" text-anchor="middle" font-size="20" fill="#4AA370">木</text>
+          <text x="160" y="42" text-anchor="middle" font-size="10" fill="#76BA93" font-family="sans-serif">WOOD</text>
+        </g>
+        <!-- Fire — Right -->
+        <g class="element-node">
+          <circle cx="295" cy="128" r="30" fill="rgba(220,74,63,0.2)" stroke="#DC4A3F" stroke-width="2"/>
+          <text x="295" y="122" text-anchor="middle" font-size="20" fill="#DC4A3F">火</text>
+          <text x="295" y="140" text-anchor="middle" font-size="10" fill="#DC4A3F" font-family="sans-serif">FIRE</text>
+        </g>
+        <!-- Earth — Bottom Right -->
+        <g class="element-node">
+          <circle cx="245" cy="275" r="30" fill="rgba(212,168,67,0.2)" stroke="#D4A843" stroke-width="2"/>
+          <text x="245" y="269" text-anchor="middle" font-size="20" fill="#D4A843">土</text>
+          <text x="245" y="287" text-anchor="middle" font-size="10" fill="#D4A843" font-family="sans-serif">EARTH</text>
+        </g>
+        <!-- Metal — Bottom Left -->
+        <g class="element-node">
+          <circle cx="75" cy="275" r="30" fill="rgba(160,160,160,0.2)" stroke="#A0A0A0" stroke-width="2"/>
+          <text x="75" y="269" text-anchor="middle" font-size="20" fill="#A0A0A0">金</text>
+          <text x="75" y="287" text-anchor="middle" font-size="10" fill="#A0A0A0" font-family="sans-serif">METAL</text>
+        </g>
+        <!-- Water — Left -->
+        <g class="element-node">
+          <circle cx="25" cy="128" r="30" fill="rgba(37,99,235,0.2)" stroke="#2563EB" stroke-width="2"/>
+          <text x="25" y="122" text-anchor="middle" font-size="20" fill="#2563EB">水</text>
+          <text x="25" y="140" text-anchor="middle" font-size="10" fill="#2563EB" font-family="sans-serif">WATER</text>
+        </g>
+
+        <!-- Center -->
+        <circle cx="160" cy="155" r="20" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <text x="160" y="160" text-anchor="middle" font-size="14" fill="rgba(255,255,255,0.5)">☯</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG / CONTENT -->
+<section class="section blog-section">
+  <div class="section-header">
+    <span class="section-eyebrow">
+      <span class="en-inline">TCM Knowledge Hub</span>
+      <span class="zh-inline">中医知识中心</span>
+    </span>
+    <h2>
+      <span class="en-inline">Learn, Then Shop with Confidence</span>
+      <span class="zh-inline">先了解，再放心购物</span>
+    </h2>
+    <p>
+      <span class="en-inline">Our AI-written, practitioner-reviewed content explains TCM concepts, herbs, and conditions in plain English — with direct links to relevant products.</span>
+      <span class="zh-inline">我们的AI撰写、中医师审核的内容用通俗语言解释中医概念、草药和疾病——并直接链接相关产品。</span>
+    </p>
+  </div>
+
+  <div class="article-grid">
+    <div class="article-card">
+      <div class="article-img" style="background: linear-gradient(135deg, #E8F5EE, #76BA93);">🌿</div>
+      <div class="article-body">
+        <div class="article-meta">
+          <span class="article-tag">
+            <span class="en-inline">Immunity</span><span class="zh-inline">免疫力</span>
+          </span>
+          <span class="article-date">Mar 8, 2026</span>
+        </div>
+        <div class="article-title">
+          <span class="en-inline">How to Boost Immunity with TCM Herbs: A Practical Guide</span>
+          <span class="zh-inline">如何用中草药提升免疫力：实用指南</span>
+        </div>
+        <div class="article-excerpt">
+          <span class="en-inline">Astragalus, Reishi, and Cordyceps are the "three pillars" of TCM immune support. Learn when and how to use them based on your constitution...</span>
+          <span class="zh-inline">黄芪、灵芝和冬虫夏草是中医免疫支持的"三大支柱"。了解如何根据您的体质选择和使用它们...</span>
+        </div>
+        <div style="margin-bottom:10px">
+          <span class="embedded-product-chip">🌿 <span class="en-inline">Astragalus Immune Formula</span><span class="zh-inline">黄芪免疫方</span></span>
+        </div>
+        <div class="article-footer">
+          <div class="author">
+            <div class="author-avatar">👨‍⚕️</div>
+            <span>Dr. Huang, L.Ac.</span>
+          </div>
+          <span class="read-more">
+            <span class="en-inline">Read →</span><span class="zh-inline">阅读 →</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card">
+      <div class="article-img" style="background: linear-gradient(135deg, #FFF8E7, #FFD666);">😴</div>
+      <div class="article-body">
+        <div class="article-meta">
+          <span class="article-tag">
+            <span class="en-inline">Sleep</span><span class="zh-inline">睡眠</span>
+          </span>
+          <span class="article-date">Mar 5, 2026</span>
+        </div>
+        <div class="article-title">
+          <span class="en-inline">TCM Approach to Insomnia: Calming the Shen (Spirit)</span>
+          <span class="zh-inline">中医治疗失眠：安神之道</span>
+        </div>
+        <div class="article-excerpt">
+          <span class="en-inline">In TCM, poor sleep is often linked to Heart Blood deficiency or Liver Qi stagnation. These patterns require different herbs and approaches...</span>
+          <span class="zh-inline">在中医中，睡眠不佳通常与心血不足或肝气郁结有关。这些体质需要不同的草药和调理方法...</span>
+        </div>
+        <div style="margin-bottom:10px">
+          <span class="embedded-product-chip">🍯 <span class="en-inline">Reishi Sleep Formula</span><span class="zh-inline">灵芝安神方</span></span>
+        </div>
+        <div class="article-footer">
+          <div class="author">
+            <div class="author-avatar">👩‍⚕️</div>
+            <span>Dr. Chen, DAOM</span>
+          </div>
+          <span class="read-more">
+            <span class="en-inline">Read →</span><span class="zh-inline">阅读 →</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card">
+      <div class="article-img" style="background: linear-gradient(135deg, #FCE7F3, #F9A8D4);">🌸</div>
+      <div class="article-body">
+        <div class="article-meta">
+          <span class="article-tag">
+            <span class="en-inline">Women's Health</span><span class="zh-inline">女性健康</span>
+          </span>
+          <span class="article-date">Mar 1, 2026</span>
+        </div>
+        <div class="article-title">
+          <span class="en-inline">Dong Quai: The Queen of TCM Women's Herbs Explained</span>
+          <span class="zh-inline">当归：中医女性草药之后详解</span>
+        </div>
+        <div class="article-excerpt">
+          <span class="en-inline">Called "female ginseng," Dong Quai (Dāng Guī) has been used for over 2,000 years to nourish blood and regulate the menstrual cycle...</span>
+          <span class="zh-inline">被称为"女性人参"，当归已被使用超过2000年，用于滋养血液和调节月经周期...</span>
+        </div>
+        <div style="margin-bottom:10px">
+          <span class="embedded-product-chip">🌸 <span class="en-inline">Dong Quai Root</span><span class="zh-inline">当归</span></span>
+        </div>
+        <div class="article-footer">
+          <div class="author">
+            <div class="author-avatar">👨‍⚕️</div>
+            <span>Dr. Huang, L.Ac.</span>
+          </div>
+          <span class="read-more">
+            <span class="en-inline">Read →</span><span class="zh-inline">阅读 →</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST & SECURITY SECTION -->
+<section class="trust-section">
+  <div class="section-header">
+    <span class="section-eyebrow">
+      <span class="en-inline">Why Shop With Us</span>
+      <span class="zh-inline">为什么选择我们</span>
+    </span>
+    <h2>
+      <span class="en-inline">Safe, Secure & Trusted</span>
+      <span class="zh-inline">安全、可靠、值得信赖</span>
+    </h2>
+  </div>
+
+  <div class="trust-grid">
+    <div class="trust-card">
+      <div class="trust-icon">🔒</div>
+      <h4><span class="en-inline">Secure Payments</span><span class="zh-inline">安全支付</span></h4>
+      <p>
+        <span class="en-inline">256-bit SSL encryption. We never store your card data. Powered by Stripe — the same platform trusted by Amazon and Apple.</span>
+        <span class="zh-inline">256位SSL加密。我们从不存储您的卡片数据。由Stripe提供支持——亚马逊和苹果信赖的同一平台。</span>
+      </p>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">🧪</div>
+      <h4><span class="en-inline">Quality Verified</span><span class="zh-inline">品质验证</span></h4>
+      <p>
+        <span class="en-inline">Every product is sourced from GMP-certified manufacturers and reviewed by our licensed TCM practitioners before listing.</span>
+        <span class="zh-inline">每款产品均来自GMP认证制造商，并在上架前由我们持牌中医师审核。</span>
+      </p>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">↩️</div>
+      <h4><span class="en-inline">Easy Returns</span><span class="zh-inline">轻松退货</span></h4>
+      <p>
+        <span class="en-inline">Not satisfied? Return within 30 days for a full refund — no questions asked. We stand behind every product we sell.</span>
+        <span class="zh-inline">不满意？30天内退货全额退款——无需任何解释。我们对所售每款产品负责。</span>
+      </p>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon">🌿</div>
+      <h4><span class="en-inline">Practitioner Network</span><span class="zh-inline">中医师网络</span></h4>
+      <p>
+        <span class="en-inline">Products recommended by Dr. Huang (L.Ac., DAOM) and a network of 3+ licensed TCM practitioners across New York.</span>
+        <span class="zh-inline">产品由黄医生（执照针灸师、东方医学博士）及纽约3位以上持牌中医师推荐。</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="ssl-badges">
+    <div class="ssl-badge">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      SSL Secured
+    </div>
+    <div class="ssl-badge">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Stripe Payments
+    </div>
+    <div class="ssl-badge">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      GMP Certified
+    </div>
+    <div class="ssl-badge">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      UPS / USPS / FedEx
+    </div>
+    <div class="ssl-badge">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/></svg>
+      Free Returns 30 Days
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+  <h2>
+    <span class="en-inline">Your Free TCM Wellness Guide</span>
+    <span class="zh-inline">免费获取中医健康指南</span>
+  </h2>
+  <p>
+    <span class="en-inline">Join 15,000+ wellness seekers. Get our 30-page TCM Beginner's Guide + 10% off your first order.</span>
+    <span class="zh-inline">加入15,000+健康爱好者。获取我们的30页中医入门指南 + 首单九折优惠。</span>
+  </p>
+  <div class="newsletter-form">
+    <input class="newsletter-input" type="email" placeholder="your@email.com" />
+    <button class="btn-primary">
+      <span class="en-inline">Get Guide</span><span class="zh-inline">获取指南</span>
+    </button>
+  </div>
+  <div class="newsletter-disclaimer">
+    <span class="en-inline">We respect your privacy. Unsubscribe anytime. No spam, ever.</span>
+    <span class="zh-inline">我们尊重您的隐私。随时退订。绝不发送垃圾邮件。</span>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a class="logo" href="#">pure<span>Herb</span>Health</a>
+      <p>
+        <span class="en-inline">AI-powered TCM wellness store. Practitioner-curated herbs, formulas, and tools — backed by 2,000 years of Chinese medicine wisdom and modern science.</span>
+        <span class="zh-inline">AI驱动的中医健康商店。中医师精选草药、方剂和工具——结合2000年中医智慧与现代科学。</span>
+      </p>
+      <div class="fda">
+        ⚠️ <span class="en-inline">These statements have not been evaluated by the Food and Drug Administration. These products are not intended to diagnose, treat, cure, or prevent any disease.</span>
+        <span class="zh-inline">本产品的相关声明未经美国食品药品监督管理局评估。本产品无意用于诊断、治疗、治愈或预防任何疾病。</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5><span class="en-inline">Shop</span><span class="zh-inline">购物</span></h5>
+      <a href="#"><span class="en-inline">Herbal Formulas</span><span class="zh-inline">中药方剂</span></a>
+      <a href="#"><span class="en-inline">Single Herbs</span><span class="zh-inline">单味草药</span></a>
+      <a href="#"><span class="en-inline">Herbal Teas</span><span class="zh-inline">草本茶</span></a>
+      <a href="#"><span class="en-inline">Moxibustion</span><span class="zh-inline">艾灸</span></a>
+      <a href="#"><span class="en-inline">Wellness Tools</span><span class="zh-inline">健康工具</span></a>
+      <a href="#"><span class="en-inline">New Arrivals</span><span class="zh-inline">新品上架</span></a>
+    </div>
+    <div class="footer-col">
+      <h5><span class="en-inline">Learn</span><span class="zh-inline">学习</span></h5>
+      <a href="#"><span class="en-inline">TCM Blog</span><span class="zh-inline">中医博客</span></a>
+      <a href="#"><span class="en-inline">Herb Encyclopedia</span><span class="zh-inline">草药百科</span></a>
+      <a href="#"><span class="en-inline">Condition Guides</span><span class="zh-inline">疾病指南</span></a>
+      <a href="#"><span class="en-inline">Five Elements</span><span class="zh-inline">五行理论</span></a>
+      <a href="#"><span class="en-inline">Constitution Quiz</span><span class="zh-inline">体质测试</span></a>
+      <a href="#"><span class="en-inline">AI Wellness Chat</span><span class="zh-inline">AI健康咨询</span></a>
+    </div>
+    <div class="footer-col">
+      <h5><span class="en-inline">Support</span><span class="zh-inline">客户支持</span></h5>
+      <a href="#"><span class="en-inline">About Us</span><span class="zh-inline">关于我们</span></a>
+      <a href="#"><span class="en-inline">Contact</span><span class="zh-inline">联系我们</span></a>
+      <a href="#"><span class="en-inline">Shipping & Returns</span><span class="zh-inline">配送与退货</span></a>
+      <a href="#"><span class="en-inline">FAQ</span><span class="zh-inline">常见问题</span></a>
+      <a href="#"><span class="en-inline">Privacy Policy</span><span class="zh-inline">隐私政策</span></a>
+      <a href="#"><span class="en-inline">Terms of Service</span><span class="zh-inline">服务条款</span></a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-left">
+      © 2026 pureHerbHealth. All rights reserved. &nbsp;|&nbsp;
+      <span class="en-inline">New York, USA</span><span class="zh-inline">美国纽约</span>
+    </div>
+    <div class="payment-icons">
+      <span style="font-size:12px;color:var(--neutral-600);margin-right:4px">
+        <span class="en-inline">We accept:</span><span class="zh-inline">接受付款：</span>
+      </span>
+      <span class="payment-icon">VISA</span>
+      <span class="payment-icon">MC</span>
+      <span class="payment-icon">AMEX</span>
+      <span class="payment-icon" style="background:#003087;color:white">PayPal</span>
+      <span class="payment-icon" style="background:#000;color:white">⌘Pay</span>
+      <span class="payment-icon" style="background:#34A853;color:white">GPay</span>
+    </div>
+  </div>
+</footer>
+
+<!-- AI CHAT WIDGET -->
+<div class="chat-widget">
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-header">
+      <div class="chat-header-avatar">🌿</div>
+      <div class="chat-header-info">
+        <strong>
+          <span class="en-inline">Herb AI Assistant</span>
+          <span class="zh-inline">草药AI助手</span>
+        </strong>
+        <span><span class="online-dot"></span>
+          <span class="en-inline">Online — Ask me anything</span>
+          <span class="zh-inline">在线 — 随时提问</span>
+        </span>
+      </div>
+      <button onclick="toggleChat()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:18px;cursor:pointer;padding:0">✕</button>
+    </div>
+
+    <div class="chat-messages">
+      <div class="msg-row">
+        <div class="msg-avatar ai-av">🌿</div>
+        <div class="msg-bubble ai-bubble">
+          <span class="en-inline">Hi! I'm your TCM wellness guide. I can help you find the right herbs for your constitution, explain traditional formulas, or answer questions about products. What can I help you with today?</span>
+          <span class="zh-inline">您好！我是您的中医健康向导。我可以帮您根据体质找到合适的草药，解释传统方剂，或回答关于产品的问题。今天我能帮您什么？</span>
+        </div>
+      </div>
+      <div class="msg-row user">
+        <div class="msg-avatar user-av">👤</div>
+        <div class="msg-bubble user-bubble">
+          <span class="en-inline">I have low energy and often feel cold</span>
+          <span class="zh-inline">我经常感到疲劳，手脚冰凉</span>
+        </div>
+      </div>
+      <div class="msg-row">
+        <div class="msg-avatar ai-av">🌿</div>
+        <div class="msg-bubble ai-bubble">
+          <span class="en-inline">That sounds like <strong>Yang deficiency</strong> — your warming energy is low. I recommend warming, tonifying herbs. Here's a great option:</span>
+          <span class="zh-inline">这听起来像是<strong>阳虚</strong>——您的温阳之气不足。我推荐温阳补气的草药。这是一个很好的选择：</span>
+          <div class="msg-product">
+            <div class="msg-product-img">🌿</div>
+            <div>
+              <div class="msg-product-name">
+                <span class="en-inline">Astragalus Immune Formula</span>
+                <span class="zh-inline">黄芪免疫方</span>
+              </div>
+              <div class="msg-product-price">$38.00 →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      ⚠️ <span class="en-inline">For educational purposes. Not medical advice. Consult a licensed practitioner.</span>
+      <span class="zh-inline">仅供教育目的。非医疗建议。请咨询持牌中医师。</span>
+    </div>
+
+    <div class="chat-input-row">
+      <input class="chat-input" type="text"
+        placeholder="Ask about herbs, your constitution..." id="chatInput"
+        onkeydown="if(event.key==='Enter')sendMsg()" />
+      <button class="chat-send" onclick="sendMsg()">→</button>
+    </div>
+  </div>
+
+  <button class="chat-fab" onclick="toggleChat()">
+    🌿
+    <span class="chat-fab-badge">1</span>
+  </button>
+</div>
+
+<script>
+  // Language toggle
+  function setLang(lang) {
+    document.body.className = lang === 'zh' ? 'zh' : '';
+    document.querySelectorAll('.lang-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'zh'));
+    });
+    document.documentElement.lang = lang;
+    // Update placeholder
+    const input = document.getElementById('chatInput');
+    if (input) input.placeholder = lang === 'zh' ? '询问关于草药、体质...' : 'Ask about herbs, your constitution...';
+  }
+
+  function toggleProto() {
+    const isZh = document.body.classList.contains('zh');
+    setLang(isZh ? 'en' : 'zh');
+  }
+
+  // Chat widget
+  let chatOpen = false;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById('chatPanel').classList.toggle('open', chatOpen);
+    if (chatOpen) document.querySelector('.chat-fab-badge').style.display = 'none';
+  }
+
+  function sendMsg() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const msgs = document.querySelector('.chat-messages');
+    const isZh = document.body.classList.contains('zh');
+    msgs.insertAdjacentHTML('beforeend', `
+      <div class="msg-row user">
+        <div class="msg-avatar user-av">👤</div>
+        <div class="msg-bubble user-bubble">${msg}</div>
+      </div>
+      <div class="msg-row">
+        <div class="msg-avatar ai-av">🌿</div>
+        <div class="msg-bubble ai-bubble" style="color:var(--neutral-400);font-style:italic">
+          ${isZh ? '正在思考...' : 'Thinking...'}
+        </div>
+      </div>
+    `);
+    input.value = '';
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(() => {
+      const thinking = msgs.querySelector('.msg-bubble[style*="italic"]');
+      if (thinking) thinking.innerHTML = isZh
+        ? '感谢您的提问！在实际实现中，我们的TCM AI将根据您的具体症状和体质，从我们200+产品中为您推荐最合适的草药方剂。'
+        : 'Thanks for asking! In the real implementation, our TCM AI will analyze your symptoms and constitution to recommend the most suitable herbal formulas from our 200+ products catalog.';
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 1200);
+  }
+
+  // Add to cart feedback
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const orig = this.innerHTML;
+      this.innerHTML = '✓ Added!';
+      this.style.background = 'var(--success)';
+      const countEl = document.querySelector('.cart-count');
+      if (countEl) countEl.textContent = parseInt(countEl.textContent) + 1;
+      setTimeout(() => {
+        this.innerHTML = orig;
+        this.style.background = '';
+      }, 1500);
+    });
+  });
+</script>
+
+</body>
+</html>

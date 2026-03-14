@@ -1,0 +1,1623 @@
+<!-- Theme sourced from theme.json — keep in sync -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Prototype — pureHerbHealth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       DESIGN SYSTEM — pureHerbHealth v1.0 (sourced from theme.json)
+    ============================================================ */
+    :root {
+      --brand-50:#f0fdf4; --brand-100:#dcfce7; --brand-200:#bbf7d0;
+      --brand-300:#86efac; --brand-400:#4ade80; --brand-500:#2D8C54;
+      --brand-600:#22764a; --brand-700:#166534; --brand-800:#14532d; --brand-900:#052e16;
+      --accent-50:#fffbeb; --accent-100:#fef3c7; --accent-200:#fde68a;
+      --accent-300:#fcd34d; --accent-400:#fbbf24; --accent-500:#D4A843;
+      --accent-600:#b45309; --accent-700:#92400e;
+      --neutral-50:#fafafa; --neutral-100:#f5f5f5; --neutral-200:#e5e5e5;
+      --neutral-300:#d4d4d4; --neutral-400:#a3a3a3; --neutral-500:#737373;
+      --neutral-600:#525252; --neutral-700:#404040; --neutral-800:#262626; --neutral-900:#171717;
+      --element-wood:#4CAF50; --element-fire:#E53E3E; --element-earth:#D4A843;
+      --element-metal:#A0AEC0; --element-water:#3182CE;
+      --nature-hot:#dc2626; --nature-warm:#ea580c; --nature-neutral:#6b7280;
+      --nature-cool:#0284c7; --nature-cold:#1e3a8a;
+      --font-heading:'DM Serif Display', Georgia, 'Times New Roman', serif;
+      --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-chinese:'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --radius-sm:4px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px; --radius-full:9999px;
+      --shadow-xs:0 1px 2px rgba(0,0,0,.05);
+      --shadow-sm:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+      --shadow-md:0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04);
+      --shadow-lg:0 8px 24px rgba(0,0,0,.10),0 4px 8px rgba(0,0,0,.04);
+      --shadow-brand:0 4px 14px rgba(45,140,84,.30);
+      --shadow-gold:0 4px 14px rgba(212,168,67,.35);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--font-body);background:var(--neutral-100);color:var(--neutral-700);font-size:15px;line-height:1.6;}
+    body.zh{font-family:var(--font-chinese),var(--font-body);}
+    body.zh h1,body.zh h2,body.zh h3,body.zh h4{font-family:var(--font-chinese),var(--font-heading);font-weight:500;}
+    h1,h2,h3,h4{font-family:var(--font-heading);color:var(--neutral-900);line-height:1.2;}
+    a{text-decoration:none;color:inherit;}
+
+    /* ---- I18N ---- */
+    .en{display:block;}.zh-c{display:none;}
+    .ei{display:inline;}.zi{display:none;}
+    body.zh .en{display:none;}body.zh .zh-c{display:block;}
+    body.zh .ei{display:none;}body.zh .zi{display:inline;}
+
+    /* ============================================================
+       PROTOTYPE BAR
+    ============================================================ */
+    .proto-bar{
+      position:fixed;top:0;left:0;right:0;z-index:9999;
+      background:#1a1a1a;height:48px;
+      display:flex;align-items:center;gap:12px;padding:0 16px;
+      font-family:var(--font-body);font-size:12px;
+    }
+    .proto-title{color:#fff;font-weight:700;white-space:nowrap;font-size:11px;letter-spacing:.04em;}
+    .proto-divider{width:1px;height:20px;background:#444;flex-shrink:0;}
+    .proto-label{color:#888;font-size:11px;white-space:nowrap;}
+    .query-btns{display:flex;gap:6px;}
+    .query-btn{
+      padding:4px 10px;border-radius:var(--radius-full);border:1px solid #444;
+      background:transparent;color:#ccc;font-size:11px;font-weight:500;cursor:pointer;
+      transition:all .15s;white-space:nowrap;font-family:var(--font-body);
+    }
+    .query-btn:hover{border-color:#888;color:#fff;}
+    .query-btn.active{background:var(--brand-500);border-color:var(--brand-500);color:#fff;}
+    .proto-lang{display:flex;background:#2a2a2a;border-radius:var(--radius-full);border:1px solid #444;overflow:hidden;margin-left:auto;}
+    .proto-lang-btn{padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#888;font-family:var(--font-body);}
+    .proto-lang-btn.active{background:var(--brand-500);color:#fff;}
+    .proto-note{color:#555;font-size:10px;white-space:nowrap;}
+
+    /* ============================================================
+       TOPBAR + SHARED HEADER
+    ============================================================ */
+    .site-wrap{margin-top:48px;}
+    .topbar{
+      background:var(--brand-700);padding:8px 32px;
+      color:var(--brand-100);font-size:13px;text-align:center;
+    }
+    .topbar span{color:var(--accent-300);font-weight:600;}
+    .site-header{
+      background:#fff;border-bottom:1px solid var(--neutral-200);
+      position:sticky;top:48px;z-index:200;box-shadow:var(--shadow-sm);
+    }
+    .header-inner{
+      max-width:1280px;margin:0 auto;
+      display:flex;align-items:center;gap:20px;padding:14px 32px;
+    }
+    .logo{font-family:var(--font-heading);font-size:22px;color:var(--brand-700);white-space:nowrap;flex-shrink:0;cursor:pointer;}
+    .logo-accent{color:var(--accent-500);}
+    .nav{display:flex;gap:2px;flex:1;}
+    .nav-link{
+      padding:7px 12px;border-radius:var(--radius-md);font-size:13px;
+      font-weight:500;color:var(--neutral-700);cursor:pointer;
+      transition:background .15s;
+    }
+    .nav-link:hover{background:var(--neutral-100);}
+    .nav-link.active{color:var(--brand-700);background:var(--brand-50);}
+    .header-right{display:flex;align-items:center;gap:10px;}
+    .icon-btn{
+      width:36px;height:36px;border-radius:var(--radius-md);
+      border:1px solid var(--neutral-200);background:#fff;
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;color:var(--neutral-500);font-size:16px;
+      transition:all .15s;
+    }
+    .icon-btn:hover{background:var(--neutral-100);}
+    .h-lang{display:flex;background:var(--neutral-100);border-radius:var(--radius-full);padding:3px;border:1px solid var(--neutral-200);}
+    .h-lang-btn{
+      padding:3px 10px;border-radius:var(--radius-full);font-size:12px;
+      font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--neutral-500);
+      font-family:var(--font-body);
+    }
+    .h-lang-btn.active{background:#fff;color:var(--brand-700);box-shadow:var(--shadow-xs);}
+    .cart-btn{
+      background:var(--brand-500);color:#fff;border:none;border-radius:var(--radius-md);
+      padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;
+      display:flex;align-items:center;gap:6px;transition:background .15s;
+      font-family:var(--font-body);
+    }
+    .cart-btn:hover{background:var(--brand-600);}
+    .cart-cnt{
+      background:var(--accent-500);color:#fff;border-radius:var(--radius-full);
+      font-size:11px;font-weight:700;padding:1px 6px;min-width:18px;text-align:center;
+    }
+
+    /* ============================================================
+       SEARCH BAR SECTION
+    ============================================================ */
+    .search-section{
+      background:#fff;border-bottom:1px solid var(--neutral-200);
+      padding:28px 32px 20px;
+    }
+    .search-section-inner{max-width:800px;margin:0 auto;}
+    .search-input-wrap{
+      display:flex;align-items:center;
+      border:2px solid var(--brand-500);border-radius:var(--radius-full);
+      background:#fff;overflow:hidden;
+      box-shadow:var(--shadow-brand);
+      transition:box-shadow .2s;
+    }
+    .search-input-wrap:focus-within{box-shadow:0 0 0 4px rgba(45,140,84,.15),var(--shadow-brand);}
+    .search-icon{padding:0 16px;color:var(--neutral-400);font-size:18px;flex-shrink:0;}
+    .search-input{
+      flex:1;border:none;outline:none;padding:14px 0;
+      font-size:16px;color:var(--neutral-900);font-family:var(--font-body);
+      background:transparent;
+    }
+    body.zh .search-input{font-family:var(--font-chinese);}
+    .search-clear{
+      padding:0 12px;color:var(--neutral-400);font-size:20px;cursor:pointer;
+      border:none;background:transparent;line-height:1;flex-shrink:0;
+      transition:color .15s;
+    }
+    .search-clear:hover{color:var(--neutral-700);}
+    .search-btn{
+      padding:14px 24px;background:var(--brand-500);color:#fff;border:none;
+      font-size:15px;font-weight:600;cursor:pointer;transition:background .15s;
+      font-family:var(--font-body);flex-shrink:0;
+    }
+    .search-btn:hover{background:var(--brand-600);}
+    .result-meta{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-top:14px;flex-wrap:wrap;gap:10px;
+    }
+    .result-count-txt{font-size:14px;color:var(--neutral-600);}
+    .result-count-txt strong{color:var(--neutral-900);}
+    .filter-pills{display:flex;gap:6px;flex-wrap:wrap;}
+    .filter-pill{
+      padding:5px 14px;border-radius:var(--radius-full);
+      border:1px solid var(--neutral-200);background:#fff;
+      font-size:13px;font-weight:500;color:var(--neutral-600);
+      cursor:pointer;transition:all .15s;
+    }
+    .filter-pill:hover{border-color:var(--brand-400);color:var(--brand-600);}
+    .filter-pill.active{background:var(--brand-500);border-color:var(--brand-500);color:#fff;}
+    .sort-select{
+      padding:6px 12px;border:1px solid var(--neutral-200);border-radius:var(--radius-md);
+      font-size:13px;color:var(--neutral-700);background:#fff;cursor:pointer;
+      font-family:var(--font-body);outline:none;
+    }
+
+    /* ============================================================
+       MAIN LAYOUT
+    ============================================================ */
+    .search-body{max-width:1280px;margin:0 auto;padding:28px 32px;}
+    .search-layout{display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:start;}
+
+    /* ---- SIDEBAR ---- */
+    .sidebar{
+      background:#fff;border-radius:var(--radius-lg);
+      border:1px solid var(--neutral-200);overflow:hidden;
+      position:sticky;top:120px;
+    }
+    .sidebar-hdr{
+      padding:14px 18px;border-bottom:1px solid var(--neutral-200);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .sidebar-hdr h3{font-size:14px;font-weight:700;color:var(--neutral-900);font-family:var(--font-body);}
+    .clear-all-btn{font-size:12px;color:var(--brand-500);cursor:pointer;font-weight:600;border:none;background:none;font-family:var(--font-body);}
+    .clear-all-btn:hover{color:var(--brand-700);}
+    .filter-section{padding:14px 18px;border-bottom:1px solid var(--neutral-100);}
+    .filter-title{
+      font-size:11px;font-weight:700;color:var(--neutral-900);
+      text-transform:uppercase;letter-spacing:.06em;
+      margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;
+      cursor:pointer;
+    }
+    .filter-opts{display:flex;flex-direction:column;gap:7px;}
+    .filter-opt{display:flex;align-items:center;gap:8px;cursor:pointer;}
+    .filter-opt input[type=checkbox]{accent-color:var(--brand-500);width:14px;height:14px;cursor:pointer;}
+    .filter-opt label{font-size:13px;color:var(--neutral-700);cursor:pointer;flex:1;}
+    .filter-opt .cnt{font-size:11px;color:var(--neutral-400);}
+    .element-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:2px;}
+    .el-chip{
+      padding:5px 7px;border-radius:var(--radius-md);border:1px solid;
+      font-size:11px;font-weight:600;cursor:pointer;text-align:center;
+      transition:all .15s;
+    }
+    .el-chip:hover{opacity:.8;}
+    .el-wood{color:#166534;border-color:#4CAF50;background:rgba(76,175,80,.08);}
+    .el-fire{color:#c53030;border-color:#E53E3E;background:rgba(229,62,62,.08);}
+    .el-earth{color:#92400e;border-color:#D4A843;background:rgba(212,168,67,.08);}
+    .el-metal{color:#374151;border-color:#A0AEC0;background:rgba(160,174,192,.08);}
+    .el-water{color:#1e40af;border-color:#3182CE;background:rgba(49,130,206,.08);}
+    .el-chip.selected{color:#fff!important;}
+    .el-wood.selected{background:#4CAF50!important;border-color:#4CAF50!important;}
+    .el-fire.selected{background:#E53E3E!important;border-color:#E53E3E!important;}
+    .el-earth.selected{background:#D4A843!important;border-color:#D4A843!important;}
+    .el-metal.selected{background:#A0AEC0!important;border-color:#A0AEC0!important;}
+    .el-water.selected{background:#3182CE!important;border-color:#3182CE!important;}
+    .nature-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px;}
+    .nature-pill{
+      padding:4px 10px;border-radius:var(--radius-full);border:1px solid;
+      font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;
+    }
+    .nature-pill:hover{opacity:.75;}
+    .nature-pill.selected{color:#fff;}
+    .action-opts{display:flex;flex-direction:column;gap:6px;}
+    .action-opt{display:flex;align-items:center;gap:7px;cursor:pointer;}
+    .action-opt input[type=checkbox]{accent-color:var(--brand-500);width:13px;height:13px;}
+    .action-opt label{font-size:12px;color:var(--neutral-700);cursor:pointer;}
+    .price-inputs{display:flex;gap:8px;align-items:center;margin-top:6px;}
+    .price-in{width:75px;padding:6px 8px;border:1px solid var(--neutral-200);border-radius:var(--radius-md);font-size:12px;text-align:center;font-family:var(--font-body);}
+    .price-sep{color:var(--neutral-400);font-size:12px;}
+    .rating-opt{display:flex;align-items:center;gap:8px;cursor:pointer;}
+    .rating-opt input{accent-color:var(--brand-500);width:14px;height:14px;}
+    .rating-opt label{font-size:13px;color:var(--neutral-700);cursor:pointer;display:flex;align-items:center;gap:4px;}
+    .stars-gold{color:var(--accent-500);}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;}
+    .toggle-label{font-size:13px;color:var(--neutral-700);}
+    .toggle{position:relative;width:36px;height:20px;cursor:pointer;}
+    .toggle input{opacity:0;width:0;height:0;position:absolute;}
+    .toggle-slider{
+      position:absolute;inset:0;background:var(--neutral-300);
+      border-radius:var(--radius-full);transition:background .2s;
+    }
+    .toggle-slider::before{
+      content:'';position:absolute;width:14px;height:14px;
+      border-radius:50%;background:#fff;top:3px;left:3px;
+      transition:transform .2s;box-shadow:var(--shadow-xs);
+    }
+    .toggle input:checked + .toggle-slider{background:var(--brand-500);}
+    .toggle input:checked + .toggle-slider::before{transform:translateX(16px);}
+
+    /* ============================================================
+       RIGHT COLUMN
+    ============================================================ */
+    .right-col{display:flex;flex-direction:column;gap:20px;}
+
+    /* ---- AI INTERPRETATION CARD ---- */
+    .ai-card{
+      background:var(--brand-50);border:1px solid var(--brand-200);
+      border-left:4px solid var(--brand-500);border-radius:var(--radius-lg);
+      overflow:hidden;transition:all .3s;
+    }
+    .ai-card-head{
+      padding:16px 20px 0;
+      display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;gap:8px;
+    }
+    .ai-card-head-left{display:flex;align-items:center;gap:10px;}
+    .ai-badge{
+      display:inline-flex;align-items:center;gap:5px;
+      background:var(--brand-500);color:#fff;
+      padding:3px 10px;border-radius:var(--radius-full);
+      font-size:11px;font-weight:700;letter-spacing:.03em;
+    }
+    .ai-powered{font-size:11px;color:var(--neutral-500);font-style:italic;}
+    .ai-collapse-btn{
+      font-size:12px;color:var(--brand-600);cursor:pointer;border:none;background:none;
+      font-weight:600;font-family:var(--font-body);white-space:nowrap;
+    }
+    .ai-collapse-btn:hover{color:var(--brand-800);}
+    .ai-card-body{padding:14px 20px 18px;}
+    .ai-headline{
+      font-size:17px;color:var(--neutral-900);margin-bottom:10px;line-height:1.35;
+    }
+    .ai-headline strong{color:var(--brand-700);}
+    .ai-para{font-size:13px;color:var(--neutral-700);line-height:1.65;margin-bottom:14px;}
+    .ai-section-label{
+      font-size:11px;font-weight:700;color:var(--brand-600);
+      text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;
+    }
+    .ai-patterns{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+    .ai-pattern{
+      display:inline-flex;align-items:center;gap:5px;
+      padding:5px 12px;border-radius:var(--radius-full);
+      font-size:12px;font-weight:600;border:1px solid;
+    }
+    .pat-red{color:#c53030;border-color:#feb2b2;background:#fff5f5;}
+    .pat-blue{color:#1e40af;border-color:#bfdbfe;background:#eff6ff;}
+    .pat-purple{color:#6b21a8;border-color:#e9d5ff;background:#faf5ff;}
+    .ai-meridians{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;}
+    .meridian-item{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--neutral-700);}
+    .meridian-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .ai-approaches{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+    .approach-chip{
+      padding:4px 11px;border-radius:var(--radius-full);
+      background:var(--brand-100);color:var(--brand-700);
+      font-size:12px;font-weight:600;border:1px solid var(--brand-200);
+    }
+    .ai-disclaimer{
+      font-size:11px;color:var(--neutral-500);font-style:italic;
+      border-top:1px solid var(--brand-100);padding-top:12px;line-height:1.5;
+    }
+    .ai-card-collapsed .ai-card-body{display:none;}
+
+    /* ---- RESULTS TOOLBAR ---- */
+    .results-toolbar{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    }
+    .results-count{font-size:14px;color:var(--neutral-600);flex:1;}
+    .results-count strong{color:var(--neutral-900);}
+
+    /* ---- PRODUCT GRID ---- */
+    .product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+    .p-card{
+      background:#fff;border-radius:var(--radius-lg);
+      border:1px solid var(--neutral-200);overflow:hidden;
+      transition:all .2s;cursor:pointer;position:relative;
+      display:flex;flex-direction:column;
+    }
+    .p-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);border-color:var(--brand-200);}
+    .p-img{
+      width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+      font-size:48px;position:relative;
+    }
+    .p-badges-wrap{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:3px;}
+    .p-badge{padding:2px 7px;border-radius:var(--radius-full);font-size:10px;font-weight:700;}
+    .b-bs{background:var(--accent-500);color:#fff;}
+    .b-pick{background:var(--brand-500);color:#fff;}
+    .b-gmp{background:#dcfce7;color:#166534;border:1px solid #86efac;}
+    .b-org{background:#fefce8;color:#713f12;border:1px solid #fef08a;}
+    .rel-chip-wrap{
+      position:absolute;bottom:8px;left:8px;right:8px;
+    }
+    .rel-chip{
+      display:inline-flex;align-items:center;gap:4px;
+      padding:4px 10px;border-radius:var(--radius-full);
+      font-size:10px;font-weight:700;
+      cursor:default;position:relative;
+    }
+    .rel-chip .rel-tooltip{
+      display:none;position:absolute;bottom:calc(100% + 6px);left:50%;
+      transform:translateX(-50%);
+      background:var(--neutral-800);color:#fff;
+      font-size:11px;font-weight:400;padding:6px 10px;border-radius:var(--radius-md);
+      white-space:nowrap;z-index:50;line-height:1.4;min-width:160px;text-align:center;
+      box-shadow:var(--shadow-md);
+    }
+    .rel-chip .rel-tooltip::after{
+      content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+      border:5px solid transparent;border-top-color:var(--neutral-800);
+    }
+    .rel-chip:hover .rel-tooltip{display:block;}
+    .rc-green{background:var(--brand-500);color:#fff;}
+    .rc-gold{background:var(--accent-500);color:#fff;}
+    .rc-teal{background:#0d9488;color:#fff;}
+    .rc-blue{background:var(--nature-cool);color:#fff;}
+    .rc-sage{background:#4CAF50;color:#fff;}
+    .p-info{padding:13px;flex:1;display:flex;flex-direction:column;}
+    .p-name{font-size:14px;font-weight:700;color:var(--neutral-900);margin-bottom:1px;line-height:1.3;}
+    .p-name-zh{font-size:12px;color:var(--neutral-500);font-family:var(--font-chinese);margin-bottom:7px;}
+    .tcm-tags-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
+    .tcm-tag{
+      padding:2px 7px;border-radius:var(--radius-full);
+      font-size:10px;font-weight:600;border:1px solid;
+    }
+    .t-cool{color:#0369a1;border-color:#bae6fd;background:#f0f9ff;}
+    .t-neutral{color:#4b5563;border-color:#d1d5db;background:#f9fafb;}
+    .t-warm{color:#c2410c;border-color:#fed7aa;background:#fff7ed;}
+    .t-calm{color:#166534;border-color:#bbf7d0;background:var(--brand-50);}
+    .t-nourish{color:#1e40af;border-color:#bfdbfe;background:#eff6ff;}
+    .t-tonify{color:#92400e;border-color:#fde68a;background:var(--accent-50);}
+    .t-clear{color:#6d28d9;border-color:#ddd6fe;background:#f5f3ff;}
+    .star-row{display:flex;align-items:center;gap:5px;margin-bottom:7px;}
+    .stars{color:var(--accent-500);font-size:12px;letter-spacing:1px;}
+    .star-score{font-size:12px;font-weight:600;color:var(--neutral-800);}
+    .star-cnt{font-size:11px;color:var(--neutral-400);}
+    .price-row{display:flex;align-items:baseline;gap:6px;margin-bottom:10px;margin-top:auto;}
+    .price{font-size:17px;font-weight:700;color:var(--neutral-900);}
+    .add-btn{
+      width:100%;padding:8px;background:var(--brand-500);color:#fff;
+      border:none;border-radius:var(--radius-md);font-size:13px;font-weight:600;
+      cursor:pointer;transition:background .15s;font-family:var(--font-body);
+    }
+    .add-btn:hover{background:var(--brand-600);}
+    .add-btn:active{transform:scale(.98);}
+
+    /* element bg colors for product images */
+    .bg-wood{background:linear-gradient(135deg,#f0fdf4,#dcfce7);}
+    .bg-fire{background:linear-gradient(135deg,#fff5f5,#fed7d7);}
+    .bg-earth{background:linear-gradient(135deg,#fffbeb,#fef3c7);}
+    .bg-metal{background:linear-gradient(135deg,#f9fafb,#f3f4f6);}
+    .bg-water{background:linear-gradient(135deg,#eff6ff,#dbeafe);}
+
+    /* ---- ELEMENT BADGE on card ---- */
+    .el-badge{
+      display:inline-flex;align-items:center;gap:3px;
+      padding:2px 7px;border-radius:var(--radius-full);
+      font-size:10px;font-weight:700;
+    }
+
+    /* ---- RELATED SEARCHES ---- */
+    .related-section{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--neutral-200);padding:18px 20px;}
+    .related-label{font-size:13px;font-weight:600;color:var(--neutral-700);margin-bottom:10px;}
+    .related-chips{display:flex;flex-wrap:wrap;gap:7px;}
+    .related-chip{
+      padding:5px 13px;border-radius:var(--radius-full);
+      background:var(--neutral-100);border:1px solid var(--neutral-200);
+      font-size:12px;color:var(--neutral-700);cursor:pointer;transition:all .15s;
+    }
+    .related-chip:hover{background:var(--brand-50);border-color:var(--brand-300);color:var(--brand-700);}
+
+    /* ---- CONTENT RESULTS ---- */
+    .content-section{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--neutral-200);padding:18px 20px;}
+    .content-label{
+      font-size:12px;font-weight:700;color:var(--neutral-500);
+      text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .content-label::after{content:'';flex:1;height:1px;background:var(--neutral-200);}
+    .article-card{
+      display:flex;gap:14px;padding:12px 0;
+      border-bottom:1px solid var(--neutral-100);
+      cursor:pointer;transition:all .15s;
+    }
+    .article-card:last-child{border-bottom:none;padding-bottom:0;}
+    .article-card:hover .article-title{color:var(--brand-600);}
+    .article-icon{
+      width:48px;height:48px;border-radius:var(--radius-md);
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;flex-shrink:0;
+    }
+    .article-body{}
+    .article-title{font-size:14px;font-weight:600;color:var(--neutral-900);margin-bottom:3px;line-height:1.35;transition:color .15s;}
+    .article-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--neutral-400);}
+    .article-product-chip{
+      display:inline-flex;align-items:center;gap:3px;
+      background:var(--brand-50);border:1px solid var(--brand-200);
+      color:var(--brand-700);padding:1px 7px;border-radius:var(--radius-full);
+      font-size:10px;font-weight:600;
+    }
+
+    /* ============================================================
+       STATE 2 — CHINESE QUERY
+    ============================================================ */
+    .formula-card{
+      background:#fff;border:1px solid var(--neutral-200);border-radius:var(--radius-lg);
+      padding:20px;
+    }
+    .formula-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;
+      padding:4px 12px;border-radius:var(--radius-full);
+      font-size:11px;font-weight:700;margin-bottom:12px;
+    }
+    .formula-name{font-size:22px;color:var(--neutral-900);margin-bottom:4px;}
+    .formula-pinyin{font-size:14px;color:var(--neutral-400);font-style:italic;margin-bottom:12px;}
+    .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+    .formula-prop{}
+    .formula-prop-label{font-size:11px;font-weight:700;color:var(--neutral-500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+    .formula-prop-value{font-size:13px;color:var(--neutral-800);}
+    .herb-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+    .herb-chip{
+      padding:5px 12px;border-radius:var(--radius-full);
+      background:var(--brand-50);border:1px solid var(--brand-200);
+      color:var(--brand-700);font-size:12px;font-weight:600;
+      display:flex;align-items:center;gap:5px;
+    }
+    .herb-zh{font-family:var(--font-chinese);font-size:11px;color:var(--brand-600);}
+    .lang-note{
+      display:inline-flex;align-items:center;gap:6px;
+      background:#eff6ff;border:1px solid #bfdbfe;
+      color:#1e40af;padding:5px 12px;border-radius:var(--radius-md);
+      font-size:12px;
+    }
+
+    /* State 2 exact matches section */
+    .state2-section-label{font-size:13px;font-weight:700;color:var(--neutral-900);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+    .state2-section-label span{font-size:11px;font-weight:500;color:var(--neutral-500);}
+    .formula-result-list{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+    .formula-result{
+      background:#fff;border:1px solid var(--neutral-200);border-radius:var(--radius-lg);
+      padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;
+      transition:all .2s;
+    }
+    .formula-result:hover{box-shadow:var(--shadow-md);border-color:var(--brand-200);}
+    .fr-img{width:56px;height:56px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+    .fr-body{flex:1;}
+    .fr-name{font-size:14px;font-weight:700;color:var(--neutral-900);}
+    .fr-sub{font-size:12px;color:var(--neutral-500);margin-top:1px;}
+    .fr-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+    .fr-price{font-size:16px;font-weight:700;color:var(--neutral-900);}
+    .fr-stars{color:var(--accent-500);font-size:11px;}
+    .fr-add{
+      padding:6px 14px;background:var(--brand-500);color:#fff;border:none;
+      border-radius:var(--radius-md);font-size:12px;font-weight:600;cursor:pointer;
+      font-family:var(--font-body);transition:background .15s;
+    }
+    .fr-add:hover{background:var(--brand-600);}
+
+    /* ============================================================
+       STATE 3 — ZERO RESULTS
+    ============================================================ */
+    .zero-state{
+      display:flex;flex-direction:column;align-items:center;
+      padding:48px 32px;text-align:center;
+    }
+    .zero-icon{font-size:64px;margin-bottom:20px;opacity:.4;}
+    .zero-title{font-size:24px;color:var(--neutral-900);margin-bottom:8px;}
+    .zero-sub{font-size:15px;color:var(--neutral-500);margin-bottom:36px;max-width:400px;}
+    .zero-paths{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:700px;margin-bottom:32px;}
+    .zero-card-ai{
+      background:var(--brand-700);border-radius:var(--radius-xl);
+      padding:24px;text-align:left;
+    }
+    .zero-card-ai h3{color:#fff;font-size:16px;margin-bottom:6px;}
+    .zero-card-ai p{color:var(--brand-200);font-size:13px;margin-bottom:16px;line-height:1.5;}
+    .zero-ai-input{
+      width:100%;padding:10px 14px;border-radius:var(--radius-md);
+      border:2px solid var(--brand-500);background:var(--brand-800);
+      color:#fff;font-size:13px;margin-bottom:10px;outline:none;
+      font-family:var(--font-body);
+    }
+    .zero-ai-input::placeholder{color:var(--brand-400);}
+    .zero-ai-btn{
+      width:100%;padding:10px;background:var(--accent-500);color:#fff;
+      border:none;border-radius:var(--radius-md);font-size:14px;font-weight:700;
+      cursor:pointer;transition:background .15s;font-family:var(--font-body);
+    }
+    .zero-ai-btn:hover{background:var(--accent-600);}
+    .zero-card-browse{
+      background:#fff;border:1px solid var(--neutral-200);border-radius:var(--radius-xl);
+      padding:24px;text-align:left;
+    }
+    .zero-card-browse h3{color:var(--neutral-900);font-size:16px;margin-bottom:6px;}
+    .zero-card-browse p{color:var(--neutral-500);font-size:13px;margin-bottom:16px;}
+    .browse-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .browse-chip{
+      padding:8px 10px;border-radius:var(--radius-md);
+      background:var(--neutral-50);border:1px solid var(--neutral-200);
+      font-size:12px;font-weight:500;color:var(--neutral-700);
+      cursor:pointer;transition:all .15s;text-align:center;
+    }
+    .browse-chip:hover{background:var(--brand-50);border-color:var(--brand-300);color:var(--brand-700);}
+    .zero-suggested{width:100%;max-width:700px;}
+    .zero-suggested-label{font-size:13px;font-weight:600;color:var(--neutral-600);margin-bottom:10px;}
+    .zero-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
+    .zero-chip{
+      padding:5px 13px;border-radius:var(--radius-full);
+      background:#fff;border:1px solid var(--neutral-200);
+      font-size:12px;color:var(--neutral-700);cursor:pointer;transition:all .15s;
+    }
+    .zero-chip:hover{background:var(--brand-50);border-color:var(--brand-300);color:var(--brand-700);}
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer{background:var(--neutral-900);color:var(--neutral-400);padding:48px 32px 24px;margin-top:60px;}
+    .footer-inner{max-width:1280px;margin:0 auto;}
+    .footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;margin-bottom:36px;}
+    .footer-brand .logo{color:#fff;display:block;margin-bottom:10px;cursor:default;}
+    .footer-desc{font-size:13px;line-height:1.65;color:var(--neutral-500);}
+    .footer-col h4{font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;font-family:var(--font-body);}
+    .footer-links{display:flex;flex-direction:column;gap:7px;}
+    .footer-links a{font-size:13px;color:var(--neutral-500);cursor:pointer;transition:color .15s;}
+    .footer-links a:hover{color:var(--neutral-200);}
+    .footer-bottom{border-top:1px solid var(--neutral-800);padding-top:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+    .footer-copy{font-size:12px;color:var(--neutral-600);}
+    .fda-notice{font-size:11px;color:var(--neutral-600);max-width:600px;line-height:1.5;font-style:italic;}
+
+    /* ============================================================
+       STATES VISIBILITY
+    ============================================================ */
+    .state{display:none;}
+    .state.active{display:block;}
+    .state-zero-wrap{display:none;}
+    .state-zero-wrap.active{display:flex;}
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    #toast{
+      position:fixed;bottom:24px;right:24px;z-index:10000;
+      background:var(--neutral-900);color:#fff;
+      padding:12px 20px;border-radius:var(--radius-lg);
+      font-size:13px;font-weight:500;
+      box-shadow:var(--shadow-lg);
+      display:flex;align-items:center;gap:8px;
+      transform:translateY(100px);opacity:0;
+      transition:all .3s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events:none;
+    }
+    #toast.show{transform:translateY(0);opacity:1;}
+
+    /* ============================================================
+       MISC UTILITIES
+    ============================================================ */
+    .section-gap{margin-top:28px;}
+    .divider-row{height:1px;background:var(--neutral-200);margin:20px 0;}
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     PROTOTYPE BAR
+============================================================ -->
+<div class="proto-bar">
+  <span class="proto-title">SEARCH PROTOTYPE — pureHerbHealth</span>
+  <div class="proto-divider"></div>
+  <span class="proto-label">Query:</span>
+  <div class="query-btns">
+    <button class="query-btn active" onclick="setQuery('sleep')" id="qbtn-sleep">herbs for poor sleep</button>
+    <button class="query-btn" onclick="setQuery('formula')" id="qbtn-formula">玉屏风散</button>
+    <button class="query-btn" onclick="setQuery('zero')" id="qbtn-zero">xyzabc123</button>
+  </div>
+  <div class="proto-divider"></div>
+  <div class="proto-lang">
+    <button class="proto-lang-btn active" id="plang-en" onclick="setLang('en')">EN</button>
+    <button class="proto-lang-btn" id="plang-zh" onclick="setLang('zh')">ZH</button>
+  </div>
+  <span class="proto-note">theme.json v1.0 · 2026-03-11</span>
+</div>
+
+<!-- ============================================================
+     SITE WRAP
+============================================================ -->
+<div class="site-wrap">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <span class="ei">🌿 Free shipping on orders over <span>$65</span> · Use code <span>TCM15</span> for 15% off your first order</span>
+    <span class="zi">🌿 满<span>$65</span>免运费 · 首单使用优惠码 <span>TCM15</span> 享8.5折优惠</span>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">🌿 pureHerb<span class="logo-accent">Health</span></div>
+      <nav class="nav">
+        <span class="nav-link"><span class="ei">Shop</span><span class="zi">商城</span></span>
+        <span class="nav-link active"><span class="ei">Search</span><span class="zi">搜索</span></span>
+        <span class="nav-link"><span class="ei">Formulas</span><span class="zi">方剂</span></span>
+        <span class="nav-link"><span class="ei">Learn</span><span class="zi">学习</span></span>
+        <span class="nav-link"><span class="ei">Clinic</span><span class="zi">诊所</span></span>
+      </nav>
+      <div class="header-right">
+        <div class="icon-btn">🔍</div>
+        <div class="h-lang">
+          <button class="h-lang-btn active" id="hlang-en" onclick="setLang('en')">EN</button>
+          <button class="h-lang-btn" id="hlang-zh" onclick="setLang('zh')">ZH</button>
+        </div>
+        <button class="cart-btn" onclick="this.querySelector('.cart-cnt').textContent=parseInt(this.querySelector('.cart-cnt').textContent)">
+          🛒 <span class="ei">Cart</span><span class="zi">购物车</span>
+          <span class="cart-cnt" id="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- SEARCH BAR SECTION -->
+  <div class="search-section">
+    <div class="search-section-inner">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="search-input" type="text" value="herbs for poor sleep" />
+        <button class="search-clear" onclick="document.getElementById('search-input').value='';document.getElementById('search-input').focus()">×</button>
+        <button class="search-btn"><span class="ei">Search</span><span class="zi">搜索</span></button>
+      </div>
+      <div class="result-meta">
+        <div class="result-count-txt" id="result-count-txt">
+          <span class="ei">Showing <strong>8 results</strong> for '<strong>herbs for poor sleep</strong>'</span>
+          <span class="zi">为"<strong>睡眠不好的草药</strong>"显示 <strong>8 个结果</strong></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="filter-pills" id="filter-pills">
+            <button class="filter-pill active"><span class="ei">All Products</span><span class="zi">全部</span></button>
+            <button class="filter-pill"><span class="ei">Herbal Formulas</span><span class="zi">方剂</span></button>
+            <button class="filter-pill"><span class="ei">Single Herbs</span><span class="zi">单味药</span></button>
+            <button class="filter-pill"><span class="ei">Teas</span><span class="zi">茶饮</span></button>
+            <button class="filter-pill"><span class="ei">Topicals</span><span class="zi">外用</span></button>
+          </div>
+          <select class="sort-select">
+            <option>Best Match</option>
+            <option>Relevance</option>
+            <option>Price ↑</option>
+            <option>Price ↓</option>
+            <option>Rating</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN BODY -->
+  <div class="search-body">
+
+    <!-- ===== STATES 1 & 2 — two-column layout ===== -->
+    <div id="layout-twocol" class="search-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-hdr">
+          <h3><span class="ei">Filters</span><span class="zi">筛选</span></h3>
+          <button class="clear-all-btn" onclick="clearAllFilters()">
+            <span class="ei">Clear All</span><span class="zi">清除全部</span>
+          </button>
+        </div>
+
+        <!-- Categories -->
+        <div class="filter-section">
+          <div class="filter-title"><span class="ei">Categories</span><span class="zi">分类</span> <span>▾</span></div>
+          <div class="filter-opts">
+            <label class="filter-opt"><input type="checkbox" checked /><label><span class="ei">All Products</span><span class="zi">全部产品</span></label><span class="cnt">(142)</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Herbal Formulas</span><span class="zi">方剂</span></label><span class="cnt">(58)</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Single Herbs</span><span class="zi">单味药</span></label><span class="cnt">(47)</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Teas & Drinks</span><span class="zi">茶饮</span></label><span class="cnt">(22)</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Topicals</span><span class="zi">外用</span></label><span class="cnt">(11)</span></label>
+            <label class="filter-opt"><input type="checkbox" /><label><span class="ei">Accessories</span><span class="zi">配件</span></label><span class="cnt">(4)</span></label>
+          </div>
+        </div>
+
+        <!-- Five Elements -->
+        <div class="filter-section">
+          <div class="filter-title"><span class="ei">Five Elements</span><span class="zi">五行</span> <span>▾</span></div>
+          <div class="element-grid">
+            <button class="el-chip el-wood" onclick="this.classList.toggle('selected')">🌱 <span class="ei">Wood</span><span class="zi">木</span></button>
+            <button class="el-chip el-fire" onclick="this.classList.toggle('selected')">🔥 <span class="ei">Fire</span><span class="zi">火</span></button>
+            <button class="el-chip el-earth" onclick="this.classList.toggle('selected')">⛰ <span class="ei">Earth</span><span class="zi">土</span></button>
+            <button class="el-chip el-metal" onclick="this.classList.toggle('selected')">⚙️ <span class="ei">Metal</span><span class="zi">金</span></button>
+            <button class="el-chip el-water selected" onclick="this.classList.toggle('selected')">💧 <span class="ei">Water</span><span class="zi">水</span></button>
+          </div>
+        </div>
+
+        <!-- TCM Nature -->
+        <div class="filter-section">
+          <div class="filter-title"><span class="ei">TCM Nature</span><span class="zi">药性</span> <span>▾</span></div>
+          <div class="nature-pills">
+            <button class="nature-pill" style="color:#dc2626;border-color:#dc2626;" onclick="this.classList.toggle('selected');if(this.classList.contains('selected'))this.style.background='#dc2626',this.style.color='#fff';else this.style.background='',this.style.color='#dc2626'"><span class="ei">Hot</span><span class="zi">热</span></button>
+            <button class="nature-pill" style="color:#ea580c;border-color:#ea580c;" onclick="this.classList.toggle('selected');if(this.classList.contains('selected'))this.style.background='#ea580c',this.style.color='#fff';else this.style.background='',this.style.color='#ea580c'"><span class="ei">Warm</span><span class="zi">温</span></button>
+            <button class="nature-pill" style="color:#6b7280;border-color:#6b7280;" onclick="this.classList.toggle('selected');if(this.classList.contains('selected'))this.style.background='#6b7280',this.style.color='#fff';else this.style.background='',this.style.color='#6b7280'"><span class="ei">Neutral</span><span class="zi">平</span></button>
+            <button class="nature-pill selected" style="color:#fff;border-color:#0284c7;background:#0284c7;" onclick="this.classList.toggle('selected');if(this.classList.contains('selected'))this.style.background='#0284c7',this.style.color='#fff';else this.style.background='',this.style.color='#0284c7'"><span class="ei">Cool</span><span class="zi">凉</span></button>
+            <button class="nature-pill" style="color:#1e3a8a;border-color:#1e3a8a;" onclick="this.classList.toggle('selected');if(this.classList.contains('selected'))this.style.background='#1e3a8a',this.style.color='#fff';else this.style.background='',this.style.color='#1e3a8a'"><span class="ei">Cold</span><span class="zi">寒</span></button>
+          </div>
+        </div>
+
+        <!-- TCM Action -->
+        <div class="filter-section">
+          <div class="filter-title"><span class="ei">TCM Action</span><span class="zi">功效</span> <span>▾</span></div>
+          <div class="action-opts">
+            <label class="action-opt"><input type="checkbox" checked /><label><span class="ei">Calm Shen</span><span class="zi">安神</span></label></label>
+            <label class="action-opt"><input type="checkbox" checked /><label><span class="ei">Nourish Yin</span><span class="zi">滋阴</span></label></label>
+            <label class="action-opt"><input type="checkbox" /><label><span class="ei">Tonify Qi</span><span class="zi">补气</span></label></label>
+            <label class="action-opt"><input type="checkbox" /><label><span class="ei">Tonify Blood</span><span class="zi">补血</span></label></label>
+            <label class="action-opt"><input type="checkbox" /><label><span class="ei">Clear Heat</span><span class="zi">清热</span></label></label>
+            <label class="action-opt"><input type="checkbox" /><label><span class="ei">Release Exterior</span><span class="zi">解表</span></label></label>
+          </div>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-section">
+          <div class="filter-title"><span class="ei">Price Range</span><span class="zi">价格区间</span> <span>▾</span></div>
+          <div class="price-inputs">
+            <input class="price-in" type="text" value="$0" />
+            <span class="price-sep">—</span>
+            <input class="price-in" type="text" value="$100" />
+          </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="filter-section">
+          <div class="filter-title"><span class="ei">Rating</span><span class="zi">评分</span> <span>▾</span></div>
+          <label class="rating-opt">
+            <input type="checkbox" checked />
+            <label><span class="stars-gold">★★★★</span>+ <span style="color:var(--neutral-400);font-size:11px;">(<span class="ei">and above</span><span class="zi">及以上</span>)</span></label>
+          </label>
+        </div>
+
+        <!-- In Stock -->
+        <div class="filter-section" style="border-bottom:none;">
+          <div class="toggle-row">
+            <span class="toggle-label"><span class="ei">In Stock Only</span><span class="zi">仅显示有货</span></span>
+            <label class="toggle"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN -->
+      <div class="right-col">
+
+        <!-- ===== STATE 1 — SLEEP QUERY ===== -->
+        <div id="state-sleep" class="state active">
+
+          <!-- AI INTERPRETATION CARD -->
+          <div class="ai-card" id="ai-card-sleep">
+            <div class="ai-card-head">
+              <div class="ai-card-head-left">
+                <span class="ai-badge">✨ <span class="ei">TCM AI Interpretation</span><span class="zi">中医AI解读</span></span>
+                <span class="ai-powered"><span class="ei">Powered by Claude</span><span class="zi">由 Claude 提供支持</span></span>
+              </div>
+              <button class="ai-collapse-btn" onclick="toggleAiCard('ai-card-sleep', this)">
+                <span class="ei">Collapse AI Interpretation ▲</span><span class="zi">收起AI解读 ▲</span>
+              </button>
+            </div>
+            <div class="ai-card-body">
+              <div class="ai-headline en">Your query suggests a pattern of <strong>Heart-Kidney Disharmony</strong></div>
+              <div class="ai-headline zh-c">您的查询提示<strong>心肾不交</strong>的证型</div>
+              <p class="ai-para en">In TCM, poor sleep (失眠, shīmián) often relates to Heart Shen disturbance and insufficient Kidney Yin failing to anchor the Heart Yang. The most effective approach combines Shen-calming herbs with Yin nourishing formulas.</p>
+              <p class="ai-para zh-c">在中医理论中，失眠通常与心神不安及肾阴不足、无法潜藏心阳有关。最有效的方法是将安神草药与滋阴方相结合。</p>
+
+              <div class="ai-section-label"><span class="ei">Identified Patterns</span><span class="zi">辨证分析</span></div>
+              <div class="ai-patterns">
+                <span class="ai-pattern pat-red">🔴 <span class="ei">Heart-Kidney Disharmony</span><span class="zi">心肾不交</span></span>
+                <span class="ai-pattern pat-blue">🔵 <span class="ei">Kidney Yin Deficiency</span><span class="zi">肾阴虚</span></span>
+                <span class="ai-pattern pat-purple">💤 <span class="ei">Shen Disturbance</span><span class="zi">心神不安</span></span>
+              </div>
+
+              <div class="ai-section-label"><span class="ei">Relevant Meridians</span><span class="zi">相关经络</span></div>
+              <div class="ai-meridians">
+                <span class="meridian-item"><span class="meridian-dot" style="background:#E53E3E;"></span><span class="ei">Heart</span><span class="zi">心经</span></span>
+                <span style="color:var(--neutral-300);">·</span>
+                <span class="meridian-item"><span class="meridian-dot" style="background:#3182CE;"></span><span class="ei">Kidney</span><span class="zi">肾经</span></span>
+                <span style="color:var(--neutral-300);">·</span>
+                <span class="meridian-item"><span class="meridian-dot" style="background:#4CAF50;"></span><span class="ei">Liver</span><span class="zi">肝经</span></span>
+              </div>
+
+              <div class="ai-section-label"><span class="ei">Suggested Approaches</span><span class="zi">建议方向</span></div>
+              <div class="ai-approaches">
+                <span class="approach-chip"><span class="ei">Calm Shen</span><span class="zi">安神</span></span>
+                <span class="approach-chip"><span class="ei">Nourish Yin</span><span class="zi">滋阴</span></span>
+                <span class="approach-chip"><span class="ei">Clear Empty Heat</span><span class="zi">清虚热</span></span>
+              </div>
+
+              <div class="ai-disclaimer">
+                <span class="ei">This is educational context, not medical advice. Consult your practitioner before making health decisions.</span>
+                <span class="zi">以上内容仅供教育参考，不构成医疗建议。做出健康决定前请咨询您的医疗从业者。</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCT GRID -->
+          <div class="product-grid">
+
+            <!-- Card 1: Calm Mind Formula -->
+            <div class="p-card">
+              <div class="p-img bg-water" style="position:relative;">
+                <div style="font-size:52px;">🌙</div>
+                <div class="p-badges-wrap">
+                  <span class="p-badge b-bs"><span class="ei">Best Seller</span><span class="zi">畅销</span></span>
+                </div>
+                <div class="rel-chip-wrap">
+                  <span class="rel-chip rc-green">
+                    💚 <span class="ei">Calms Shen · Nourishes Heart</span><span class="zi">安神·养心</span>
+                    <span class="rel-tooltip"><span class="ei">Directly addresses Heart Shen disturbance identified in your search pattern</span><span class="zi">直接针对您搜索模式中识别的心神不安</span></span>
+                  </span>
+                </div>
+              </div>
+              <div class="p-info">
+                <div class="p-name"><span class="ei">Calm Mind Formula</span><span class="zi">安神方</span></div>
+                <div class="p-name-zh"><span class="ei">安神方</span><span class="zi">Calm Mind Formula</span></div>
+                <div class="tcm-tags-row">
+                  <span class="tcm-tag t-cool"><span class="ei">Cool</span><span class="zi">凉性</span></span>
+                  <span class="tcm-tag t-calm"><span class="ei">Calm Shen</span><span class="zi">安神</span></span>
+                  <span class="el-badge" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;">💧 <span class="ei">Water</span><span class="zi">水</span></span>
+                </div>
+                <div class="star-row">
+                  <span class="stars">★★★★★</span>
+                  <span class="star-score">4.8</span>
+                  <span class="star-cnt">(127)</span>
+                </div>
+                <div class="price-row"><span class="price">$38.00</span></div>
+                <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+              </div>
+            </div>
+
+            <!-- Card 2: Emperor's Teapills -->
+            <div class="p-card">
+              <div class="p-img bg-water" style="position:relative;">
+                <div style="font-size:52px;">👑</div>
+                <div class="p-badges-wrap">
+                  <span class="p-badge b-pick"><span class="ei">Dr. Pick</span><span class="zi">医师推荐</span></span>
+                </div>
+                <div class="rel-chip-wrap">
+                  <span class="rel-chip rc-gold">
+                    ✨ <span class="ei">Classic Heart-Kidney formula</span><span class="zi">经典心肾方</span>
+                    <span class="rel-tooltip"><span class="ei">Traditional formula specifically formulated for Heart-Kidney Disharmony insomnia</span><span class="zi">专为心肾不交型失眠设计的传统方剂</span></span>
+                  </span>
+                </div>
+              </div>
+              <div class="p-info">
+                <div class="p-name"><span class="ei">Emperor's Teapills</span><span class="zi">天王补心丹</span></div>
+                <div class="p-name-zh"><span class="ei">天王补心丹</span><span class="zi">Emperor's Teapills</span></div>
+                <div class="tcm-tags-row">
+                  <span class="tcm-tag t-neutral"><span class="ei">Neutral</span><span class="zi">平性</span></span>
+                  <span class="tcm-tag t-nourish"><span class="ei">Nourish Yin</span><span class="zi">滋阴</span></span>
+                  <span class="el-badge" style="background:#fff5f5;color:#c53030;border:1px solid #feb2b2;">🔥 <span class="ei">Fire</span><span class="zi">火</span></span>
+                </div>
+                <div class="star-row">
+                  <span class="stars">★★★★★</span>
+                  <span class="star-score">4.9</span>
+                  <span class="star-cnt">(89)</span>
+                </div>
+                <div class="price-row"><span class="price">$42.00</span></div>
+                <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+              </div>
+            </div>
+
+            <!-- Card 3: Suan Zao Ren Tang -->
+            <div class="p-card">
+              <div class="p-img bg-wood" style="position:relative;">
+                <div style="font-size:52px;">🌿</div>
+                <div class="p-badges-wrap">
+                  <span class="p-badge b-gmp">GMP</span>
+                </div>
+                <div class="rel-chip-wrap">
+                  <span class="rel-chip rc-green">
+                    🌿 <span class="ei">Specifically for insomnia</span><span class="zi">专治失眠</span>
+                    <span class="rel-tooltip"><span class="ei">Classical formula from Jingui Yaolue specifically targeting liver blood deficiency insomnia</span><span class="zi">来自金匮要略的经典方剂，专门针对肝血虚型失眠</span></span>
+                  </span>
+                </div>
+              </div>
+              <div class="p-info">
+                <div class="p-name"><span class="ei">Suan Zao Ren Tang</span><span class="zi">酸枣仁汤</span></div>
+                <div class="p-name-zh"><span class="ei">酸枣仁汤</span><span class="zi">Suan Zao Ren Tang</span></div>
+                <div class="tcm-tags-row">
+                  <span class="tcm-tag t-neutral"><span class="ei">Neutral</span><span class="zi">平性</span></span>
+                  <span class="tcm-tag t-calm"><span class="ei">Calm Shen</span><span class="zi">安神</span></span>
+                  <span class="el-badge" style="background:#f0fdf4;color:#166534;border:1px solid #86efac;">🌱 <span class="ei">Wood</span><span class="zi">木</span></span>
+                </div>
+                <div class="star-row">
+                  <span class="stars">★★★★★</span>
+                  <span class="star-score">4.7</span>
+                  <span class="star-cnt">(64)</span>
+                </div>
+                <div class="price-row"><span class="price">$36.00</span></div>
+                <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+              </div>
+            </div>
+
+            <!-- Card 4: Reishi Mushroom -->
+            <div class="p-card">
+              <div class="p-img bg-earth" style="position:relative;">
+                <div style="font-size:52px;">🍄</div>
+                <div class="p-badges-wrap">
+                  <span class="p-badge b-org"><span class="ei">Organic</span><span class="zi">有机</span></span>
+                </div>
+                <div class="rel-chip-wrap">
+                  <span class="rel-chip rc-teal">
+                    🌊 <span class="ei">Supports deep sleep</span><span class="zi">助深度睡眠</span>
+                    <span class="rel-tooltip"><span class="ei">Reishi (Lingzhi) calms the Shen and tonifies Qi, supporting restorative sleep stages</span><span class="zi">灵芝安神补气，支持恢复性睡眠阶段</span></span>
+                  </span>
+                </div>
+              </div>
+              <div class="p-info">
+                <div class="p-name"><span class="ei">Reishi Mushroom Capsules</span><span class="zi">灵芝胶囊</span></div>
+                <div class="p-name-zh"><span class="ei">灵芝胶囊</span><span class="zi">Reishi Mushroom Capsules</span></div>
+                <div class="tcm-tags-row">
+                  <span class="tcm-tag t-neutral"><span class="ei">Neutral</span><span class="zi">平性</span></span>
+                  <span class="tcm-tag t-tonify"><span class="ei">Tonify Qi</span><span class="zi">补气</span></span>
+                  <span class="el-badge" style="background:#fffbeb;color:#92400e;border:1px solid #fde68a;">⛰ <span class="ei">Earth</span><span class="zi">土</span></span>
+                </div>
+                <div class="star-row">
+                  <span class="stars">★★★★★</span>
+                  <span class="star-score">4.6</span>
+                  <span class="star-cnt">(203)</span>
+                </div>
+                <div class="price-row"><span class="price">$45.00</span></div>
+                <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+              </div>
+            </div>
+
+            <!-- Card 5: Liu Wei Di Huang Wan -->
+            <div class="p-card">
+              <div class="p-img bg-water" style="position:relative;">
+                <div style="font-size:52px;">💧</div>
+                <div class="p-badges-wrap">
+                  <span class="p-badge b-bs"><span class="ei">Best Seller</span><span class="zi">畅销</span></span>
+                </div>
+                <div class="rel-chip-wrap">
+                  <span class="rel-chip rc-blue">
+                    💧 <span class="ei">Nourishes Kidney Yin</span><span class="zi">滋补肾阴</span>
+                    <span class="rel-tooltip"><span class="ei">Addresses root Kidney Yin deficiency pattern underlying Heart-Kidney disharmony</span><span class="zi">针对心肾不交根源的肾阴虚证</span></span>
+                  </span>
+                </div>
+              </div>
+              <div class="p-info">
+                <div class="p-name"><span class="ei">Liu Wei Di Huang Wan</span><span class="zi">六味地黄丸</span></div>
+                <div class="p-name-zh"><span class="ei">六味地黄丸</span><span class="zi">Liu Wei Di Huang Wan</span></div>
+                <div class="tcm-tags-row">
+                  <span class="tcm-tag t-cool"><span class="ei">Cool</span><span class="zi">凉性</span></span>
+                  <span class="tcm-tag t-nourish"><span class="ei">Nourish Yin</span><span class="zi">滋阴</span></span>
+                  <span class="el-badge" style="background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;">💧 <span class="ei">Water</span><span class="zi">水</span></span>
+                </div>
+                <div class="star-row">
+                  <span class="stars">★★★★★</span>
+                  <span class="star-score">4.9</span>
+                  <span class="star-cnt">(312)</span>
+                </div>
+                <div class="price-row"><span class="price">$32.00</span></div>
+                <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+              </div>
+            </div>
+
+            <!-- Card 6: Magnolia & Ziziphus Tea -->
+            <div class="p-card">
+              <div class="p-img bg-wood" style="position:relative;">
+                <div style="font-size:52px;">🍵</div>
+                <div class="p-badges-wrap">
+                  <span class="p-badge b-org"><span class="ei">Organic</span><span class="zi">有机</span></span>
+                </div>
+                <div class="rel-chip-wrap">
+                  <span class="rel-chip rc-sage">
+                    🌸 <span class="ei">Relaxing evening blend</span><span class="zi">舒缓晚间茶</span>
+                    <span class="rel-tooltip"><span class="ei">He Huan (Albizzia) and Suan Zao Ren (Ziziphus) combine for gentle nightly relaxation and Shen calming</span><span class="zi">合欢与酸枣仁结合，温和帮助入睡安神</span></span>
+                  </span>
+                </div>
+              </div>
+              <div class="p-info">
+                <div class="p-name"><span class="ei">Magnolia & Ziziphus Tea</span><span class="zi">合欢枣仁茶</span></div>
+                <div class="p-name-zh"><span class="ei">合欢枣仁茶</span><span class="zi">Magnolia & Ziziphus Tea</span></div>
+                <div class="tcm-tags-row">
+                  <span class="tcm-tag t-warm"><span class="ei">Warm</span><span class="zi">温性</span></span>
+                  <span class="tcm-tag t-calm"><span class="ei">Calm Shen</span><span class="zi">安神</span></span>
+                  <span class="el-badge" style="background:#f0fdf4;color:#166534;border:1px solid #86efac;">🌱 <span class="ei">Wood</span><span class="zi">木</span></span>
+                </div>
+                <div class="star-row">
+                  <span class="stars">★★★★★</span>
+                  <span class="star-score">4.5</span>
+                  <span class="star-cnt">(41)</span>
+                </div>
+                <div class="price-row"><span class="price">$24.00</span></div>
+                <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+              </div>
+            </div>
+
+          </div><!-- /product-grid -->
+
+          <!-- RELATED SEARCHES -->
+          <div class="related-section section-gap">
+            <div class="related-label"><span class="ei">Related searches:</span><span class="zi">相关搜索：</span></div>
+            <div class="related-chips">
+              <span class="related-chip" onclick="switchRelated('herbs for stress and anxiety')"><span class="ei">herbs for stress and anxiety</span><span class="zi">压力焦虑草药</span></span>
+              <span class="related-chip" onclick="switchRelated('yin nourishing formulas')"><span class="ei">yin nourishing formulas</span><span class="zi">滋阴方剂</span></span>
+              <span class="related-chip" onclick="switchRelated('suan zao ren')"><span class="ei">suan zao ren</span><span class="zi">酸枣仁</span></span>
+              <span class="related-chip" onclick="switchRelated('heart blood deficiency')"><span class="ei">heart blood deficiency</span><span class="zi">心血虚</span></span>
+              <span class="related-chip" onclick="switchRelated('sleep support tea')"><span class="ei">sleep support tea</span><span class="zi">助眠茶</span></span>
+            </div>
+          </div>
+
+          <!-- CONTENT RESULTS -->
+          <div class="content-section section-gap">
+            <div class="content-label"><span class="ei">From the Learn Hub</span><span class="zi">来自知识中心</span></div>
+            <div class="article-card">
+              <div class="article-icon" style="background:var(--brand-50);">📖</div>
+              <div class="article-body">
+                <div class="article-title en">5 TCM Patterns Behind Poor Sleep (and How to Address Each)</div>
+                <div class="article-title zh-c">睡眠不佳背后的5种中医证型（以及如何调理）</div>
+                <div class="article-meta">
+                  <span><span class="ei">8 min read</span><span class="zi">阅读8分钟</span></span>
+                  <span>·</span>
+                  <span class="ei">Condition Guide</span><span class="zi">症状指南</span>
+                  <span>·</span>
+                  <span class="article-product-chip">🌙 <span class="ei">Calm Mind Formula</span><span class="zi">安神方</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="article-card">
+              <div class="article-icon" style="background:#eff6ff;">🔬</div>
+              <div class="article-body">
+                <div class="article-title en">Kidney Yin and Heart Connection: A TCM Guide to Better Sleep</div>
+                <div class="article-title zh-c">肾阴与心的关系：中医改善睡眠指南</div>
+                <div class="article-meta">
+                  <span><span class="ei">6 min read</span><span class="zi">阅读6分钟</span></span>
+                  <span>·</span>
+                  <span class="ei">Guide</span><span class="zi">指南</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /state-sleep -->
+
+        <!-- ===== STATE 2 — FORMULA QUERY ===== -->
+        <div id="state-formula" class="state">
+
+          <!-- AI Card for formula -->
+          <div class="ai-card" id="ai-card-formula">
+            <div class="ai-card-head">
+              <div class="ai-card-head-left">
+                <span class="ai-badge">✨ <span class="ei">TCM AI Interpretation</span><span class="zi">中医AI解读</span></span>
+                <span class="ai-powered"><span class="ei">Powered by Claude</span><span class="zi">由 Claude 提供支持</span></span>
+              </div>
+              <button class="ai-collapse-btn" onclick="toggleAiCard('ai-card-formula', this)">
+                <span class="ei">Collapse AI Interpretation ▲</span><span class="zi">收起AI解读 ▲</span>
+              </button>
+            </div>
+            <div class="ai-card-body">
+              <div class="formula-badge">🏯 <span class="ei">Exact Formula Match</span><span class="zi">精确方剂匹配</span></div>
+              <div class="ai-headline en">玉屏风散 — <strong>Jade Screen Formula</strong> (Yù Píng Fēng Sǎn)</div>
+              <div class="ai-headline zh-c"><strong>玉屏风散</strong> — Jade Screen Formula (Yù Píng Fēng Sǎn)</div>
+
+              <div class="ai-section-label"><span class="ei">Composition (3 herbs)</span><span class="zi">组方（3味药）</span></div>
+              <div class="herb-chips">
+                <span class="herb-chip">🌾 <span class="ei">Astragalus</span><span class="zi">Astragalus</span> <span class="herb-zh">黄芪</span></span>
+                <span class="herb-chip">🌿 <span class="ei">Atractylodes</span><span class="zi">Atractylodes</span> <span class="herb-zh">白术</span></span>
+                <span class="herb-chip">🍃 <span class="ei">Siler Root</span><span class="zi">Siler Root</span> <span class="herb-zh">防风</span></span>
+              </div>
+
+              <div class="ai-section-label"><span class="ei">Applications</span><span class="zi">适应症</span></div>
+              <div class="formula-grid">
+                <div class="formula-prop">
+                  <div class="formula-prop-label"><span class="ei">Primary Action</span><span class="zi">主要功效</span></div>
+                  <div class="formula-prop-value"><span class="ei">Strengthens Wei Qi (Defensive Qi)</span><span class="zi">固护卫气</span></div>
+                </div>
+                <div class="formula-prop">
+                  <div class="formula-prop-label"><span class="ei">Primary Element</span><span class="zi">主要五行</span></div>
+                  <div class="formula-prop-value" style="display:flex;align-items:center;gap:6px;">
+                    <span class="el-badge" style="background:#f9fafb;color:#374151;border:1px solid #e5e7eb;">⚙️ <span class="ei">Metal</span><span class="zi">金</span></span>
+                    <span style="font-size:12px;color:var(--neutral-500);"><span class="ei">Lung / Wei Qi</span><span class="zi">肺 / 卫气</span></span>
+                  </div>
+                </div>
+                <div class="formula-prop">
+                  <div class="formula-prop-label"><span class="ei">Indications</span><span class="zi">主治</span></div>
+                  <div class="formula-prop-value"><span class="ei">Frequent colds, spontaneous sweating, weak constitution</span><span class="zi">反复感冒、自汗、体虚易感</span></div>
+                </div>
+                <div class="formula-prop">
+                  <div class="formula-prop-label"><span class="ei">Formula Source</span><span class="zi">方剂来源</span></div>
+                  <div class="formula-prop-value"><span class="ei">Danxi Xinfa (丹溪心法), Yuan Dynasty</span><span class="zi">《丹溪心法》，元代</span></div>
+                </div>
+              </div>
+
+              <div class="lang-note">🔤 <span class="ei">Searching in Chinese — showing Chinese name matches first</span><span class="zi">中文搜索模式 — 优先显示中文名称匹配结果</span></div>
+
+              <div class="ai-disclaimer" style="margin-top:14px;">
+                <span class="ei">This is educational context, not medical advice. Consult your practitioner before making health decisions.</span>
+                <span class="zi">以上内容仅供教育参考，不构成医疗建议。做出健康决定前请咨询您的医疗从业者。</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Exact matches -->
+          <div class="section-gap">
+            <div class="state2-section-label">
+              <span class="ei">Exact Matches</span><span class="zi">精确匹配</span>
+              <span><span class="ei">3 products found for "玉屏风散"</span><span class="zi">找到3个"玉屏风散"产品</span></span>
+            </div>
+            <div class="formula-result-list">
+              <div class="formula-result">
+                <div class="fr-img bg-metal">🛡️</div>
+                <div class="fr-body">
+                  <div class="fr-name"><span class="ei">Yu Ping Feng San — Classic Teapills</span><span class="zi">玉屏风散 — 经典水丸</span></div>
+                  <div class="fr-sub"><span class="ei">Plum Flower Brand · 200 teapills · GMP Certified</span><span class="zi">梅花牌 · 200粒水丸 · GMP认证</span></div>
+                </div>
+                <div class="fr-right">
+                  <div class="fr-price">$28.00</div>
+                  <div class="fr-stars">★★★★★ 4.9 <span style="color:var(--neutral-400);font-size:10px;">(184)</span></div>
+                  <button class="fr-add" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入</span></button>
+                </div>
+              </div>
+              <div class="formula-result">
+                <div class="fr-img bg-metal">🌬️</div>
+                <div class="fr-body">
+                  <div class="fr-name"><span class="ei">Jade Screen Granules — Concentrated Extract</span><span class="zi">玉屏风散颗粒 — 浓缩提取</span></div>
+                  <div class="fr-sub"><span class="ei">Sun Ten Brand · 100g powder · 5:1 concentration</span><span class="zi">順天堂 · 100g粉末 · 5:1浓缩</span></div>
+                </div>
+                <div class="fr-right">
+                  <div class="fr-price">$42.00</div>
+                  <div class="fr-stars">★★★★★ 4.8 <span style="color:var(--neutral-400);font-size:10px;">(97)</span></div>
+                  <button class="fr-add" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入</span></button>
+                </div>
+              </div>
+              <div class="formula-result">
+                <div class="fr-img bg-metal">🌿</div>
+                <div class="fr-body">
+                  <div class="fr-name"><span class="ei">Yu Ping Feng San — Raw Herb Bundle</span><span class="zi">玉屏风散 — 原药材组合包</span></div>
+                  <div class="fr-sub"><span class="ei">Wildcrafted · 3-herb set · Brew at home</span><span class="zi">野生采集 · 3味药材套装 · 家庭煎煮</span></div>
+                </div>
+                <div class="fr-right">
+                  <div class="fr-price">$22.00</div>
+                  <div class="fr-stars">★★★★☆ 4.6 <span style="color:var(--neutral-400);font-size:10px;">(38)</span></div>
+                  <button class="fr-add" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入</span></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Related formulas -->
+            <div class="state2-section-label">
+              <span class="ei">Related Formulas</span><span class="zi">相关方剂</span>
+              <span><span class="ei">You may also consider</span><span class="zi">您也可以考虑</span></span>
+            </div>
+            <div class="product-grid">
+              <div class="p-card">
+                <div class="p-img bg-metal"><div style="font-size:48px;">🫁</div></div>
+                <div class="p-info">
+                  <div class="p-name"><span class="ei">Bu Zhong Yi Qi Wan</span><span class="zi">补中益气丸</span></div>
+                  <div class="p-name-zh"><span class="ei">补中益气丸</span><span class="zi">Bu Zhong Yi Qi Wan</span></div>
+                  <div class="tcm-tags-row"><span class="tcm-tag t-warm"><span class="ei">Warm</span><span class="zi">温性</span></span><span class="tcm-tag t-tonify"><span class="ei">Tonify Qi</span><span class="zi">补气</span></span></div>
+                  <div class="star-row"><span class="stars">★★★★★</span><span class="star-score">4.8</span><span class="star-cnt">(156)</span></div>
+                  <div class="price-row"><span class="price">$30.00</span></div>
+                  <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+                </div>
+              </div>
+              <div class="p-card">
+                <div class="p-img bg-metal"><div style="font-size:48px;">⚙️</div></div>
+                <div class="p-info">
+                  <div class="p-name"><span class="ei">Astragalus Root Capsules</span><span class="zi">黄芪胶囊</span></div>
+                  <div class="p-name-zh"><span class="ei">黄芪胶囊</span><span class="zi">Astragalus Root Capsules</span></div>
+                  <div class="tcm-tags-row"><span class="tcm-tag t-warm"><span class="ei">Warm</span><span class="zi">温性</span></span><span class="tcm-tag t-tonify"><span class="ei">Tonify Qi</span><span class="zi">补气</span></span></div>
+                  <div class="star-row"><span class="stars">★★★★★</span><span class="star-score">4.7</span><span class="star-cnt">(241)</span></div>
+                  <div class="price-row"><span class="price">$35.00</span></div>
+                  <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+                </div>
+              </div>
+              <div class="p-card">
+                <div class="p-img bg-earth"><div style="font-size:48px;">🌾</div></div>
+                <div class="p-info">
+                  <div class="p-name"><span class="ei">Shen Ling Bai Zhu San</span><span class="zi">参苓白术散</span></div>
+                  <div class="p-name-zh"><span class="ei">参苓白术散</span><span class="zi">Shen Ling Bai Zhu San</span></div>
+                  <div class="tcm-tags-row"><span class="tcm-tag t-neutral"><span class="ei">Neutral</span><span class="zi">平性</span></span><span class="tcm-tag t-tonify"><span class="ei">Tonify Qi</span><span class="zi">补气</span></span></div>
+                  <div class="star-row"><span class="stars">★★★★★</span><span class="star-score">4.6</span><span class="star-cnt">(88)</span></div>
+                  <div class="price-row"><span class="price">$34.00</span></div>
+                  <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+                </div>
+              </div>
+              <div class="p-card">
+                <div class="p-img bg-metal"><div style="font-size:48px;">🛡️</div></div>
+                <div class="p-info">
+                  <div class="p-name"><span class="ei">Immune Defense Blend</span><span class="zi">免疫防御配方</span></div>
+                  <div class="p-name-zh"><span class="ei">免疫防御配方</span><span class="zi">Immune Defense Blend</span></div>
+                  <div class="tcm-tags-row"><span class="tcm-tag t-warm"><span class="ei">Warm</span><span class="zi">温性</span></span><span class="tcm-tag t-tonify"><span class="ei">Tonify Qi</span><span class="zi">补气</span></span></div>
+                  <div class="star-row"><span class="stars">★★★★★</span><span class="star-score">4.7</span><span class="star-cnt">(119)</span></div>
+                  <div class="price-row"><span class="price">$48.00</span></div>
+                  <button class="add-btn" onclick="addToCart(this)"><span class="ei">Add to Cart</span><span class="zi">加入购物车</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /state-formula -->
+
+      </div><!-- /right-col -->
+    </div><!-- /search-layout -->
+
+    <!-- ===== STATE 3 — ZERO RESULTS (full width) ===== -->
+    <div id="state-zero" class="state-zero-wrap" style="display:none;flex-direction:column;align-items:center;">
+      <div class="zero-state">
+        <div class="zero-icon">🔍</div>
+        <h2 class="zero-title"><span class="ei">No results for 'xyzabc123'</span><span class="zi">没有找到"xyzabc123"的结果</span></h2>
+        <p class="zero-sub">
+          <span class="ei">We couldn't find any herbs or formulas matching that search. Try describing your symptoms or browsing by category.</span>
+          <span class="zi">我们找不到与该搜索匹配的草药或方剂。请尝试描述您的症状，或按分类浏览。</span>
+        </p>
+
+        <div class="zero-paths">
+          <!-- AI Fallback -->
+          <div class="zero-card-ai">
+            <h3><span class="ei">✨ Describe your symptoms instead</span><span class="zi">✨ 改为描述您的症状</span></h3>
+            <p><span class="ei">Not sure what to search? Tell our TCM AI how you're feeling.</span><span class="zi">不确定搜什么？告诉我们的中医AI您的感受。</span></p>
+            <input class="zero-ai-input" type="text" placeholder="e.g., I feel tired and cold all the time... / 例如：我总是感到疲倦和怕冷..." />
+            <button class="zero-ai-btn">✨ <span class="ei">Ask TCM AI</span><span class="zi">询问中医AI</span></button>
+          </div>
+          <!-- Browse by category -->
+          <div class="zero-card-browse">
+            <h3><span class="ei">Browse by Category</span><span class="zi">按分类浏览</span></h3>
+            <p><span class="ei">Explore our full range of TCM products.</span><span class="zi">浏览我们的全系列中医产品。</span></p>
+            <div class="browse-grid">
+              <span class="browse-chip">📦 <span class="ei">Herbal Formulas</span><span class="zi">方剂</span></span>
+              <span class="browse-chip">🌿 <span class="ei">Single Herbs</span><span class="zi">单味药</span></span>
+              <span class="browse-chip">☯️ <span class="ei">Five Elements</span><span class="zi">五行</span></span>
+              <span class="browse-chip">🍵 <span class="ei">Teas</span><span class="zi">茶饮</span></span>
+              <span class="browse-chip">🧬 <span class="ei">By Constitution</span><span class="zi">按体质</span></span>
+              <span class="browse-chip">🏥 <span class="ei">Conditions</span><span class="zi">症状</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zero-suggested">
+          <div class="zero-suggested-label"><span class="ei">Popular searches:</span><span class="zi">热门搜索：</span></div>
+          <div class="zero-chips">
+            <span class="zero-chip" onclick="setQueryText('astragalus')">astragalus</span>
+            <span class="zero-chip" onclick="setQueryText('reishi')">reishi</span>
+            <span class="zero-chip" onclick="setQueryText('qi deficiency')">qi deficiency</span>
+            <span class="zero-chip" onclick="setQueryText('sleep formula')">sleep formula</span>
+            <span class="zero-chip" onclick="setQueryText('免疫力')">免疫力</span>
+            <span class="zero-chip" onclick="setQueryText('补气')">补气</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /search-body -->
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo" style="font-family:var(--font-heading);font-size:20px;color:#fff;margin-bottom:10px;">🌿 pureHerb<span style="color:var(--accent-500);">Health</span></div>
+          <p class="footer-desc"><span class="ei">Authentic Traditional Chinese Medicine products, sourced responsibly and tested for purity. Bridging ancient wisdom with modern wellness.</span><span class="zi">正宗中药产品，负责任地溯源并经纯度检测。连接古老智慧与现代健康。</span></p>
+        </div>
+        <div class="footer-col">
+          <h4><span class="ei">Shop</span><span class="zi">商城</span></h4>
+          <div class="footer-links">
+            <a><span class="ei">All Products</span><span class="zi">全部产品</span></a>
+            <a><span class="ei">Herbal Formulas</span><span class="zi">方剂</span></a>
+            <a><span class="ei">Single Herbs</span><span class="zi">单味药</span></a>
+            <a><span class="ei">Teas & Drinks</span><span class="zi">茶饮</span></a>
+            <a><span class="ei">New Arrivals</span><span class="zi">新品</span></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4><span class="ei">Learn</span><span class="zi">学习</span></h4>
+          <div class="footer-links">
+            <a><span class="ei">TCM Basics</span><span class="zi">中医基础</span></a>
+            <a><span class="ei">Herb Library</span><span class="zi">草药库</span></a>
+            <a><span class="ei">Condition Guides</span><span class="zi">症状指南</span></a>
+            <a><span class="ei">Five Elements</span><span class="zi">五行</span></a>
+            <a><span class="ei">Constitution Quiz</span><span class="zi">体质测试</span></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4><span class="ei">Support</span><span class="zi">支持</span></h4>
+          <div class="footer-links">
+            <a><span class="ei">Practitioner Portal</span><span class="zi">医师入口</span></a>
+            <a><span class="ei">Shipping & Returns</span><span class="zi">运费与退货</span></a>
+            <a><span class="ei">Quality Assurance</span><span class="zi">质量保证</span></a>
+            <a><span class="ei">Contact Us</span><span class="zi">联系我们</span></a>
+            <a><span class="ei">FAQ</span><span class="zi">常见问题</span></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 pureHerbHealth. <span class="ei">All rights reserved.</span><span class="zi">版权所有。</span></p>
+        <p class="fda-notice">
+          <span class="ei">Products shown for informational purposes. These statements have not been evaluated by the FDA. Not intended to diagnose, treat, cure, or prevent any disease. Consult your healthcare practitioner before use.</span>
+          <span class="zi">产品展示仅供参考。本产品声明未经FDA评估，不用于诊断、治疗、治愈或预防任何疾病。使用前请咨询您的医疗从业者。</span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /site-wrap -->
+
+<!-- TOAST -->
+<div id="toast">🛒 <span id="toast-msg">Added to cart!</span></div>
+
+<script>
+  // ============================================================
+  // THEME JSON (sourced from theme.json — keep in sync)
+  // ============================================================
+  const THEME_JSON = {
+    colors: {
+      brand:   {"50":"#f0fdf4","100":"#dcfce7","200":"#bbf7d0","300":"#86efac","400":"#4ade80","500":"#2D8C54","600":"#22764a","700":"#166534","800":"#14532d","900":"#052e16"},
+      accent:  {"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#D4A843","600":"#b45309","700":"#92400e"},
+      neutral: {"50":"#fafafa","100":"#f5f5f5","200":"#e5e5e5","300":"#d4d4d4","400":"#a3a3a3","500":"#737373","600":"#525252","700":"#404040","800":"#262626","900":"#171717"},
+      elements: {
+        wood:  {badge:"#4CAF50",bg:"#f0fdf4",border:"#86efac",text:"#166534"},
+        fire:  {badge:"#E53E3E",bg:"#fff5f5",border:"#feb2b2",text:"#c53030"},
+        earth: {badge:"#D4A843",bg:"#fffbeb",border:"#fde68a",text:"#92400e"},
+        metal: {badge:"#A0AEC0",bg:"#f9fafb",border:"#e5e7eb",text:"#374151"},
+        water: {badge:"#3182CE",bg:"#eff6ff",border:"#bfdbfe",text:"#1e40af"}
+      }
+    },
+    typography: {
+      fontHeading:"'DM Serif Display', Georgia, 'Times New Roman', serif",
+      fontBody:"'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      fontChinese:"'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif"
+    },
+    radius: {sm:"4px",md:"8px",lg:"12px",xl:"16px","2xl":"24px","3xl":"32px",full:"9999px"},
+    shadows: {
+      xs:"0 1px 2px rgba(0,0,0,.05)",
+      sm:"0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04)",
+      md:"0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04)",
+      lg:"0 8px 24px rgba(0,0,0,.10),0 4px 8px rgba(0,0,0,.04)",
+      brand:"0 4px 14px rgba(45,140,84,.30)",
+      gold:"0 4px 14px rgba(212,168,67,.35)"
+    },
+    transitions: {fast:"150ms ease",base:"250ms ease",slow:"400ms ease",spring:"300ms cubic-bezier(0.34,1.56,0.64,1)"}
+  };
+
+  function applyTheme(t) {
+    const r = document.documentElement.style;
+    const c = t.colors;
+    Object.entries(c.brand).forEach(([k,v]) => r.setProperty(`--brand-${k}`, v));
+    Object.entries(c.accent).forEach(([k,v]) => r.setProperty(`--accent-${k}`, v));
+    Object.entries(c.neutral).forEach(([k,v]) => r.setProperty(`--neutral-${k}`, v));
+    Object.entries(c.elements).forEach(([el,vals]) =>
+      Object.entries(vals).forEach(([k,v]) => r.setProperty(`--element-${el}-${k}`, v))
+    );
+    r.setProperty('--font-heading', t.typography.fontHeading);
+    r.setProperty('--font-body',    t.typography.fontBody);
+    r.setProperty('--font-chinese', t.typography.fontChinese);
+    Object.entries(t.radius).forEach(([k,v]) => r.setProperty(`--radius-${k}`, v));
+    Object.entries(t.shadows).forEach(([k,v]) => r.setProperty(`--shadow-${k}`, v));
+    Object.entries(t.transitions).forEach(([k,v]) => r.setProperty(`--transition-${k}`, v));
+  }
+  applyTheme(THEME_JSON);
+
+  // ============================================================
+  // STATE MANAGEMENT
+  // ============================================================
+  let currentQuery = 'sleep';
+  let currentLang  = 'en';
+  let cartCount    = 0;
+
+  const QUERIES = {
+    sleep: {
+      en: "herbs for poor sleep",
+      zh: "睡眠不好的草药",
+      countEn: 'Showing <strong>8 results</strong> for \'<strong>herbs for poor sleep</strong>\'',
+      countZh: '为"<strong>睡眠不好的草药</strong>"显示 <strong>8 个结果</strong>',
+    },
+    formula: {
+      en: "玉屏风散",
+      zh: "玉屏风散",
+      countEn: 'Showing <strong>7 results</strong> for \'<strong>玉屏风散</strong>\'',
+      countZh: '为"<strong>玉屏风散</strong>"显示 <strong>7 个结果</strong>',
+    },
+    zero: {
+      en: "xyzabc123",
+      zh: "xyzabc123",
+      countEn: '<strong>0 results</strong> for \'<strong>xyzabc123</strong>\'',
+      countZh: '"<strong>xyzabc123</strong>"的结果：<strong>0 个</strong>',
+    }
+  };
+
+  function setQuery(q) {
+    currentQuery = q;
+
+    // Update prototype bar buttons
+    document.querySelectorAll('.query-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('qbtn-' + q).classList.add('active');
+
+    // Update search input
+    const qData = QUERIES[q];
+    document.getElementById('search-input').value = currentLang === 'zh' ? qData.zh : qData.en;
+
+    // Update result count
+    const countEl = document.getElementById('result-count-txt');
+    countEl.innerHTML = `<span class="ei">${qData.countEn}</span><span class="zi">${qData.countZh}</span>`;
+    applyLangToElement(countEl);
+
+    // Show/hide layout
+    const twoCol = document.getElementById('layout-twocol');
+    const zeroWrap = document.getElementById('state-zero');
+
+    if (q === 'zero') {
+      twoCol.style.display = 'none';
+      zeroWrap.style.display = 'flex';
+      document.getElementById('filter-pills').style.opacity = '0.4';
+    } else {
+      twoCol.style.display = 'grid';
+      zeroWrap.style.display = 'none';
+      document.getElementById('filter-pills').style.opacity = '1';
+    }
+
+    // Switch state panels
+    document.querySelectorAll('#layout-twocol .state').forEach(s => s.classList.remove('active'));
+    if (q === 'sleep') document.getElementById('state-sleep').classList.add('active');
+    if (q === 'formula') document.getElementById('state-formula').classList.add('active');
+
+    // Scroll search section into view smoothly
+    document.querySelector('.search-section').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.body.classList.toggle('zh', lang === 'zh');
+
+    // Proto bar
+    document.getElementById('plang-en').classList.toggle('active', lang === 'en');
+    document.getElementById('plang-zh').classList.toggle('active', lang === 'zh');
+    // Header
+    document.getElementById('hlang-en').classList.toggle('active', lang === 'en');
+    document.getElementById('hlang-zh').classList.toggle('active', lang === 'zh');
+
+    // Update search input value
+    const qData = QUERIES[currentQuery];
+    document.getElementById('search-input').value = lang === 'zh' ? qData.zh : qData.en;
+
+    // Update result count text
+    const countEl = document.getElementById('result-count-txt');
+    applyLangToElement(countEl);
+  }
+
+  function applyLangToElement(el) {
+    el.querySelectorAll('.ei').forEach(e => e.style.display = currentLang === 'zh' ? 'none' : 'inline');
+    el.querySelectorAll('.zi').forEach(e => e.style.display = currentLang === 'zh' ? 'inline' : 'none');
+    el.querySelectorAll('.en').forEach(e => e.style.display = currentLang === 'zh' ? 'none' : 'block');
+    el.querySelectorAll('.zh-c').forEach(e => e.style.display = currentLang === 'zh' ? 'block' : 'none');
+  }
+
+  // ============================================================
+  // AI CARD COLLAPSE
+  // ============================================================
+  function toggleAiCard(cardId, btn) {
+    const card = document.getElementById(cardId);
+    const collapsed = card.classList.toggle('ai-card-collapsed');
+    const isZh = currentLang === 'zh';
+    if (collapsed) {
+      btn.innerHTML = isZh
+        ? '<span class="ei">Expand AI Interpretation ▼</span><span class="zi">展开AI解读 ▼</span>'
+        : '<span class="ei">Expand AI Interpretation ▼</span><span class="zi">展开AI解读 ▼</span>';
+    } else {
+      btn.innerHTML = '<span class="ei">Collapse AI Interpretation ▲</span><span class="zi">收起AI解读 ▲</span>';
+    }
+    applyLangToElement(btn);
+  }
+
+  // ============================================================
+  // CART
+  // ============================================================
+  function addToCart(btn) {
+    cartCount++;
+    document.getElementById('cart-count').textContent = cartCount;
+
+    // Brief button feedback
+    const orig = btn.innerHTML;
+    btn.style.background = 'var(--brand-700)';
+    btn.innerHTML = '✓ <span class="ei">Added!</span><span class="zi">已加入!</span>';
+    if (currentLang === 'zh') {
+      btn.querySelector('.ei').style.display = 'none';
+      btn.querySelector('.zi').style.display = 'inline';
+    }
+    setTimeout(() => {
+      btn.style.background = '';
+      btn.innerHTML = orig;
+    }, 1200);
+
+    // Toast
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = currentLang === 'zh' ? '已添加到购物车！' : 'Added to cart!';
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  // ============================================================
+  // RELATED / CHIP CLICKS
+  // ============================================================
+  function switchRelated(query) {
+    document.getElementById('search-input').value = query;
+    showToastMsg(currentLang === 'zh' ? `搜索："${query}"` : `Searching for "${query}"`, '🔍');
+  }
+
+  function setQueryText(query) {
+    document.getElementById('search-input').value = query;
+    showToastMsg(currentLang === 'zh' ? `搜索："${query}"` : `Searching for "${query}"`, '🔍');
+  }
+
+  function showToastMsg(msg, icon) {
+    const toast = document.getElementById('toast');
+    toast.innerHTML = `${icon || ''} <span>${msg}</span>`;
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  // ============================================================
+  // FILTER PILL ACTIVE TOGGLE
+  // ============================================================
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.addEventListener('click', function() {
+      this.closest('.filter-pills').querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // ============================================================
+  // CLEAR ALL FILTERS
+  // ============================================================
+  function clearAllFilters() {
+    document.querySelectorAll('.sidebar input[type=checkbox]').forEach(cb => {
+      cb.checked = false;
+    });
+    document.querySelectorAll('.el-chip').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.nature-pill').forEach(p => {
+      p.classList.remove('selected');
+      p.style.background = '';
+      p.style.color = p.dataset.color || '';
+    });
+    showToastMsg(currentLang === 'zh' ? '筛选已清除' : 'Filters cleared', '✓');
+  }
+
+  // ============================================================
+  // INIT
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(THEME_JSON);
+    setQuery('sleep');
+    setLang('en');
+  });
+</script>
+</body>
+</html>

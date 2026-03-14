@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clinic Shop Prototype — Embedded Store White-Label Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================
+       CLINIC WHITE-LABEL DESIGN SYSTEM
+       Three stores, one codebase, different themes
+    ============================================ */
+
+    /* ---- STORE THEME TOKENS ---- */
+    /* Each store overrides these CSS custom properties via stores.theme_config */
+
+    /* Theme A: Dr. Huang Clinic (source: chinese-medicine/styles/globals.css) */
+    .theme-drhuang {
+      --clinic-primary:        #166534;  /* Green-700 */
+      --clinic-primary-dark:   #14532d;  /* Green-800 */
+      --clinic-primary-light:  #22c55e;  /* Green-500 */
+      --clinic-primary-50:     #f0fdf4;  /* Green-50 */
+      --clinic-primary-100:    #dcfce7;  /* Green-100 */
+      --clinic-secondary:      #78350f;  /* Amber-900 */
+      --clinic-secondary-light:#f59e0b;  /* Amber-500 */
+      --clinic-secondary-50:   #fffbeb;  /* Amber-50 */
+      --clinic-backdrop:       #f0fdf4;
+      --clinic-name: "Dr. Huang Acupuncture & Herbal Medicine";
+      --clinic-tagline: "Flushing, NY  ·  Licensed Acupuncturist & Herbalist";
+    }
+
+    /* Theme B: Acupuncture Flushing */
+    .theme-flushing {
+      --clinic-primary:        #1e3a5f;  /* Navy */
+      --clinic-primary-dark:   #152d4d;
+      --clinic-primary-light:  #3b82f6;
+      --clinic-primary-50:     #eff6ff;
+      --clinic-primary-100:    #dbeafe;
+      --clinic-secondary:      #b45309;  /* Warm amber */
+      --clinic-secondary-light:#f59e0b;
+      --clinic-secondary-50:   #fffbeb;
+      --clinic-backdrop:       #f0f4ff;
+    }
+
+    /* Theme C: pureHerbHealth (standalone — for comparison) */
+    .theme-purehrb {
+      --clinic-primary:        #2D8C54;
+      --clinic-primary-dark:   #247043;
+      --clinic-primary-light:  #4AA370;
+      --clinic-primary-50:     #E8F5EE;
+      --clinic-primary-100:    #A3D1B7;
+      --clinic-secondary:      #D4A843;
+      --clinic-secondary-light:#FFD666;
+      --clinic-secondary-50:   #FFF8E7;
+      --clinic-backdrop:       #FAFAF9;
+    }
+
+    /* Shared token aliases */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      font-size: 15px;
+    }
+    body.zh { font-family: 'Noto Sans SC', 'Inter', sans-serif; }
+
+    /* ============================================
+       PROTOTYPE CHROME
+    ============================================ */
+    .proto-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      background: #1e293b; color: #94a3b8;
+      padding: 0 24px; height: 44px;
+      display: flex; align-items: center; gap: 0;
+      font-size: 12px; font-weight: 500;
+    }
+    .proto-bar-left { display: flex; align-items: center; gap: 16px; flex: 1; }
+    .proto-title { color: white; font-weight: 600; }
+    .proto-badge { background: #f59e0b; color: #1e293b; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+    .store-picker { display: flex; gap: 0; background: #0f172a; border-radius: 6px; overflow: hidden; border: 1px solid #334155; }
+    .store-tab {
+      padding: 5px 14px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: none; background: transparent; color: #64748b;
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .store-tab.active { background: var(--clinic-primary, #166534); color: white; }
+    .store-tab:hover:not(.active) { color: #cbd5e1; }
+    .lang-toggle { display: flex; background: #0f172a; border-radius: 6px; overflow: hidden; border: 1px solid #334155; }
+    .lang-tab { padding: 5px 12px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #64748b; transition: all 0.15s; }
+    .lang-tab.active { background: #475569; color: white; }
+
+    /* ============================================
+       CLINIC SITE LAYOUT (the parent shell)
+    ============================================ */
+    .clinic-site { margin-top: 44px; min-height: 100vh; }
+
+    /* CLINIC TOPBAR */
+    .clinic-topbar {
+      background: var(--clinic-primary);
+      padding: 8px 24px;
+    }
+    .clinic-topbar-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .clinic-topbar-left { display: flex; gap: 20px; align-items: center; }
+    .topbar-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.85); }
+    .topbar-item svg { opacity: 0.7; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-book-btn {
+      background: var(--clinic-secondary-light); color: #1e293b;
+      border: none; border-radius: 4px; padding: 5px 14px;
+      font-size: 12px; font-weight: 700; cursor: pointer;
+    }
+
+    /* CLINIC HEADER */
+    .clinic-header {
+      background: white; border-bottom: 2px solid var(--clinic-primary-100);
+      position: sticky; top: 44px; z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .clinic-header-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 24px;
+    }
+    .clinic-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .clinic-logo-icon {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: var(--clinic-primary); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .clinic-logo-text strong { display: block; font-size: 15px; font-weight: 700; color: var(--clinic-primary); line-height: 1.2; }
+    .clinic-logo-text span { font-size: 11px; color: #64748b; }
+    .clinic-nav { display: flex; gap: 2px; flex: 1; margin-left: 8px; }
+    .clinic-nav a {
+      padding: 8px 10px; border-radius: 6px;
+      font-size: 13px; font-weight: 600; color: #475569;
+      text-decoration: none; transition: all 0.15s; white-space: nowrap;
+    }
+    .clinic-nav a:hover { background: var(--clinic-primary-50); color: var(--clinic-primary); }
+    .clinic-nav a.active {
+      background: var(--clinic-primary-50);
+      color: var(--clinic-primary);
+      border-bottom: 2px solid var(--clinic-primary);
+      border-radius: 6px 6px 0 0;
+    }
+    .clinic-nav a.shop-tab {
+      background: var(--clinic-primary); color: white;
+      border-radius: 6px;
+    }
+    .clinic-nav a.shop-tab:hover { background: var(--clinic-primary-dark); }
+    .clinic-header-actions { display: flex; align-items: center; gap: 10px; }
+    .clinic-lang-sw { display: flex; background: #f1f5f9; border-radius: 20px; overflow: hidden; }
+    .clinic-lang-btn { padding: 4px 10px; font-size: 12px; font-weight: 600; border: none; background: transparent; cursor: pointer; color: #64748b; }
+    .clinic-lang-btn.active { background: white; color: var(--clinic-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 20px; }
+    .clinic-cart-btn {
+      background: var(--clinic-primary); color: white;
+      border: none; border-radius: 6px; padding: 8px 16px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .cart-badge { background: var(--clinic-secondary-light); color: #1e293b; border-radius: 20px; font-size: 11px; font-weight: 700; padding: 1px 6px; }
+
+    /* ============================================
+       SHOP EMBEDDED SECTION
+       Everything below the clinic header is the
+       white-labeled store — no clinic branding inside
+    ============================================ */
+
+    /* Shop breadcrumb */
+    .shop-breadcrumb {
+      background: var(--clinic-backdrop);
+      border-bottom: 1px solid var(--clinic-primary-100);
+      padding: 10px 24px;
+    }
+    .shop-breadcrumb-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 6px; font-size: 13px; }
+    .bc-item { color: #64748b; }
+    .bc-item.active { color: var(--clinic-primary); font-weight: 600; }
+    .bc-sep { color: #94a3b8; }
+
+    /* Shop trust mini-bar */
+    .shop-trust-mini {
+      background: var(--clinic-primary-50);
+      border-bottom: 1px solid var(--clinic-primary-100);
+      padding: 7px 24px;
+    }
+    .shop-trust-mini-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; gap: 28px; align-items: center; justify-content: center;
+    }
+    .trust-mini-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--clinic-primary); font-weight: 500; }
+
+    /* Shop home hero — clinic branded */
+    .shop-hero {
+      background: linear-gradient(120deg, var(--clinic-primary) 0%, var(--clinic-primary-dark) 100%);
+      padding: 48px 24px;
+    }
+    .shop-hero-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .shop-hero-content { color: white; }
+    .shop-hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 600;
+      color: rgba(255,255,255,0.9); margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    .shop-hero h1 { font-size: 34px; line-height: 1.2; margin-bottom: 12px; }
+    .shop-hero h1 em { color: var(--clinic-secondary-light); font-style: normal; }
+    .shop-hero-zh { font-family: 'Noto Sans SC', sans-serif; font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 16px; }
+    .shop-hero p { font-size: 15px; color: rgba(255,255,255,0.8); line-height: 1.6; margin-bottom: 24px; max-width: 420px; }
+    .shop-hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-shop-primary {
+      background: var(--clinic-secondary-light); color: #1e293b;
+      border: none; padding: 11px 22px; border-radius: 6px;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+    .btn-shop-outline {
+      background: transparent; color: white;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 11px 22px; border-radius: 6px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .shop-hero-practitioner {
+      background: rgba(255,255,255,0.1); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;
+      padding: 20px;
+    }
+    .practitioner-card { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+    .practitioner-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--clinic-primary-light); opacity: 0.6;
+      display: flex; align-items: center; justify-content: center; font-size: 26px;
+      flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3);
+    }
+    .practitioner-info strong { display: block; font-size: 15px; color: white; }
+    .practitioner-info span { font-size: 12px; color: rgba(255,255,255,0.65); }
+    .practitioner-note { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; font-style: italic; margin-bottom: 14px; }
+    .practitioner-picks-label { font-size: 11px; font-weight: 600; color: var(--clinic-secondary-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .mini-products { display: flex; gap: 8px; }
+    .mini-product {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px; padding: 8px 10px; flex: 1; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .mini-product:hover { background: rgba(255,255,255,0.2); }
+    .mini-product-name { font-size: 12px; color: white; font-weight: 500; }
+    .mini-product-price { font-size: 13px; color: var(--clinic-secondary-light); font-weight: 700; margin-top: 2px; }
+
+    /* Category strip */
+    .category-strip { background: white; padding: 28px 24px; border-bottom: 1px solid #e2e8f0; }
+    .category-strip-inner { max-width: 1280px; margin: 0 auto; }
+    .category-strip h3 { font-size: 14px; font-weight: 700; color: var(--clinic-primary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
+    .category-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .cat-chip {
+      display: flex; align-items: center; gap: 7px;
+      padding: 8px 16px; border-radius: 20px;
+      border: 1px solid var(--clinic-primary-100);
+      background: var(--clinic-backdrop); cursor: pointer;
+      font-size: 13px; font-weight: 600; color: #475569;
+      transition: all 0.15s;
+    }
+    .cat-chip:hover { border-color: var(--clinic-primary); color: var(--clinic-primary); background: var(--clinic-primary-50); }
+    .cat-chip.active { border-color: var(--clinic-primary); background: var(--clinic-primary); color: white; }
+    .cat-chip-zh { font-size: 11px; color: inherit; opacity: 0.75; font-family: 'Noto Sans SC', sans-serif; }
+
+    /* Products section */
+    .products-section { padding: 40px 24px; background: var(--clinic-backdrop); }
+    .products-section-inner { max-width: 1280px; margin: 0 auto; }
+    .products-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .products-header h2 { font-size: 22px; color: #0f172a; }
+    .products-header h2 span { color: var(--clinic-primary); }
+    .filter-row { display: flex; gap: 8px; align-items: center; }
+    .filter-select { padding: 7px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; color: #475569; background: white; cursor: pointer; }
+    .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* Product card */
+    .product-card {
+      background: white; border-radius: 10px;
+      border: 1px solid #e2e8f0; overflow: hidden;
+      transition: all 0.2s; cursor: pointer; position: relative;
+    }
+    .product-card:hover { box-shadow: 0 8px 20px -4px rgba(0,0,0,0.1); transform: translateY(-2px); border-color: var(--clinic-primary-100); }
+    .product-img {
+      width: 100%; aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 52px; position: relative;
+    }
+    .product-badges { position: absolute; top: 8px; left: 8px; display: flex; flex-direction: column; gap: 4px; }
+    .badge { padding: 3px 7px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .badge-pick { background: var(--clinic-primary); color: white; }
+    .badge-sale { background: #ef4444; color: white; }
+    .badge-new { background: #3b82f6; color: white; }
+    .badge-bs { background: var(--clinic-secondary-light); color: #1e293b; }
+    .wishlist { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; background: white; border: 1px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .product-info { padding: 14px; }
+    .product-cat { font-size: 10px; font-weight: 700; color: var(--clinic-primary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+    .product-name { font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3; margin-bottom: 2px; }
+    .product-name-zh { font-size: 12px; color: #64748b; font-family: 'Noto Sans SC', sans-serif; margin-bottom: 6px; }
+    .tcm-tags { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 8px; }
+    .tcm-tag { padding: 2px 7px; border-radius: 20px; font-size: 10px; font-weight: 600; border: 1px solid; }
+    .tag-wood { color: #16a34a; border-color: #16a34a; background: #f0fdf4; }
+    .tag-fire { color: #dc2626; border-color: #dc2626; background: #fef2f2; }
+    .tag-earth { color: #d97706; border-color: #d97706; background: #fffbeb; }
+    .tag-water { color: #2563eb; border-color: #2563eb; background: #eff6ff; }
+    .stars { color: #f59e0b; font-size: 12px; }
+    .star-row { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; font-size: 11px; color: #94a3b8; }
+    .price-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px; }
+    .price { font-size: 17px; font-weight: 700; color: #0f172a; }
+    .price-orig { font-size: 12px; color: #94a3b8; text-decoration: line-through; }
+    .stock-row { display: flex; align-items: center; gap: 5px; font-size: 11px; margin-bottom: 10px; }
+    .stock-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .dot-in { background: #16a34a; }
+    .dot-low { background: #f59e0b; }
+    .add-btn {
+      width: 100%; padding: 9px; background: var(--clinic-primary); color: white;
+      border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .add-btn:hover { background: var(--clinic-primary-dark); }
+
+    /* Practitioner section */
+    .practitioner-section { background: white; padding: 40px 24px; border-top: 1px solid #e2e8f0; }
+    .practitioner-section-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 40px; align-items: start; }
+    .practitioner-profile { text-align: center; }
+    .prac-avatar-lg {
+      width: 100px; height: 100px; border-radius: 50%;
+      background: var(--clinic-primary-100);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; margin: 0 auto 14px;
+      border: 3px solid var(--clinic-primary-100);
+    }
+    .prac-name { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+    .prac-title { font-size: 13px; color: var(--clinic-primary); font-weight: 500; margin-bottom: 4px; }
+    .prac-cred { font-size: 12px; color: #64748b; }
+    .prac-note-section h3 { font-size: 17px; color: #0f172a; margin-bottom: 10px; }
+    .prac-note-section h3 span { color: var(--clinic-primary); }
+    .prac-note { font-size: 14px; color: #475569; line-height: 1.7; margin-bottom: 16px; border-left: 3px solid var(--clinic-primary-100); padding-left: 16px; }
+    .prac-picks-label { font-size: 11px; font-weight: 700; color: var(--clinic-primary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+    .prac-picks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .prac-pick-card {
+      border: 1px solid var(--clinic-primary-100); border-radius: 8px;
+      padding: 10px; display: flex; gap: 8px; align-items: center;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .prac-pick-card:hover { background: var(--clinic-primary-50); border-color: var(--clinic-primary); }
+    .prac-pick-emoji { font-size: 24px; flex-shrink: 0; }
+    .prac-pick-name { font-size: 12px; font-weight: 600; color: #0f172a; }
+    .prac-pick-price { font-size: 12px; color: var(--clinic-primary); font-weight: 700; }
+
+    /* ---- CHECKOUT SECTION ---- */
+    .checkout-section { background: var(--clinic-backdrop); padding: 40px 24px; border-top: 1px solid var(--clinic-primary-100); }
+    .checkout-section-inner { max-width: 840px; margin: 0 auto; }
+    .checkout-label { font-size: 11px; font-weight: 700; color: var(--clinic-primary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .checkout-grid { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+    .checkout-form-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden; }
+    .checkout-form-header { background: var(--clinic-primary); color: white; padding: 14px 20px; font-weight: 700; font-size: 14px; }
+    .checkout-form-body { padding: 20px; }
+    .form-section-title { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; margin-top: 16px; }
+    .form-section-title:first-child { margin-top: 0; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .form-label { font-size: 12px; font-weight: 600; color: #374151; }
+    .form-input {
+      padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 6px;
+      font-size: 13px; color: #1e293b; outline: none; font-family: inherit;
+    }
+    .form-input:focus { border-color: var(--clinic-primary); box-shadow: 0 0 0 3px var(--clinic-primary-50); }
+    .payment-methods { display: flex; gap: 8px; margin-bottom: 14px; }
+    .pay-method { flex: 1; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .pay-method.active { border-color: var(--clinic-primary); background: var(--clinic-primary-50); color: var(--clinic-primary); }
+    .stripe-input { background: var(--clinic-backdrop); border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; font-size: 13px; color: #94a3b8; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .place-order-btn {
+      width: 100%; padding: 13px; background: var(--clinic-primary); color: white;
+      border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .place-order-btn:hover { background: var(--clinic-primary-dark); }
+    .ssl-note { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 8px; }
+    .order-summary-card { background: white; border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden; }
+    .order-summary-header { background: var(--clinic-primary-50); padding: 14px 16px; font-weight: 700; font-size: 14px; color: var(--clinic-primary); border-bottom: 1px solid var(--clinic-primary-100); }
+    .order-item { display: flex; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #f1f5f9; }
+    .order-item-img { width: 44px; height: 44px; background: var(--clinic-backdrop); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .order-item-info { flex: 1; }
+    .order-item-name { font-size: 13px; font-weight: 600; color: #0f172a; }
+    .order-item-name-zh { font-size: 11px; color: #94a3b8; font-family: 'Noto Sans SC', sans-serif; }
+    .order-item-qty { font-size: 12px; color: #64748b; }
+    .order-item-price { font-size: 14px; font-weight: 700; color: #0f172a; align-self: center; }
+    .order-totals { padding: 14px 16px; }
+    .total-row { display: flex; justify-content: space-between; font-size: 13px; color: #475569; margin-bottom: 6px; }
+    .total-row.grand { font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e8f0; }
+    .promo-row { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #f1f5f9; }
+    .promo-input { flex: 1; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; }
+    .promo-apply { padding: 8px 14px; background: var(--clinic-secondary-light); color: #1e293b; border: none; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; }
+    .invoice-note { padding: 10px 16px; background: var(--clinic-primary-50); border-top: 1px solid var(--clinic-primary-100); font-size: 11px; color: var(--clinic-primary); }
+
+    /* ---- THEME COMPARISON ---- */
+    .comparison-section { background: #0f172a; padding: 40px 24px; }
+    .comparison-inner { max-width: 1280px; margin: 0 auto; }
+    .comparison-title { font-size: 18px; font-weight: 700; color: white; margin-bottom: 6px; }
+    .comparison-subtitle { font-size: 13px; color: #64748b; margin-bottom: 28px; }
+    .comparison-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .comparison-card { border-radius: 10px; overflow: hidden; border: 1px solid #1e293b; }
+    .comparison-store-header { padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+    .comp-store-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .comp-store-name { font-size: 13px; font-weight: 700; color: white; }
+    .comp-store-type { font-size: 11px; color: rgba(255,255,255,0.5); }
+    .comparison-product-card { margin: 12px; border-radius: 8px; overflow: hidden; background: white; }
+    .comp-product-img { height: 80px; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+    .comp-product-body { padding: 10px; }
+    .comp-product-name { font-size: 12px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+    .comp-product-price { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+    .comp-add-btn { width: 100%; padding: 7px; border: none; border-radius: 5px; color: white; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .comparison-note { margin: 0 12px 12px; font-size: 11px; color: rgba(255,255,255,0.5); text-align: center; }
+
+    /* ---- FDA DISCLAIMER ---- */
+    .fda-bar { background: #fefce8; border-top: 1px solid #fde68a; padding: 10px 24px; }
+    .fda-bar-inner { max-width: 1280px; margin: 0 auto; font-size: 11px; color: #78350f; line-height: 1.5; }
+
+    /* ---- CLINIC FOOTER ---- */
+    .clinic-footer { background: #1e293b; color: #94a3b8; padding: 32px 24px; }
+    .clinic-footer-inner { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    .clinic-footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
+    .clinic-footer-brand strong { display: block; font-size: 15px; color: white; margin-bottom: 4px; }
+    .clinic-footer-brand p { font-size: 12px; max-width: 280px; line-height: 1.6; }
+    .clinic-footer-links { display: flex; gap: 40px; }
+    .footer-col-title { font-size: 12px; font-weight: 700; color: white; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .footer-link { display: block; font-size: 12px; color: #64748b; text-decoration: none; margin-bottom: 6px; }
+    .footer-link:hover { color: #94a3b8; }
+    .clinic-footer-bottom { border-top: 1px solid #334155; padding-top: 16px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; flex-wrap: wrap; gap: 8px; }
+    .payment-icons { display: flex; gap: 6px; }
+    .pay-icon { background: white; border-radius: 3px; padding: 2px 7px; font-size: 11px; font-weight: 700; color: #1e293b; }
+
+    /* ---- I18N ---- */
+    .en { display: block; }
+    .zh-c { display: none; }
+    .en-i { display: inline; }
+    .zh-i { display: none; }
+    body.zh .en { display: none; }
+    body.zh .zh-c { display: block; }
+    body.zh .en-i { display: none; }
+    body.zh .zh-i { display: inline; }
+
+    /* ---- AI CHAT ---- */
+    .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 200; }
+    .chat-fab {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--clinic-primary, #166534); color: white; border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); font-size: 22px;
+    }
+    .chat-panel {
+      position: absolute; bottom: 64px; right: 0;
+      width: 320px; background: white; border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15); border: 1px solid #e2e8f0;
+      overflow: hidden; display: none;
+    }
+    .chat-panel.open { display: flex; flex-direction: column; }
+    .chat-head { background: var(--clinic-primary, #166534); padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+    .chat-head-av { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .chat-head-info strong { display: block; font-size: 13px; color: white; font-family: inherit; }
+    .chat-head-info span { font-size: 11px; color: rgba(255,255,255,0.7); }
+    .chat-msgs { padding: 14px; max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .msg { display: flex; gap: 7px; align-items: flex-start; }
+    .msg.user { flex-direction: row-reverse; }
+    .msg-av { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .msg-av.ai { background: var(--clinic-primary, #166534); }
+    .msg-av.u { background: #e2e8f0; }
+    .bubble { max-width: 210px; padding: 8px 12px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
+    .bubble.ai { background: #f1f5f9; color: #374151; border-radius: 2px 8px 8px 8px; }
+    .bubble.u { background: var(--clinic-primary, #166534); color: white; border-radius: 8px 2px 8px 8px; }
+    .chat-disclaim { padding: 6px 14px; font-size: 10px; color: #94a3b8; border-top: 1px solid #f1f5f9; }
+    .chat-input-row { padding: 10px; border-top: 1px solid #f1f5f9; display: flex; gap: 7px; }
+    .c-input { flex: 1; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 12px; outline: none; font-family: inherit; }
+    .c-input:focus { border-color: var(--clinic-primary, #166534); }
+    .c-send { width: 32px; height: 32px; background: var(--clinic-primary, #166534); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<!-- =============================================
+     PROTOTYPE CHROME BAR
+============================================= -->
+<div class="proto-bar">
+  <div class="proto-bar-left">
+    <span class="proto-title">CLINIC_SHOP_PROTOTYPE</span>
+    <span class="proto-badge">VISUAL ONLY</span>
+    <span style="color:#475569">Embedded store white-label preview — 3 clinic themes</span>
+  </div>
+
+  <div style="display:flex;gap:12px;align-items:center">
+    <!-- Store switcher -->
+    <div class="store-picker">
+      <button class="store-tab active theme-drhuang" id="tab-drhuang" onclick="switchStore('drhuang')">🌿 Dr. Huang</button>
+      <button class="store-tab theme-flushing" id="tab-flushing" onclick="switchStore('flushing')">🏥 Acupuncture Flushing</button>
+      <button class="store-tab theme-purehrb" id="tab-purehrb" onclick="switchStore('purehrb')">⭐ pureHerbHealth</button>
+    </div>
+
+    <!-- Language toggle -->
+    <div class="lang-toggle">
+      <button class="lang-tab active" onclick="setLang('en')">EN</button>
+      <button class="lang-tab" onclick="setLang('zh')">中文</button>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     CLINIC SITE SHELL — theme-drhuang by default
+============================================= -->
+<div class="clinic-site theme-drhuang" id="clinic-site">
+
+  <!-- CLINIC TOPBAR -->
+  <div class="clinic-topbar">
+    <div class="clinic-topbar-inner">
+      <div class="clinic-topbar-left">
+        <div class="topbar-item">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.28a2 2 0 0 1 1.95-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.84a16 16 0 0 0 6 6l.9-.9a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.72 16.92z"/></svg>
+          <span id="topbar-phone">(718) 888-8888</span>
+        </div>
+        <div class="topbar-item">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span id="topbar-addr">
+            <span class="en-i">Flushing, Queens NY</span>
+            <span class="zh-i">纽约法拉盛</span>
+          </span>
+        </div>
+        <div class="topbar-item">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="en-i">Mon–Sat 9am–7pm</span>
+          <span class="zh-i">周一至周六 上午9时–下午7时</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-item">
+          <span id="promo-text" class="en-i">🌿 Patient discount: use code <strong>PATIENT20</strong></span>
+          <span id="promo-text-zh" class="zh-i">🌿 患者优惠码：<strong>PATIENT20</strong></span>
+        </div>
+        <button class="topbar-book-btn">
+          <span class="en-i">Book Appointment</span>
+          <span class="zh-i">在线预约</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLINIC HEADER -->
+  <header class="clinic-header">
+    <div class="clinic-header-inner">
+      <a class="clinic-logo">
+        <div class="clinic-logo-icon" id="clinic-icon">🌿</div>
+        <div class="clinic-logo-text">
+          <strong id="clinic-name">Dr. Huang Acupuncture & Herbal Medicine</strong>
+          <span id="clinic-tagline">
+            <span class="en-i">Licensed Acupuncturist · Flushing, NY</span>
+            <span class="zh-i">持牌针灸师 · 纽约法拉盛</span>
+          </span>
+        </div>
+      </a>
+
+      <nav class="clinic-nav">
+        <a href="#" class="en-i"><span class="en-i">Home</span></a>
+        <a href="#" class="en-i"><span class="en-i">Services</span></a>
+        <a href="#" class="en-i"><span class="en-i">Conditions</span></a>
+        <a href="#" class="en-i"><span class="en-i">About</span></a>
+        <a href="#" class="en-i"><span class="en-i">Blog</span></a>
+        <a href="#" class="en-i"><span class="en-i">Contact</span></a>
+        <a href="#" class="shop-tab active"><span class="en-i">🛍 Shop</span><span class="zh-i">🛍 商店</span></a>
+
+        <a href="#" class="zh-c"><span class="zh-i">首页</span></a>
+        <a href="#" class="zh-c"><span class="zh-i">服务项目</span></a>
+        <a href="#" class="zh-c"><span class="zh-i">治疗病症</span></a>
+        <a href="#" class="zh-c"><span class="zh-i">关于我们</span></a>
+        <a href="#" class="zh-c"><span class="zh-i">博客</span></a>
+        <a href="#" class="zh-c"><span class="zh-i">联系我们</span></a>
+      </nav>
+
+      <div class="clinic-header-actions">
+        <div class="clinic-lang-sw">
+          <button class="clinic-lang-btn active" onclick="setLang('en')">EN</button>
+          <button class="clinic-lang-btn" onclick="setLang('zh')">中文</button>
+        </div>
+        <button class="clinic-cart-btn">
+          🛒 <span class="en-i">Cart</span><span class="zh-i">购物车</span>
+          <span class="cart-badge" id="cart-count">3</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =============================================
+       EMBEDDED SHOP — starts here
+       Parent clinic header ↑ stays fixed
+       Everything below is the white-labeled store
+  ============================================= -->
+
+  <!-- Breadcrumb -->
+  <div class="shop-breadcrumb">
+    <div class="shop-breadcrumb-inner">
+      <span class="bc-item"><span class="en-i">Home</span><span class="zh-i">首页</span></span>
+      <span class="bc-sep">›</span>
+      <span class="bc-item active"><span class="en-i">Shop</span><span class="zh-i">商店</span></span>
+    </div>
+  </div>
+
+  <!-- Trust mini-bar -->
+  <div class="shop-trust-mini">
+    <div class="shop-trust-mini-inner">
+      <div class="trust-mini-item">🔒 <span class="en-i">Secure Checkout</span><span class="zh-i">安全结账</span></div>
+      <div class="trust-mini-item">📦 <span class="en-i">Free Shipping $75+</span><span class="zh-i">满$75免运费</span></div>
+      <div class="trust-mini-item">↩️ <span class="en-i">30-Day Returns</span><span class="zh-i">30天退货</span></div>
+      <div class="trust-mini-item">✓ <span id="shop-trust-name">Dr. Huang–Verified Products</span></div>
+    </div>
+  </div>
+
+  <!-- Shop Hero -->
+  <section class="shop-hero">
+    <div class="shop-hero-inner">
+      <div class="shop-hero-content">
+        <div class="shop-hero-eyebrow">
+          ✦ <span class="en-i">Practitioner-Curated Herbal Store</span>
+               <span class="zh-i">中医师精选草药商店</span>
+        </div>
+        <h1 class="en">
+          <span id="clinic-hero-name">Dr. Huang's</span> Recommended<br/><em>Herbal Products</em>
+        </h1>
+        <h1 class="zh-c" style="font-family:'Noto Sans SC',sans-serif;font-weight:500;font-size:28px">
+          <span id="clinic-hero-name-zh">黄医生</span>推荐的<em>草药产品</em>
+        </h1>
+        <div class="shop-hero-zh">
+          <span class="en-i">黄医生的 · 中医草药专卖店</span>
+          <span class="zh-i">Dr. Huang's Herbal Store</span>
+        </div>
+        <p class="en">Products personally selected by Dr. Huang for your wellness journey. Each item has been vetted for quality, sourced from trusted suppliers, and approved for patient use.</p>
+        <p class="zh-c">由黄医生亲自为您的健康之旅精选的产品。每款产品均经过质量审核，来源于可信赖的供应商，并获得患者使用认可。</p>
+        <div class="shop-hero-actions">
+          <button class="btn-shop-primary">
+            🌿 <span class="en-i">Shop All Products</span><span class="zh-i">浏览所有产品</span>
+          </button>
+          <button class="btn-shop-outline">
+            ✦ <span class="en-i">Take Constitution Quiz</span><span class="zh-i">测试您的体质</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Practitioner card -->
+      <div class="shop-hero-practitioner">
+        <div class="practitioner-card">
+          <div class="practitioner-avatar">👨‍⚕️</div>
+          <div class="practitioner-info">
+            <strong id="prac-hero-name">Dr. Wei Huang, L.Ac., DAOM</strong>
+            <span id="prac-hero-title">
+              <span class="en-i">Licensed Acupuncturist · Doctor of Oriental Medicine</span>
+              <span class="zh-i">执照针灸师 · 东方医学博士</span>
+            </span>
+          </div>
+        </div>
+        <p class="practitioner-note en">
+          "I've carefully selected these products for my patients over 15 years of practice. Every item in this store meets my standards for purity, potency, and safety."
+        </p>
+        <p class="practitioner-note zh-c" style="display:none">
+          "经过15年的临床实践，我精心为我的患者挑选了这些产品。店内每一款产品都符合我对纯度、效力和安全性的标准。"
+        </p>
+        <div class="practitioner-picks-label">
+          ★ <span class="en-i">This Week's Picks</span><span class="zh-i">本周精选</span>
+        </div>
+        <div class="mini-products">
+          <div class="mini-product">
+            <div class="mini-product-name"><span class="en-i">Astragalus Formula</span><span class="zh-i">黄芪方</span></div>
+            <div class="mini-product-price">$38</div>
+          </div>
+          <div class="mini-product">
+            <div class="mini-product-name"><span class="en-i">Reishi Sleep</span><span class="zh-i">灵芝安神</span></div>
+            <div class="mini-product-price">$32</div>
+          </div>
+          <div class="mini-product">
+            <div class="mini-product-name"><span class="en-i">Moxa Sticks</span><span class="zh-i">艾条</span></div>
+            <div class="mini-product-price">$45</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category strip -->
+  <div class="category-strip">
+    <div class="category-strip-inner">
+      <h3><span class="en-i">Browse Categories</span><span class="zh-i">浏览分类</span></h3>
+      <div class="category-row">
+        <div class="cat-chip active">🧪 <span class="en-i">Herbal Formulas</span><span class="zh-i">中药方剂</span> <span class="cat-chip-zh en-i">中药方剂</span></div>
+        <div class="cat-chip">🌱 <span class="en-i">Single Herbs</span><span class="zh-i">单味草药</span></div>
+        <div class="cat-chip">🍵 <span class="en-i">Herbal Teas</span><span class="zh-i">草本茶</span></div>
+        <div class="cat-chip">🔥 <span class="en-i">Moxibustion</span><span class="zh-i">艾灸</span></div>
+        <div class="cat-chip">💆 <span class="en-i">Wellness Tools</span><span class="zh-i">健康工具</span></div>
+        <div class="cat-chip" id="cat-patient">⭐ <span class="en-i">Dr. Picks</span><span class="zh-i">医生精选</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products grid -->
+  <section class="products-section">
+    <div class="products-section-inner">
+      <div class="products-header">
+        <h2><span id="prod-heading"><span class="en-i">Products curated by <span style="color:var(--clinic-primary)" id="prod-heading-name">Dr. Huang</span></span><span class="zh-i"><span id="prod-heading-name-zh" style="color:var(--clinic-primary)">黄医生</span>精选产品</span></span></h2>
+        <div class="filter-row">
+          <select class="filter-select"><option><span class="en-i">Sort: Best Sellers</span></option></select>
+          <select class="filter-select"><option><span class="en-i">All Categories</span></option></select>
+        </div>
+      </div>
+
+      <div class="product-grid">
+        <!-- Product 1 -->
+        <div class="product-card">
+          <div class="product-img" style="background:linear-gradient(135deg,#f0fdf4,#bbf7d0)">🌿
+            <div class="product-badges">
+              <span class="badge badge-pick" id="prac-badge-1">✓ Dr. Pick</span>
+              <span class="badge badge-bs">★ Best Seller</span>
+            </div>
+            <div class="wishlist">♡</div>
+          </div>
+          <div class="product-info">
+            <div class="product-cat"><span class="en-i">Herbal Formulas</span><span class="zh-i">中药方剂</span></div>
+            <div class="product-name"><span class="en-i">Astragalus Immune Formula</span><span class="zh-i">黄芪免疫方</span></div>
+            <div class="product-name-zh"><span class="en-i">黄芪免疫方 (Huáng Qí)</span></div>
+            <div class="tcm-tags">
+              <span class="tcm-tag tag-wood">Wood</span>
+              <span class="tcm-tag tag-earth">Earth</span>
+              <span class="tcm-tag" style="color:var(--clinic-primary);border-color:var(--clinic-primary);background:var(--clinic-primary-50)">Tonify Qi</span>
+            </div>
+            <div class="star-row"><span class="stars">★★★★★</span> (142)</div>
+            <div class="price-row"><span class="price">$38.00</span></div>
+            <div class="stock-row"><span class="stock-dot dot-in"></span><span style="color:#16a34a;font-size:11px;font-weight:600"><span class="en-i">In Stock</span><span class="zh-i">有货</span></span></div>
+            <button class="add-btn">+ <span class="en-i">Add to Cart</span><span class="zh-i">加入购物车</span></button>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card">
+          <div class="product-img" style="background:linear-gradient(135deg,#fffbeb,#fde68a)">🍯
+            <div class="product-badges"><span class="badge badge-sale">SALE 20% OFF</span></div>
+            <div class="wishlist">♡</div>
+          </div>
+          <div class="product-info">
+            <div class="product-cat"><span class="en-i">Herbal Formulas</span><span class="zh-i">中药方剂</span></div>
+            <div class="product-name"><span class="en-i">Reishi Sleep & Calm Formula</span><span class="zh-i">灵芝安神方</span></div>
+            <div class="product-name-zh"><span class="en-i">灵芝安神方 (Líng Zhī)</span></div>
+            <div class="tcm-tags">
+              <span class="tcm-tag tag-fire">Fire</span>
+              <span class="tcm-tag tag-water">Water</span>
+            </div>
+            <div class="star-row"><span class="stars">★★★★★</span> (89)</div>
+            <div class="price-row">
+              <span class="price">$32.00</span>
+              <span class="price-orig">$40.00</span>
+            </div>
+            <div class="stock-row"><span class="stock-dot dot-low"></span><span style="color:#f59e0b;font-size:11px;font-weight:600"><span class="en-i">Only 5 left</span><span class="zh-i">仅剩5件</span></span></div>
+            <button class="add-btn">+ <span class="en-i">Add to Cart</span><span class="zh-i">加入购物车</span></button>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card">
+          <div class="product-img" style="background:linear-gradient(135deg,#eff6ff,#bfdbfe)">🌸
+            <div class="product-badges"><span class="badge badge-new">NEW</span></div>
+            <div class="wishlist">♡</div>
+          </div>
+          <div class="product-info">
+            <div class="product-cat"><span class="en-i">Single Herbs</span><span class="zh-i">单味草药</span></div>
+            <div class="product-name"><span class="en-i">Dong Quai Root</span><span class="zh-i">当归</span></div>
+            <div class="product-name-zh"><span class="en-i">当归 (Dāng Guī)</span></div>
+            <div class="tcm-tags">
+              <span class="tcm-tag tag-wood">Wood</span>
+              <span class="tcm-tag tag-fire">Fire</span>
+            </div>
+            <div class="star-row"><span class="stars">★★★★☆</span> (56)</div>
+            <div class="price-row"><span class="price">$24.00</span></div>
+            <div class="stock-row"><span class="stock-dot dot-in"></span><span style="color:#16a34a;font-size:11px;font-weight:600"><span class="en-i">In Stock</span><span class="zh-i">有货</span></span></div>
+            <button class="add-btn">+ <span class="en-i">Add to Cart</span><span class="zh-i">加入购物车</span></button>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card">
+          <div class="product-img" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">🔥
+            <div class="product-badges"><span class="badge badge-pick" id="prac-badge-4">✓ Dr. Pick</span></div>
+            <div class="wishlist">♡</div>
+          </div>
+          <div class="product-info">
+            <div class="product-cat"><span class="en-i">Moxibustion</span><span class="zh-i">艾灸</span></div>
+            <div class="product-name"><span class="en-i">Premium Moxa Stick Set</span><span class="zh-i">优质艾条套装</span></div>
+            <div class="product-name-zh"><span class="en-i">优质艾条 (Ài Tiáo)</span></div>
+            <div class="tcm-tags">
+              <span class="tcm-tag tag-fire">Fire</span>
+              <span class="tcm-tag tag-earth">Earth</span>
+            </div>
+            <div class="star-row"><span class="stars">★★★★★</span> (203)</div>
+            <div class="price-row"><span class="price">$45.00</span></div>
+            <div class="stock-row"><span class="stock-dot dot-in"></span><span style="color:#16a34a;font-size:11px;font-weight:600"><span class="en-i">In Stock</span><span class="zh-i">有货</span></span></div>
+            <button class="add-btn">+ <span class="en-i">Add to Cart</span><span class="zh-i">加入购物车</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRACTITIONER SECTION -->
+  <section class="practitioner-section">
+    <div class="practitioner-section-inner">
+      <div class="practitioner-profile">
+        <div class="prac-avatar-lg">👨‍⚕️</div>
+        <div class="prac-name" id="prac-section-name">Dr. Wei Huang</div>
+        <div class="prac-title" id="prac-section-title">L.Ac., DAOM</div>
+        <div class="prac-cred"><span class="en-i">Licensed Acupuncturist<br/>Doctor of Oriental Medicine<br/>15+ years experience</span><span class="zh-i">执照针灸师<br/>东方医学博士<br/>15年以上经验</span></div>
+      </div>
+      <div class="prac-note-section">
+        <h3><span class="en-i">A Message from <span id="prac-msg-name">Dr. Huang</span></span><span class="zh-i">来自<span id="prac-msg-name-zh">黄医生</span>的寄语</span></h3>
+        <p class="prac-note en">"After 15 years of treating patients, I've seen firsthand which herbs make a real difference. Every product in this store is one I'd confidently recommend to my own family. Quality and safety are non-negotiable — these products have earned their place here."</p>
+        <p class="prac-note zh-c" style="display:none">"经过15年的临床实践，我亲眼见证了哪些草药真正有效。店内每一款产品都是我会放心推荐给自己家人的产品。质量和安全性是不可妥协的——这些产品都经过了严格筛选。"</p>
+        <div class="prac-picks-label">⭐ <span class="en-i">Top Picks for Common Conditions</span><span class="zh-i">常见病症精选</span></div>
+        <div class="prac-picks-grid">
+          <div class="prac-pick-card"><div class="prac-pick-emoji">😴</div><div><div class="prac-pick-name"><span class="en-i">Sleep Issues</span><span class="zh-i">睡眠问题</span></div><div class="prac-pick-price">Reishi Formula →</div></div></div>
+          <div class="prac-pick-card"><div class="prac-pick-emoji">⚡</div><div><div class="prac-pick-name"><span class="en-i">Low Energy</span><span class="zh-i">精力不足</span></div><div class="prac-pick-price">Astragalus →</div></div></div>
+          <div class="prac-pick-card"><div class="prac-pick-emoji">🤧</div><div><div class="prac-pick-name"><span class="en-i">Immunity</span><span class="zh-i">免疫力</span></div><div class="prac-pick-price">Immune Formula →</div></div></div>
+          <div class="prac-pick-card"><div class="prac-pick-emoji">😰</div><div><div class="prac-pick-name"><span class="en-i">Stress / Anxiety</span><span class="zh-i">压力/焦虑</span></div><div class="prac-pick-price">Calm Shen →</div></div></div>
+          <div class="prac-pick-card"><div class="prac-pick-emoji">🦴</div><div><div class="prac-pick-name"><span class="en-i">Joint Pain</span><span class="zh-i">关节疼痛</span></div><div class="prac-pick-price">Du Huo Ji Sheng →</div></div></div>
+          <div class="prac-pick-card"><div class="prac-pick-emoji">🌸</div><div><div class="prac-pick-name"><span class="en-i">Women's Health</span><span class="zh-i">女性健康</span></div><div class="prac-pick-price">Dong Quai →</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECKOUT PREVIEW -->
+  <section class="checkout-section">
+    <div class="checkout-section-inner">
+      <div class="checkout-label">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+        <span class="en-i">Checkout — White-Label Invoice Preview</span>
+        <span class="zh-i">结账 — 白标发票预览</span>
+        <span style="background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:4px;font-size:10px;color:rgba(255,255,255,0.7)" id="invoice-label">Invoice from: Dr. Huang Acupuncture & Herbal Medicine</span>
+      </div>
+      <div class="checkout-grid">
+        <div class="checkout-form-card">
+          <div class="checkout-form-header">
+            <span class="en-i">Shipping & Payment</span>
+            <span class="zh-i">配送与支付</span>
+          </div>
+          <div class="checkout-form-body">
+            <div class="form-section-title"><span class="en-i">Shipping Address</span><span class="zh-i">收货地址</span></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label"><span class="en-i">First Name</span><span class="zh-i">名</span></label><input class="form-input" placeholder="John" /></div>
+              <div class="form-group"><label class="form-label"><span class="en-i">Last Name</span><span class="zh-i">姓</span></label><input class="form-input" placeholder="Chen" /></div>
+            </div>
+            <div class="form-group"><label class="form-label"><span class="en-i">Address</span><span class="zh-i">地址</span></label><input class="form-input" placeholder="123 Main St, Flushing NY 11354" /></div>
+            <div class="form-section-title" style="margin-top:16px"><span class="en-i">Payment Method</span><span class="zh-i">支付方式</span></div>
+            <div class="payment-methods">
+              <div class="pay-method active">💳 <span class="en-i">Card</span><span class="zh-i">信用卡</span></div>
+              <div class="pay-method">⌘ Apple Pay</div>
+              <div class="pay-method">G Google Pay</div>
+            </div>
+            <div class="stripe-input">4242 &nbsp;4242 &nbsp;4242 &nbsp;4242 &nbsp;&nbsp; 12/28 &nbsp;&nbsp; 123</div>
+            <button class="place-order-btn">
+              🔒 <span class="en-i">Place Order Securely</span><span class="zh-i">安全下单</span>
+            </button>
+            <div class="ssl-note">🔒 <span class="en-i">256-bit SSL · Powered by Stripe</span><span class="zh-i">256位SSL加密 · 由Stripe提供支持</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="order-summary-card">
+            <div class="order-summary-header">
+              <span class="en-i">Order Summary</span><span class="zh-i">订单摘要</span>
+            </div>
+            <div class="order-item">
+              <div class="order-item-img">🌿</div>
+              <div class="order-item-info">
+                <div class="order-item-name"><span class="en-i">Astragalus Immune Formula</span><span class="zh-i">黄芪免疫方</span></div>
+                <div class="order-item-name-zh"><span class="en-i">黄芪免疫方</span></div>
+                <div class="order-item-qty">Qty: 2</div>
+              </div>
+              <div class="order-item-price">$76.00</div>
+            </div>
+            <div class="order-item">
+              <div class="order-item-img">🍯</div>
+              <div class="order-item-info">
+                <div class="order-item-name"><span class="en-i">Reishi Sleep Formula</span><span class="zh-i">灵芝安神方</span></div>
+                <div class="order-item-name-zh"><span class="en-i">灵芝安神方</span></div>
+                <div class="order-item-qty">Qty: 1 · PATIENT20 applied</div>
+              </div>
+              <div class="order-item-price">$25.60</div>
+            </div>
+            <div class="promo-row">
+              <input class="promo-input" placeholder="PATIENT20" value="PATIENT20" />
+              <button class="promo-apply">✓ <span class="en-i">Applied</span><span class="zh-i">已使用</span></button>
+            </div>
+            <div class="order-totals">
+              <div class="total-row"><span><span class="en-i">Subtotal</span><span class="zh-i">小计</span></span><span>$101.60</span></div>
+              <div class="total-row"><span><span class="en-i">Discount (PATIENT20)</span><span class="zh-i">折扣 (PATIENT20)</span></span><span style="color:#16a34a">–$8.00</span></div>
+              <div class="total-row"><span><span class="en-i">Shipping (UPS Ground)</span><span class="zh-i">运费 (UPS地面)</span></span><span style="color:#16a34a"><span class="en-i">FREE</span><span class="zh-i">免费</span></span></div>
+              <div class="total-row grand"><span><span class="en-i">Total</span><span class="zh-i">总计</span></span><span>$93.60</span></div>
+            </div>
+            <div class="invoice-note" id="invoice-note">
+              📄 <span class="en-i">Invoice will be from: <strong id="invoice-from">Dr. Huang Acupuncture & Herbal Medicine</strong></span>
+              <span class="zh-i">发票来自：<strong id="invoice-from-zh">黄氏针灸草药</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THEME COMPARISON PANEL -->
+  <section class="comparison-section">
+    <div class="comparison-inner">
+      <div class="comparison-title">🎨 <span class="en-i">White-Label Theme Comparison</span><span class="zh-i">白标主题对比</span></div>
+      <div class="comparison-subtitle"><span class="en-i">Same product catalog · Same inventory · Same platform · Three independent branded storefronts</span><span class="zh-i">相同产品目录 · 相同库存 · 相同平台 · 三个独立品牌店铺</span></div>
+      <div class="comparison-grid">
+
+        <!-- Dr. Huang -->
+        <div class="comparison-card">
+          <div class="comparison-store-header" style="background:#166534">
+            <div class="comp-store-icon" style="background:rgba(255,255,255,0.2)">🌿</div>
+            <div><div class="comp-store-name">Dr. Huang Clinic</div><div class="comp-store-type">drhuangclinic.com/shop</div></div>
+          </div>
+          <div class="comparison-product-card">
+            <div class="comp-product-img" style="background:#f0fdf4">🌿</div>
+            <div class="comp-product-body">
+              <div style="background:#166534;color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:5px">✓ Dr. Huang Pick</div>
+              <div class="comp-product-name">Astragalus Immune Formula</div>
+              <div class="comp-product-price" style="color:#166534">$38.00</div>
+              <button class="comp-add-btn" style="background:#166534">Add to Cart</button>
+            </div>
+          </div>
+          <div class="comparison-note">Invoice: Dr. Huang Acupuncture<br/>Revenue: 70% → clinic · 30% → platform</div>
+        </div>
+
+        <!-- Acupuncture Flushing -->
+        <div class="comparison-card">
+          <div class="comparison-store-header" style="background:#1e3a5f">
+            <div class="comp-store-icon" style="background:rgba(255,255,255,0.2)">🏥</div>
+            <div><div class="comp-store-name">Acupuncture Flushing</div><div class="comp-store-type">acupunctureflushing.com/shop</div></div>
+          </div>
+          <div class="comparison-product-card">
+            <div class="comp-product-img" style="background:#eff6ff">🌿</div>
+            <div class="comp-product-body">
+              <div style="background:#1e3a5f;color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:5px">✓ Clinic Approved</div>
+              <div class="comp-product-name">Astragalus Immune Formula</div>
+              <div class="comp-product-price" style="color:#1e3a5f">$38.00</div>
+              <button class="comp-add-btn" style="background:#1e3a5f">Add to Cart</button>
+            </div>
+          </div>
+          <div class="comparison-note">Invoice: Acupuncture Flushing LLC<br/>Revenue: 70% → clinic · 30% → platform</div>
+        </div>
+
+        <!-- pureHerbHealth -->
+        <div class="comparison-card">
+          <div class="comparison-store-header" style="background:#2D8C54">
+            <div class="comp-store-icon" style="background:rgba(255,255,255,0.2)">⭐</div>
+            <div><div class="comp-store-name">pureHerbHealth</div><div class="comp-store-type">pureherbhealth.com (master)</div></div>
+          </div>
+          <div class="comparison-product-card">
+            <div class="comp-product-img" style="background:#E8F5EE">🌿</div>
+            <div class="comp-product-body">
+              <div style="background:#D4A843;color:#1e293b;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:5px">★ Best Seller</div>
+              <div class="comp-product-name">Astragalus Immune Formula</div>
+              <div class="comp-product-price" style="color:#2D8C54">$38.00</div>
+              <button class="comp-add-btn" style="background:#2D8C54">Add to Cart</button>
+            </div>
+          </div>
+          <div class="comparison-note">Invoice: pureHerbHealth Inc.<br/>Revenue: 100% → platform (master store)</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FDA DISCLAIMER -->
+  <div class="fda-bar">
+    <div class="fda-bar-inner">
+      ⚠️ <span class="en-i">These statements have not been evaluated by the Food and Drug Administration. These products are not intended to diagnose, treat, cure, or prevent any disease. Consult your healthcare provider before use.</span>
+      <span class="zh-i">本产品的相关声明未经美国食品药品监督管理局评估。本产品无意用于诊断、治疗、治愈或预防任何疾病。使用前请咨询您的医疗保健提供者。</span>
+    </div>
+  </div>
+
+  <!-- CLINIC FOOTER -->
+  <footer class="clinic-footer">
+    <div class="clinic-footer-inner">
+      <div class="clinic-footer-top">
+        <div class="clinic-footer-brand">
+          <strong id="footer-clinic-name">Dr. Huang Acupuncture & Herbal Medicine</strong>
+          <p id="footer-clinic-addr">
+            <span class="en-i">Flushing, Queens NY · (718) 888-8888<br/>Licensed Acupuncturist · DAOM</span>
+            <span class="zh-i">纽约法拉盛 · (718) 888-8888<br/>执照针灸师 · 东方医学博士</span>
+          </p>
+        </div>
+        <div class="clinic-footer-links">
+          <div>
+            <div class="footer-col-title"><span class="en-i">Clinic</span><span class="zh-i">诊所</span></div>
+            <a class="footer-link"><span class="en-i">Services</span><span class="zh-i">服务</span></a>
+            <a class="footer-link"><span class="en-i">Book Appointment</span><span class="zh-i">预约</span></a>
+            <a class="footer-link"><span class="en-i">About Dr. Huang</span><span class="zh-i">关于黄医生</span></a>
+          </div>
+          <div>
+            <div class="footer-col-title"><span class="en-i">Shop</span><span class="zh-i">商店</span></div>
+            <a class="footer-link"><span class="en-i">All Products</span><span class="zh-i">所有产品</span></a>
+            <a class="footer-link"><span class="en-i">Dr. Picks</span><span class="zh-i">医生精选</span></a>
+            <a class="footer-link"><span class="en-i">Shipping & Returns</span><span class="zh-i">配送与退货</span></a>
+          </div>
+          <div>
+            <div class="footer-col-title"><span class="en-i">Legal</span><span class="zh-i">法律</span></div>
+            <a class="footer-link"><span class="en-i">Privacy Policy</span><span class="zh-i">隐私政策</span></a>
+            <a class="footer-link"><span class="en-i">Terms of Service</span><span class="zh-i">服务条款</span></a>
+            <a class="footer-link"><span class="en-i">FDA Disclaimer</span><span class="zh-i">FDA免责声明</span></a>
+          </div>
+        </div>
+      </div>
+      <div class="clinic-footer-bottom">
+        <span>© 2026 <span id="footer-copyright-name">Dr. Huang Acupuncture & Herbal Medicine</span>. All rights reserved.</span>
+        <div class="payment-icons">
+          <span class="pay-icon">VISA</span>
+          <span class="pay-icon">MC</span>
+          <span class="pay-icon">AMEX</span>
+          <span class="pay-icon" style="background:#000;color:white">⌘Pay</span>
+          <span class="pay-icon" style="background:#34a853;color:white">GPay</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- end clinic-site -->
+
+<!-- AI CHAT WIDGET -->
+<div class="chat-widget">
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-head">
+      <div class="chat-head-av">🌿</div>
+      <div class="chat-head-info">
+        <strong id="chat-assistant-name">Dr. Huang's Herbal Assistant</strong>
+        <span>● <span class="en-i">Online</span><span class="zh-i">在线</span></span>
+      </div>
+      <button onclick="toggleChat()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:16px;cursor:pointer;margin-left:auto">✕</button>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="msg">
+        <div class="msg-av ai">🌿</div>
+        <div class="bubble ai">
+          <span class="en-i">Hi! I'm Dr. Huang's herbal assistant. I can help you find the right products for your wellness needs. What can I help you with?</span>
+          <span class="zh-i">您好！我是黄医生的草药助手。我可以帮您找到适合您健康需求的产品。有什么我可以帮您的？</span>
+        </div>
+      </div>
+    </div>
+    <div class="chat-disclaim">⚠️ <span class="en-i">Educational only. Not medical advice.</span><span class="zh-i">仅供教育目的，非医疗建议。</span></div>
+    <div class="chat-input-row">
+      <input class="c-input" id="chatInput" placeholder="Ask about herbs..." onkeydown="if(event.key==='Enter')sendChat()" />
+      <button class="c-send" onclick="sendChat()">→</button>
+    </div>
+  </div>
+  <button class="chat-fab" onclick="toggleChat()">🌿</button>
+</div>
+
+<script>
+  // =============================================
+  // STORE CONFIGS — mirrors stores table in DB
+  // =============================================
+  const STORES = {
+    drhuang: {
+      themeClass: 'theme-drhuang',
+      tabId: 'tab-drhuang',
+      icon: '🌿',
+      name: 'Dr. Huang Acupuncture & Herbal Medicine',
+      nameZh: '黄氏针灸草药',
+      tagline: 'Licensed Acupuncturist · Flushing, NY',
+      phone: '(718) 888-8888',
+      addr: 'Flushing, Queens NY',
+      heroName: "Dr. Huang's",
+      heroNameZh: '黄医生',
+      pracName: 'Dr. Wei Huang, L.Ac., DAOM',
+      pracTitle: 'L.Ac., DAOM',
+      msgName: 'Dr. Huang',
+      msgNameZh: '黄医生',
+      pracBadge: '✓ Dr. Huang Pick',
+      promo: '🌿 Patient discount: use code <strong>PATIENT20</strong>',
+      promoZh: '🌿 患者优惠码：<strong>PATIENT20</strong>',
+      trustName: 'Dr. Huang–Verified Products',
+      invoiceFrom: 'Dr. Huang Acupuncture & Herbal Medicine',
+      invoiceFromZh: '黄氏针灸草药',
+      invoiceLabel: 'Invoice from: Dr. Huang Acupuncture & Herbal Medicine',
+      chatName: "Dr. Huang's Herbal Assistant",
+      catPatient: '⭐ Dr. Picks',
+      footerName: 'Dr. Huang Acupuncture & Herbal Medicine',
+      copyrightName: 'Dr. Huang Acupuncture & Herbal Medicine',
+    },
+    flushing: {
+      themeClass: 'theme-flushing',
+      tabId: 'tab-flushing',
+      icon: '🏥',
+      name: 'Acupuncture Flushing',
+      nameZh: '法拉盛针灸诊所',
+      tagline: 'Holistic TCM Clinic · Flushing, NY',
+      phone: '(718) 999-7777',
+      addr: 'Flushing, Main Street NY',
+      heroName: "Acupuncture Flushing",
+      heroNameZh: '法拉盛针灸',
+      pracName: 'Dr. Lin Zhao, L.Ac.',
+      pracTitle: 'L.Ac., MS',
+      msgName: 'Dr. Zhao',
+      msgNameZh: '赵医生',
+      pracBadge: '✓ Clinic Approved',
+      promo: '🏥 New patient discount: <strong>NEWPATIENT10</strong>',
+      promoZh: '🏥 新患者优惠码：<strong>NEWPATIENT10</strong>',
+      trustName: 'Clinic-Approved Products',
+      invoiceFrom: 'Acupuncture Flushing LLC',
+      invoiceFromZh: '法拉盛针灸有限公司',
+      invoiceLabel: 'Invoice from: Acupuncture Flushing LLC',
+      chatName: "Acupuncture Flushing Herb Assistant",
+      catPatient: '⭐ Clinic Picks',
+      footerName: 'Acupuncture Flushing LLC',
+      copyrightName: 'Acupuncture Flushing',
+    },
+    purehrb: {
+      themeClass: 'theme-purehrb',
+      tabId: 'tab-purehrb',
+      icon: '⭐',
+      name: 'pureHerbHealth',
+      nameZh: '纯草健康',
+      tagline: 'AI-Powered TCM Wellness Store · New York',
+      phone: '1-800-HERB-USA',
+      addr: 'New York, USA',
+      heroName: 'pureHerbHealth',
+      heroNameZh: '纯草健康',
+      pracName: 'TCM Practitioner Network',
+      pracTitle: 'Multiple L.Ac. & DAOM',
+      msgName: 'Our Practitioners',
+      msgNameZh: '我们的中医师团队',
+      pracBadge: '★ Best Seller',
+      promo: '🌿 Free shipping on orders over <strong>$75</strong>',
+      promoZh: '🌿 满<strong>$75</strong>免运费',
+      trustName: 'Practitioner-Verified Quality',
+      invoiceFrom: 'pureHerbHealth Inc.',
+      invoiceFromZh: '纯草健康公司',
+      invoiceLabel: 'Invoice from: pureHerbHealth Inc.',
+      chatName: "pureHerbHealth AI Assistant",
+      catPatient: '⭐ Top Picks',
+      footerName: 'pureHerbHealth Inc.',
+      copyrightName: 'pureHerbHealth',
+    }
+  };
+
+  let currentStore = 'drhuang';
+  let chatOpen = false;
+  let currentLang = 'en';
+
+  function switchStore(storeId) {
+    const store = STORES[storeId];
+    const site = document.getElementById('clinic-site');
+
+    // Remove all theme classes, add correct one
+    site.className = 'clinic-site ' + store.themeClass;
+
+    // Update all store-specific text
+    document.getElementById('clinic-icon').textContent = store.icon;
+    document.getElementById('clinic-name').textContent = store.name;
+    document.getElementById('topbar-phone').textContent = store.phone;
+    document.getElementById('prac-badge-1').textContent = store.pracBadge;
+    document.getElementById('prac-badge-4').textContent = store.pracBadge;
+    document.getElementById('prac-hero-name').textContent = store.pracName;
+    document.getElementById('prac-section-name').textContent = store.pracName.split(',')[0];
+    document.getElementById('prac-section-title').textContent = store.pracTitle;
+    document.getElementById('prac-msg-name').textContent = store.msgName;
+    document.getElementById('prac-msg-name-zh').textContent = store.msgNameZh;
+    document.getElementById('clinic-hero-name').textContent = store.heroName;
+    document.getElementById('clinic-hero-name-zh').textContent = store.heroNameZh;
+    document.getElementById('shop-trust-name').textContent = store.trustName;
+    document.getElementById('invoice-label').textContent = store.invoiceLabel;
+    document.getElementById('invoice-from').textContent = store.invoiceFrom;
+    document.getElementById('invoice-from-zh').textContent = store.invoiceFromZh;
+    document.getElementById('chat-assistant-name').textContent = store.chatName;
+    document.getElementById('cat-patient').innerHTML = store.catPatient;
+    document.getElementById('footer-clinic-name').textContent = store.footerName;
+    document.getElementById('footer-copyright-name').textContent = store.copyrightName;
+    document.getElementById('prod-heading-name').textContent = store.msgName;
+    document.getElementById('prod-heading-name-zh').textContent = store.msgNameZh;
+
+    // Promo text
+    document.getElementById('promo-text').innerHTML = store.promo;
+    document.getElementById('promo-text-zh').innerHTML = store.promoZh;
+
+    // pureHerbHealth has different hero layout (no "Dr." language)
+    const heroEn = document.querySelector('.shop-hero h1.en');
+    if (storeId === 'purehrb') {
+      heroEn.innerHTML = '<em>AI-Powered</em> TCM Wellness Store';
+    } else {
+      heroEn.innerHTML = `<span id="clinic-hero-name">${store.heroName}</span> Recommended<br/><em>Herbal Products</em>`;
+    }
+
+    // Update active tab styling
+    document.querySelectorAll('.store-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(store.tabId).classList.add('active');
+
+    // Update chat fab color via theme-vars
+    currentStore = storeId;
+  }
+
+  function setLang(lang) {
+    document.body.className = lang === 'zh' ? 'zh' : '';
+    currentLang = lang;
+    // Update prototype bar lang tabs
+    document.querySelectorAll('.lang-tab').forEach((btn, i) => {
+      btn.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'zh'));
+    });
+    // Update clinic header lang buttons
+    document.querySelectorAll('.clinic-lang-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'zh'));
+    });
+    document.documentElement.lang = lang;
+    const input = document.getElementById('chatInput');
+    if (input) input.placeholder = lang === 'zh' ? '询问关于草药...' : 'Ask about herbs...';
+  }
+
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById('chatPanel').classList.toggle('open', chatOpen);
+  }
+
+  function sendChat() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const msgs = document.getElementById('chatMsgs');
+    const isZh = currentLang === 'zh';
+    const store = STORES[currentStore];
+    msgs.insertAdjacentHTML('beforeend', `
+      <div class="msg user">
+        <div class="msg-av u">👤</div>
+        <div class="bubble u">${msg}</div>
+      </div>
+      <div class="msg" id="thinking">
+        <div class="msg-av ai">🌿</div>
+        <div class="bubble ai" style="color:#94a3b8;font-style:italic">${isZh ? '正在思考...' : 'Thinking...'}</div>
+      </div>
+    `);
+    input.value = '';
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(() => {
+      const t = document.getElementById('thinking');
+      if (t) {
+        t.querySelector('.bubble').innerHTML = isZh
+          ? `在实际实现中，${store.msgNameZh}的AI助手将根据您的具体症状和中医体质，从精选产品中为您推荐最合适的草药方剂。`
+          : `In the real implementation, ${store.chatName} will analyze your symptoms and TCM constitution to recommend the best herbal products from ${store.msgName}'s curated catalog.`;
+        t.removeAttribute('id');
+      }
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 1000);
+  }
+
+  // Add to cart
+  document.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const orig = this.innerHTML;
+      this.innerHTML = '✓ Added!';
+      this.style.background = '#16a34a';
+      const count = document.getElementById('cart-count');
+      if (count) count.textContent = parseInt(count.textContent) + 1;
+      setTimeout(() => { this.innerHTML = orig; this.style.background = ''; }, 1500);
+    });
+  });
+</script>
+
+</body>
+</html>
