@@ -99,13 +99,13 @@ export default function EditProductPage() {
   const [videoAssetIds, setVideoAssetIds] = useState<string[]>([]);
   const [productMedia, setProductMedia] = useState<MediaAsset[]>([]);
   const [allMedia, setAllMedia] = useState<MediaAsset[]>([]);
-  const [mediaTab, setMediaTab] = useState<"product" | "all">("product");
-  const [mediaLoading, setMediaLoading] = useState(false);
+  const [mediaTab, _setMediaTab] = useState<"product" | "all">("product");
+  const [_mediaLoading, setMediaLoading] = useState(false);
 
   const [pickerOpen, setPickerOpen] = useState<"images" | "videos" | null>(null);
 
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [_uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [previewLocale, setPreviewLocale] = useState<"en" | "zh">("en");
@@ -193,11 +193,11 @@ export default function EditProductPage() {
     () => videoAssetIds.map((id) => allMediaCombined.find((m) => m.id === id)).filter(Boolean) as MediaAsset[],
     [videoAssetIds, allMediaCombined],
   );
-  const availableImages = useMemo(
+  const _availableImages = useMemo(
     () => mediaItems.filter((m) => m.media_type === "image" && !imageAssetIds.includes(m.id)),
     [mediaItems, imageAssetIds],
   );
-  const availableVideos = useMemo(
+  const _availableVideos = useMemo(
     () => mediaItems.filter((m) => m.media_type === "video" && !videoAssetIds.includes(m.id)),
     [mediaItems, videoAssetIds],
   );
@@ -212,7 +212,7 @@ export default function EditProductPage() {
     if (addIds.length) setImageAssetIds((prev) => [...prev, ...addIds.filter((id) => !prev.includes(id))]);
   }
 
-  async function handleUpload(files: FileList | null, type: "image" | "video") {
+  async function _handleUpload(files: FileList | null, type: "image" | "video") {
     if (!files || files.length === 0 || !storeSlug || !product?.slug) return;
     setUploading(true); setError(null);
     try {
@@ -733,7 +733,7 @@ function VariantsTab({
 // ─── Bundle Tab ───────────────────────────────────────────────────────────────
 
 function BundleTab({
-  items, onChange, storeSlug, currentProductId,
+  items, onChange, storeSlug: _storeSlug, currentProductId,
 }: {
   items: BundleItem[]; onChange: (items: BundleItem[]) => void;
   storeSlug: string; currentProductId: string;

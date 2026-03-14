@@ -32,7 +32,7 @@ export async function GET(request: Request) {
 
     // Get order counts per customer
     const customerIds = (data ?? []).map((p) => p.id);
-    let orderCounts: Record<string, number> = {};
+    const orderCounts: Record<string, number> = {};
     if (customerIds.length > 0) {
       const { data: orders } = await admin
         .from("orders")

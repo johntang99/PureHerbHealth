@@ -525,7 +525,7 @@ export function ImagePickerModal({
                     </div>
                   ) : (
                     <>
-                      <div className="mb-3 text-[11px] text-gray-400">{providerItems.length} results · click "Import" to save to your library</div>
+                      <div className="mb-3 text-[11px] text-gray-400">{providerItems.length} results · click &ldquo;Import&rdquo; to save to your library</div>
                       <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         {providerItems.map((item) => (
                           <div key={item.id} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">

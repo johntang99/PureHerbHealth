@@ -511,7 +511,7 @@ export default function AdminOrderDetailPage() {
             {order.customer_notes && (
               <div className="mt-3 border-t border-gray-100 pt-3">
                 <p className="text-[11px] uppercase tracking-wide text-gray-400">Customer Note</p>
-                <p className="mt-1 text-[13px] italic text-gray-600">"{order.customer_notes}"</p>
+                <p className="mt-1 text-[13px] italic text-gray-600">&ldquo;{order.customer_notes}&rdquo;</p>
               </div>
             )}
           </div>
