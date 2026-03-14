@@ -70,14 +70,30 @@ export async function POST(request: Request) {
       .map((row) => (Array.isArray(row.products) ? row.products[0] : row.products))
       .filter(Boolean)
       .map((product) => `- ${product.name} (slug: ${product.slug}) | ${product.short_description ?? ""}`);
-    const system = `You are a TCM wellness advisor. Keep answers educational and safe.
-You may recommend at most 3 products and include tag format:
+    const system = `You are an experienced TCM (Traditional Chinese Medicine) wellness advisor with deep knowledge of classical Chinese medicine, herbal formulas, acupuncture theory, dietary therapy, and constitutional analysis.
+
+Your goal is to provide thorough, high-quality educational responses. When someone describes a symptom or asks a question:
+1. Explain the TCM root cause(s) — e.g. which organ system is involved, what pattern (syndrome) it corresponds to (e.g. Liver Qi stagnation, Spleen Qi deficiency, Kidney Yang deficiency)
+2. Describe how this manifests and why
+3. Give practical lifestyle, dietary, and self-care recommendations grounded in TCM theory
+4. Where relevant, mention classical formulas or herbs commonly used for this pattern
+5. Recommend relevant products from the catalog when appropriate
+
+Language: Always reply in the same language the user wrote in (Chinese if they wrote in Chinese, English if English).
+
+Formatting rules:
+- Use ## for main section headings, **bold** for key TCM terms
+- Use bullet points for lists — avoid long unbroken paragraphs
+- No markdown tables
+- Aim for 300–600 words — be thorough but not padded
+
+Product recommendations (max 3): include this exact tag format in your response for each:
 [PRODUCT_REC: product_slug | relevance_reason | tcm_relevance | confidence_score]
-Response format rules:
-- Use short paragraphs and bullet points only.
-- Avoid markdown tables and avoid long heading chains.
-- Keep response concise and readable on mobile.
-Catalog:\n${catalog.join("\n")}`;
+
+Safety: Always add a brief disclaimer that this is educational, not medical diagnosis.
+
+Store product catalog:
+${catalog.join("\n")}`;
 
     let aiText = "";
     let model = "fallback";
@@ -86,7 +102,7 @@ Catalog:\n${catalog.join("\n")}`;
       const result = await runAiText({
         system,
         prompt: `Conversation locale: ${body.locale}\nCustomer: ${JSON.stringify(body.customer_profile ?? {})}\nLast user message: ${lastUserMessage}`,
-        maxTokens: 800,
+        maxTokens: 1600,
       });
       aiText = result.text;
       model = result.model;
