@@ -9,7 +9,6 @@ import remarkGfm from "remark-gfm";
 import { adminTheme as t } from "@/lib/admin/theme";
 import { ImagePickerModal } from "@/components/admin/image-picker-modal";
 
-//    ─── Types ────────────────────────────────────────────────────────────────────
 
 type CategoryNode = { id: string; name: string; children: CategoryNode[] };
 type CategoryFlat = { id: string; name: string; depth: number };
