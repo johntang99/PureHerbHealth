@@ -116,6 +116,7 @@ export async function listProducts(input: {
       .trim()
       .toLowerCase()
       .split(/\s+/)
+      .map((t) => t.replace(/[^a-z0-9\u4e00-\u9fff]/g, ""))
       .filter(Boolean)
       .slice(0, 5);
     if (tokens.length) {
